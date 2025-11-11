@@ -1,21 +1,41 @@
-﻿// Trong: Data/ApplicationDbContext.cs
-using Freelancer.Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Freelancer.Models;
 using Microsoft.EntityFrameworkCore;
 
+// 1. Đảm bảo namespace là "Freelancer.Data"
 namespace Freelancer.Data
 {
-    // Kế thừa IdentityDbContext<ApplicationUser>
-    // để nó tự động quản lý bảng Users, Roles...
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
 
-        // --- Khai báo các bảng CSDL khác của bạn ở đây ---
-        // Ví dụ (sau này bạn sẽ thêm):
-        public DbSet<Job> Jobs { get; set; }
-        public DbSet<Company> Companies { get; set; }
+        // 2. Đăng ký tất cả các Model của bạn ở đây
+        public DbSet<User> Users { get; set; }
+        public DbSet<Seeker> Seekers { get; set; }
+        public DbSet<Employer> Employers { get; set; }
+
+        // (Nếu bạn có Model "Skill", bạn cũng thêm DbSet ở đây)
+
+
+        // 3. Cấu hình quan hệ
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder); // Luôn giữ dòng này
+
+            // Cấu hình quan hệ 1:1 giữa User và Seeker
+            // Khóa ngoại của Seeker (Seeker.Id) sẽ trỏ tới User
+            modelBuilder.Entity<User>()
+                .HasOne(user => user.Seeker)
+                .WithOne(seeker => seeker.User)
+                .HasForeignKey<Seeker>(seeker => seeker.Id);
+
+            // Cấu hình quan hệ 1:1 giữa User và Employer
+            // Khóa ngoại của Employer (Employer.Id) sẽ trỏ tới User
+            modelBuilder.Entity<User>()
+                .HasOne(user => user.Employer)
+                .WithOne(employer => employer.User)
+                .HasForeignKey<Employer>(employer => employer.Id);
+        }
     }
 }

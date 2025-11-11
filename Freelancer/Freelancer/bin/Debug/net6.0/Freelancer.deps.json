@@ -8,8 +8,9 @@
     ".NETCoreApp,Version=v6.0": {
       "Freelancer/1.0.0": {
         "dependencies": {
+          "BCrypt.Net-Next": "4.0.3",
           "Google.Apis.Auth": "1.72.0",
-          "Microsoft.AspNetCore.Authentication.JwtBearer": "6.0.36",
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "6.0.30",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "6.0.36",
           "Microsoft.EntityFrameworkCore": "6.0.36",
           "Microsoft.EntityFrameworkCore.SqlServer.NetTopologySuite": "6.0.36",
@@ -18,6 +19,14 @@
         },
         "runtime": {
           "Freelancer.dll": {}
+        }
+      },
+      "BCrypt.Net-Next/4.0.3": {
+        "runtime": {
+          "lib/net6.0/BCrypt.Net-Next.dll": {
+            "assemblyVersion": "4.0.3.0",
+            "fileVersion": "4.0.3.0"
+          }
         }
       },
       "Google.Apis/1.72.0": {
@@ -63,14 +72,14 @@
           }
         }
       },
-      "Microsoft.AspNetCore.Authentication.JwtBearer/6.0.36": {
+      "Microsoft.AspNetCore.Authentication.JwtBearer/6.0.30": {
         "dependencies": {
           "Microsoft.IdentityModel.Protocols.OpenIdConnect": "6.36.0"
         },
         "runtime": {
           "lib/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll": {
-            "assemblyVersion": "6.0.36.0",
-            "fileVersion": "6.0.3624.51604"
+            "assemblyVersion": "6.0.30.0",
+            "fileVersion": "6.0.3024.21619"
           }
         }
       },
@@ -724,6 +733,13 @@
       "serviceable": false,
       "sha512": ""
     },
+    "BCrypt.Net-Next/4.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-W+U9WvmZQgi5cX6FS5GDtDoPzUCV4LkBLkywq/kRZhuDwcbavOzcDAr3LXJFqHUi952Yj3LEYoWW0jbEUQChsA==",
+      "path": "bcrypt.net-next/4.0.3",
+      "hashPath": "bcrypt.net-next.4.0.3.nupkg.sha512"
+    },
     "Google.Apis/1.72.0": {
       "type": "package",
       "serviceable": true,
@@ -752,12 +768,12 @@
       "path": "humanizer.core/2.8.26",
       "hashPath": "humanizer.core.2.8.26.nupkg.sha512"
     },
-    "Microsoft.AspNetCore.Authentication.JwtBearer/6.0.36": {
+    "Microsoft.AspNetCore.Authentication.JwtBearer/6.0.30": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-vGDqvZUehbtKdoUzVO32N0Lxon+1piGO6qFnA8FNXEzWhrLN5uum8ZyhWgrWYSA4b6JuCBJ/wAC7rV38wBvLew==",
-      "path": "microsoft.aspnetcore.authentication.jwtbearer/6.0.36",
-      "hashPath": "microsoft.aspnetcore.authentication.jwtbearer.6.0.36.nupkg.sha512"
+      "sha512": "sha512-PPB0+6RD4V5mHlpd4K95S+IuOsfzmnrjKxOhUysF+/9gP6bPasahC3GxOfN/yGKBhuPoyyJVSx18uUrZ+9UeNw==",
+      "path": "microsoft.aspnetcore.authentication.jwtbearer/6.0.30",
+      "hashPath": "microsoft.aspnetcore.authentication.jwtbearer.6.0.30.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Cryptography.Internal/6.0.36": {
       "type": "package",

@@ -4,71 +4,41 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Freelancer.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
 
-        // "Tiêm" Service vào
         public AuthController(IAuthService authService)
         {
             _authService = authService;
         }
 
-        // Tạo endpoint: POST api/auth/register
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequestDto dto)
+        public async Task<IActionResult> Register(RegisterRequestDto registerRequest)
         {
-            if (!ModelState.IsValid)
+            var result = await _authService.RegisterAsync(registerRequest);
+
+            if (!result)
             {
-                return BadRequest(ModelState);
+                return BadRequest("Email đã tồn tại hoặc đăng ký thất bại.");
             }
 
-            var result = await _authService.RegisterAsync(dto);
-
-            if (!result.Succeeded)
-            {
-                // Nếu thất bại (VD: Email trùng), trả về lỗi
-                return BadRequest(result.Errors);
-            }
-
-            // Nếu thành công
-            return Ok(new { Message = "Đăng ký thành công!" });
+            return Ok("Đăng ký thành công!");
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequestDto dto)
+        public async Task<IActionResult> Login(LoginRequestDto loginRequest)
         {
-            if (!ModelState.IsValid)
+            var authResponse = await _authService.LoginAsync(loginRequest);
+
+            if (authResponse == null)
             {
-                return BadRequest(ModelState);
+                return Unauthorized("Email hoặc mật khẩu không đúng."); // 401
             }
 
-            var loginResponse = await _authService.LoginAsync(dto);
-
-            if (loginResponse == null)
-            {
-                // Nếu Service trả về null, nghĩa là sai Email hoặc Password
-                return Unauthorized(new { Message = "Email hoặc mật khẩu không đúng." });
-            }
-
-            // Đăng nhập thành công, trả về Token
-            return Ok(loginResponse);
-        }
-
-        [HttpPost("google-login")]
-        public async Task<IActionResult> GoogleLogin([FromBody] GoogleLoginRequestDto dto)
-        {
-            var loginResponse = await _authService.GoogleLoginAsync(dto);
-
-            if (loginResponse == null)
-            {
-                return Unauthorized(new { Message = "Đăng nhập Google thất bại." });
-            }
-
-            // Đăng nhập thành công, trả về Token CỦA MÌNH
-            return Ok(loginResponse);
+            return Ok(authResponse); // Trả về Token và thông tin user
         }
     }
 }

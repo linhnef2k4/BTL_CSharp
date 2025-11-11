@@ -200,8 +200,8 @@ const NavBar = () => {
 
                     <hr className="my-1 border-blue-100" />
 
-                    <Link to="/logout" className="flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50">
-                      <LogOut size={16} /> Đăng xuất
+                    <Link to="/login" className="flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                      <LogIn size={16} /> Đăng xuất
                     </Link>
                   </motion.div>
                 )}
