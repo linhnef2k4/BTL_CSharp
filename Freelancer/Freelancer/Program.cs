@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text; // <--- Import
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Đăng ký Service (ví dụ: IProjectService)
 builder.Services.AddScoped<DbInitializer>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IProfileService, ProfileService>();
+builder.Services.AddScoped<ISocialPostService, SocialPostService>();
+builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
+
 // (Thêm các service khác của bạn ở đây)
 // builder.Services.AddScoped<IUserService, UserService>();
 
@@ -48,7 +54,37 @@ builder.Services.AddControllers();
 
 // Thêm Swagger (để tạo giao diện test API)
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+// --- THAY THẾ DÒNG "builder.Services.AddSwaggerGen();" BẰNG CÁI NÀY ---
+builder.Services.AddSwaggerGen(options =>
+{
+    // 1. Định nghĩa "Security Definition" (Cách Swagger hiểu về Token)
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Description = "Nhập Token JWT (Ví dụ: 'Bearer eyJhbGci...')",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http, // Dùng HTTP
+        Scheme = "Bearer", // Tên scheme
+        BearerFormat = "JWT"
+    });
+
+    // 2. Áp dụng Security Definition này cho tất cả API
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
+// --- KẾT THÚC THAY THẾ ---
 
 // --- 2. Xây dựng ứng dụng ---
 var app = builder.Build();

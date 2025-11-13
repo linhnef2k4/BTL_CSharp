@@ -108,9 +108,21 @@ namespace Freelancer.Services
                 // Bạn có thể thêm các Claim (thông tin) khác
             };
 
-            // Thêm vai trò (nếu có)
-            if (user.Seeker != null) claims.Add(new Claim(ClaimTypes.Role, "Seeker"));
-            if (user.Employer != null) claims.Add(new Claim(ClaimTypes.Role, "Employer"));
+            // --- LỖI 2: LOGIC VAI TRÒ ĐÚNG (ĐÃ XÓA CÁC DÒNG LẶP) ---
+
+            // 1. Lấy vai trò chính (Seeker hoặc Admin) từ bảng Users
+            if (!string.IsNullOrEmpty(user.Role))
+            {
+                claims.Add(new Claim(ClaimTypes.Role, user.Role));
+            }
+
+            // 2. Lấy vai trò phụ (Employer)
+            // (Một Seeker hoặc Admin cũng có thể là Employer)
+            if (user.Employer != null && user.Employer.Status == EmployerStatus.Approved)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, "Employer"));
+            }
+            // --- KẾT THÚC ---
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
