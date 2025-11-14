@@ -9,10 +9,12 @@ namespace Freelancer.Services
     public class SocialPostService : ISocialPostService
     {
         private readonly ApplicationDbContext _context;
+        private readonly INotificationService _notificationService;
 
-        public SocialPostService(ApplicationDbContext context)
+        public SocialPostService(ApplicationDbContext context, INotificationService notificationService)
         {
             _context = context;
+            _notificationService = notificationService; // <-- Gán
         }
 
         public async Task<SocialPostDto> CreatePostAsync(int authorId, CreateSocialPostDto request)
@@ -136,14 +138,14 @@ namespace Freelancer.Services
 
         public async Task<CommentDto> PostCommentAsync(int postId, int authorId, CreateCommentDto request)
         {
-            // 1. Kiểm tra xem bài post có tồn tại không
-            var postExists = await _context.SocialPosts.AnyAsync(p => p.Id == postId);
-            if (!postExists)
+            // 1. SỬA: Lấy bài post (thay vì chỉ kiểm tra "Exists")
+            var post = await _context.SocialPosts.FindAsync(postId);
+            if (post == null)
             {
-                return null; // Hoặc ném ra lỗi "Không tìm thấy bài post"
+                return null; // Không tìm thấy bài post
             }
 
-            // 2. Tạo model Comment
+            // 2. Tạo model Comment (giữ nguyên)
             var newComment = new SocialPostComment
             {
                 Content = request.Content,
@@ -152,46 +154,124 @@ namespace Freelancer.Services
                 CreatedDate = DateTime.UtcNow
             };
 
-            // 3. Lưu vào DB
             _context.SocialPostComments.Add(newComment);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(); // <-- Đã lưu
 
-            // 4. Lấy thông tin tác giả để trả về DTO
-            var author = await _context.Users
+            // --- (PHẦN NÂNG CẤP) TẠO THÔNG BÁO (NẾU LÀ BẠN BÈ) ---
+            try
+            {
+                // 3. Kiểm tra: Không tự thông báo cho chính mình
+                if (post.AuthorId != authorId)
+                {
+                    // 4. KIỂM TRA BẠN BÈ (Logic quan trọng)
+                    bool areFriends = await _context.Friendships
+                        .AnyAsync(f =>
+                            (f.RequesterId == post.AuthorId && f.ReceiverId == authorId && f.Status == FriendshipStatus.Accepted) ||
+                            (f.RequesterId == authorId && f.ReceiverId == post.AuthorId && f.Status == FriendshipStatus.Accepted)
+                        );
+
+                    // 5. Nếu là bạn, gửi thông báo
+                    if (areFriends)
+                    {
+                        var author = await _context.Users.FindAsync(authorId); // Lấy tên người comment
+                        await _notificationService.CreateNotificationAsync(
+                            recipientId: post.AuthorId, // Gửi cho chủ post
+                            actorId: authorId,          // Người comment
+                            message: $"đã bình luận về bài viết của bạn.",
+                            linkUrl: $"/posts/{post.Id}" // Link tới bài post
+                        );
+                    }
+                }
+            }
+            catch (System.Exception) { /* Lỗi gửi thông báo */ }
+            // --- (KẾT THÚC NÂNG CẤP) ---
+
+            // 6. Lấy thông tin tác giả để trả về DTO (giữ nguyên)
+            var commentAuthor = await _context.Users
                                 .Include(u => u.Seeker)
                                 .FirstOrDefaultAsync(u => u.Id == authorId);
 
-            // 5. Map sang DTO
+            // 7. Map sang DTO (giữ nguyên)
             return new CommentDto
             {
                 Id = newComment.Id,
                 Content = newComment.Content,
                 CreatedDate = newComment.CreatedDate,
-                AuthorId = author.Id,
-                AuthorFullName = author.FullName,
-                AuthorHeadline = author.Seeker?.Headline ?? "Thành viên"
+                AuthorId = commentAuthor.Id,
+                AuthorFullName = commentAuthor.FullName,
+                AuthorHeadline = commentAuthor.Seeker?.Headline ?? "Thành viên"
             };
         }
 
-        public async Task<IEnumerable<CommentDto>> GetCommentsAsync(int postId)
+        // (Nhớ thêm using System.Linq; và System.Collections.Generic; nếu chưa có)
+
+        public async Task<IEnumerable<CommentDto>> GetCommentsAsync(int postId, int? currentUserId)
         {
+            // 1. Lấy các comment (giống như cũ)
             var comments = await _context.SocialPostComments
-                .Where(c => c.PostId == postId) // Lấy comment của bài post
-                .Include(c => c.Author)         // Lấy thông tin người viết
-                    .ThenInclude(author => author.Seeker) // Lấy luôn Seeker (để lấy Headline)
-                .OrderBy(c => c.CreatedDate) // Sắp xếp cũ -> mới
+                .Where(c => c.PostId == postId)
+                .Include(c => c.Author)
+                    .ThenInclude(author => author.Seeker)
+                .OrderBy(c => c.CreatedDate)
                 .ToListAsync();
 
-            // Map danh sách
-            return comments.Select(c => new CommentDto
+            if (!comments.Any())
             {
-                Id = c.Id,
-                Content = c.Content,
-                CreatedDate = c.CreatedDate,
-                AuthorId = c.Author.Id,
-                AuthorFullName = c.Author.FullName,
-                AuthorHeadline = c.Author.Seeker?.Headline ?? "Thành viên"
-            });
+                return new List<CommentDto>(); // Trả về list rỗng
+            }
+
+            // Lấy danh sách ID của các comment này
+            var commentIds = comments.Select(c => c.Id).ToList();
+
+            // 2. Lấy SỐ LƯỢNG CẢM XÚC cho các comment (Chỉ 1 query)
+            var reactionCountsList = await _context.SocialCommentReactions
+                .Where(r => commentIds.Contains(r.CommentId))
+                .GroupBy(r => new { r.CommentId, r.ReactionType })
+                .Select(g => new
+                {
+                    CommentId = g.Key.CommentId,
+                    ReactionType = g.Key.ReactionType,
+                    Count = g.Count()
+                })
+                .ToListAsync();
+
+            // 3. Lấy CẢM XÚC CỦA TÔI (MyReaction) (Chỉ 1 query, nếu đã đăng nhập)
+            var myReactions = new Dictionary<int, string>();
+            if (currentUserId.HasValue)
+            {
+                myReactions = await _context.SocialCommentReactions
+                    .Where(r => commentIds.Contains(r.CommentId) && r.UserId == currentUserId.Value)
+                    .ToDictionaryAsync(x => x.CommentId, x => x.ReactionType);
+            }
+
+            // 4. "Ghép" tất cả dữ liệu lại
+            var resultDtos = new List<CommentDto>();
+            foreach (var comment in comments)
+            {
+                // Lấy ReactionCounts của comment này
+                var commentReactionCounts = reactionCountsList
+                    .Where(r => r.CommentId == comment.Id)
+                    .ToDictionary(r => r.ReactionType, r => r.Count);
+
+                resultDtos.Add(new CommentDto
+                {
+                    Id = comment.Id,
+                    Content = comment.Content,
+                    CreatedDate = comment.CreatedDate,
+                    AuthorId = comment.Author.Id,
+                    AuthorFullName = comment.Author.FullName,
+                    AuthorHeadline = comment.Author.Seeker?.Headline ?? "Thành viên",
+
+                    // --- Gán dữ liệu mới ---
+                    // 1. Gán dictionary đếm cảm xúc
+                    ReactionCounts = commentReactionCounts,
+
+                    // 2. Gán cảm xúc của tôi (nếu không có thì = null)
+                    MyReaction = myReactions.ContainsKey(comment.Id) ? myReactions[comment.Id] : null
+                });
+            }
+
+            return resultDtos;
         }
 
         // ... (Trong tệp Services/SocialPostService.cs)
@@ -200,29 +280,37 @@ namespace Freelancer.Services
         // --- THÊM HÀM MỚI VÀO CUỐI TỆP ---
         public async Task<bool> ReactToPostAsync(int postId, int userId, string reactionType)
         {
-            // 1. Tìm xem user đã reaction bài này chưa
+            // (PHẦN MỚI) 1. Lấy bài post để biết chủ nhân
+            var post = await _context.SocialPosts.FindAsync(postId);
+            if (post == null) return false; // Không tìm thấy post
+
+            var postOwnerId = post.AuthorId;
+
+            // (PHẦN CŨ) 2. Tìm reaction
             var existingReaction = await _context.SocialPostReactions
                 .FirstOrDefaultAsync(r => r.PostId == postId && r.UserId == userId);
 
+            bool sendNotification = false; // Cờ (flag) để quyết định
+
             if (existingReaction != null)
             {
-                // --- ĐÃ TỪNG REACTION ---
                 if (existingReaction.ReactionType == reactionType)
                 {
-                    // Bấm "Like" khi đang "Like" -> Gỡ Reaction (Un-react)
+                    // Bấm "Like" khi đang "Like" -> Gỡ Reaction (KHÔNG thông báo)
                     _context.SocialPostReactions.Remove(existingReaction);
                 }
                 else
                 {
-                    // Bấm "Love" khi đang "Like" -> Đổi Reaction
+                    // Bấm "Love" khi đang "Like" -> Đổi Reaction (CÓ thông báo)
                     existingReaction.ReactionType = reactionType;
                     _context.SocialPostReactions.Update(existingReaction);
+                    sendNotification = true;
                 }
             }
             else
             {
                 // --- CHƯA TỪNG REACTION ---
-                // Tạo Reaction mới
+                // Tạo Reaction mới (CÓ thông báo)
                 var newReaction = new SocialPostReaction
                 {
                     PostId = postId,
@@ -230,10 +318,39 @@ namespace Freelancer.Services
                     ReactionType = reactionType
                 };
                 _context.SocialPostReactions.Add(newReaction);
+                sendNotification = true;
             }
 
-            // Lưu tất cả thay đổi vào DB
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(); // <-- Đã lưu
+
+            // --- (PHẦN NÂNG CẤP) TẠO THÔNG BÁO (NẾU LÀ BẠN BÈ) ---
+            // (Chỉ chạy nếu sendNotification = true VÀ không phải tự "like" bài mình)
+            if (sendNotification && postOwnerId != userId)
+            {
+                try
+                {
+                    // KIỂM TRA BẠN BÈ
+                    bool areFriends = await _context.Friendships
+                        .AnyAsync(f =>
+                            (f.RequesterId == postOwnerId && f.ReceiverId == userId && f.Status == FriendshipStatus.Accepted) ||
+                            (f.RequesterId == userId && f.ReceiverId == postOwnerId && f.Status == FriendshipStatus.Accepted)
+                        );
+
+                    if (areFriends)
+                    {
+                        var actor = await _context.Users.FindAsync(userId); // Lấy tên người "Like"
+                        await _notificationService.CreateNotificationAsync(
+                            recipientId: postOwnerId, // Gửi cho chủ post
+                            actorId: userId,          // Người "Like"
+                            message: $"đã thả cảm xúc ({reactionType}) cho bài viết của bạn.",
+                            linkUrl: $"/posts/{post.Id}" // Link tới bài post
+                        );
+                    }
+                }
+                catch (System.Exception) { /* Lỗi gửi thông báo */ }
+            }
+            // --- (KẾT THÚC NÂNG CẤP) ---
+
             return true;
         }
 

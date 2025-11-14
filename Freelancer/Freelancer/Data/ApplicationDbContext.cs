@@ -22,6 +22,17 @@ namespace Freelancer.Data
         public DbSet<SocialPostReaction> SocialPostReactions { get; set; }
 
         public DbSet<SocialCommentReaction> SocialCommentReactions { get; set; }
+
+        public DbSet<JobApplication> JobApplications { get; set; }
+
+        public DbSet<Conversation> Conversations { get; set; }
+        public DbSet<ConversationUser> ConversationUsers { get; set; }
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<Friendship> Friendships { get; set; }
+
+        public DbSet<PaymentTransaction> PaymentTransactions { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
+       
         // (Nếu bạn có Model "Skill", bạn cũng thêm DbSet ở đây)
 
 
@@ -102,7 +113,109 @@ namespace Freelancer.Data
                     .HasForeignKey(reaction => reaction.CommentId)
                     .OnDelete(DeleteBehavior.Cascade); // Xóa Comment thì xóa luôn Reaction
             });
+
+            // ... (bên trong OnModelCreating)
+            // ... (Giữ nguyên các cấu hình cũ)
+
+            // --- THÊM CẤU HÌNH CHO JOB APPLICATION ---
+            modelBuilder.Entity<JobApplication>(entity =>
+            {
+                // Liên kết Application -> Project
+                entity.HasOne(app => app.Project)
+                    .WithMany() // Một Project có nhiều Application
+                    .HasForeignKey(app => app.ProjectId)
+                    .OnDelete(DeleteBehavior.Cascade); // Xóa Project thì xóa Application
+
+                // Liên kết Application -> Seeker (User)
+                entity.HasOne(app => app.Seeker)
+                    .WithMany() // Một Seeker có nhiều Application
+                    .HasForeignKey(app => app.SeekerId)
+                    .OnDelete(DeleteBehavior.Restrict); // Không cho xóa Seeker nếu họ đã ứng tuyển
+            });
+
+
+            // --- CẤU HÌNH BẢNG NỐI CONVERSATION-USER (N-N) ---
+            modelBuilder.Entity<ConversationUser>(entity =>
+            {
+                // Tạo khóa chính phức hợp
+                entity.HasKey(cu => new { cu.UserId, cu.ConversationId });
+
+                // Liên kết tới User
+                entity.HasOne(cu => cu.User)
+                    .WithMany() // Một User có nhiều ConversationUser
+                    .HasForeignKey(cu => cu.UserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                // Liên kết tới Conversation
+                entity.HasOne(cu => cu.Conversation)
+                    .WithMany(c => c.Participants) // Một Conversation có nhiều Participant
+                    .HasForeignKey(cu => cu.ConversationId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // --- CẤU HÌNH MESSAGE ---
+            modelBuilder.Entity<Message>(entity =>
+            {
+                // Liên kết Message -> Sender (User)
+                entity.HasOne(m => m.Sender)
+                    .WithMany() // Một User gửi nhiều Message
+                    .HasForeignKey(m => m.SenderId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                // Liên kết Message -> Conversation
+                entity.HasOne(m => m.Conversation)
+                    .WithMany(c => c.Messages) // Một Conversation có nhiều Message
+                    .HasForeignKey(m => m.ConversationId)
+                    .OnDelete(DeleteBehavior.Cascade); // Xóa Conversation thì xóa Message
+            });
+            // --- CẤU HÌNH PAYMENT TRANSACTION ---
+            modelBuilder.Entity<PaymentTransaction>(entity =>
+            {
+                // Liên kết Transaction -> Employer
+                entity.HasOne(pt => pt.Employer)
+                    .WithMany() // Một Employer có nhiều giao dịch
+                    .HasForeignKey(pt => pt.EmployerId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
+
+            // --- THÊM CẤU HÌNH MỚI CHO FRIENDSHIP ---
+            modelBuilder.Entity<Friendship>(entity =>
+            {
+                // Quan hệ với Requester
+                entity.HasOne(f => f.Requester)
+                    .WithMany()
+                    .HasForeignKey(f => f.RequesterId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                // Quan hệ với Receiver
+                entity.HasOne(f => f.Receiver)
+                    .WithMany()
+                    .HasForeignKey(f => f.ReceiverId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                // Đảm bảo cặp (Requester, Receiver) là duy nhất
+                entity.HasIndex(f => new { f.RequesterId, f.ReceiverId }).IsUnique();
+            });
+
+            modelBuilder.Entity<Notification>(entity =>
+            {
+                // Liên kết Thông báo -> Người Nhận (User)
+                entity.HasOne(n => n.Recipient)
+                    .WithMany()
+                    .HasForeignKey(n => n.RecipientId)
+                    .OnDelete(DeleteBehavior.Cascade); // Xóa User -> Xóa luôn Thông báo
+
+                // Liên kết Thông báo -> Người Gây ra (Actor)
+                entity.HasOne(n => n.Actor)
+                    .WithMany()
+                    .HasForeignKey(n => n.ActorId)
+                    // Đặt là Restrict hoặc SetNull (nếu ActorId là nullable int?)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
         }
     }
-    
 }
+    
+    

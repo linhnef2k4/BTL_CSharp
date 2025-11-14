@@ -71,7 +71,11 @@ namespace Freelancer.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetCommentsForPost(int postId)
         {
-            var comments = await _socialPostService.GetCommentsAsync(postId);
+            // Lấy ID (nếu có)
+            var currentUserId = GetUserIdFromToken_Optional();
+
+            // Truyền ID vào Service
+            var comments = await _socialPostService.GetCommentsAsync(postId, currentUserId);
             return Ok(comments);
         }
 

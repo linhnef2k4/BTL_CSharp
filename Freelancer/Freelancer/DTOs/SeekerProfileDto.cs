@@ -7,5 +7,11 @@
         public string Rank { get; set; }
         public string ResumeUrl { get; set; }
         public int YearsOfExperience { get; set; }
-    }
+
+        public string? Location { get; set; }
+       
+        public string? Level{ get; set; }
+        public string? Skills{get; set; }
+
+        }
 }

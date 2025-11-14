@@ -42,7 +42,7 @@ namespace Freelancer.Data
                     PasswordHash = "123456", // Cảnh báo: Chỉ dùng cho test!
                     PhoneNumber = $"090000000{i}",
                     Gender = "Male",
-                    Address = $"{i} Đường ABC, Quận 1, TPHCM",
+                    
                     DateOfBirth = new DateTime(1990 + i, 1, 1),
                 };
 
@@ -70,7 +70,7 @@ namespace Freelancer.Data
                     PasswordHash = "123456", // Cảnh báo: Chỉ dùng cho test!
                     PhoneNumber = $"091111111{i}",
                     Gender = "Female",
-                    Address = $"{i} Đường XYZ, Quận 7, TPHCM",
+                   
                     DateOfBirth = new DateTime(1985 + i, 1, 1),
                 };
 

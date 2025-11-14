@@ -21,6 +21,13 @@ namespace Freelancer.Models
         // 4. CV (link tới file PDF hoặc docx)
         public string? ResumeUrl { get; set; }
 
+        // --- THÊM 3 TRƯỜNG MỚI ĐỂ LỌC ---
+        public string? Location { get; set; } // "Hà Nội", "Hồ Chí Minh"
+        public string? Level { get; set; } // "Fresher", "Junior", "Senior"
+        public string? Skills { get; set; } // Sẽ lưu dạng: "React,Nodejs,SQL"
+
+        public string? AvatarUrl { get; set; }
+
         // --- Thuộc tính khác đã có ---
         public int YearsOfExperience { get; set; } = 0;
         public virtual User User { get; set; }

@@ -19,10 +19,10 @@ namespace Freelancer.Controllers
 
         // --- API MỚI: LẤY DANH SÁCH JOB CÔNG KHAI (TRANG TÌM VIỆC) ---
         [HttpGet] // Route: GET /api/projects
-        [AllowAnonymous] // <-- QUAN TRỌNG: Ai cũng gọi được
-        public async Task<IActionResult> GetApprovedProjects()
+        [AllowAnonymous]
+        public async Task<IActionResult> GetApprovedProjects([FromQuery] JobSearchQueryDto query)
         {
-            var projects = await _projectService.GetApprovedProjectsAsync();
+            var projects = await _projectService.GetApprovedProjectsAsync(query);
             return Ok(projects);
         }
 
@@ -83,6 +83,41 @@ namespace Freelancer.Controllers
             var employerId = GetUserIdFromToken(); // Lấy ID của Employer đang đăng nhập
             var projects = await _projectService.GetMyPendingProjectsAsync(employerId);
             return Ok(projects);
+        }
+
+
+        // --- API MỚI: SEEKER ỨNG TUYỂN VÀO JOB ---
+        [HttpPost("{id}/apply")] // Route: POST /api/projects/5/apply
+        [Authorize(Roles = "Seeker")] // <-- QUAN TRỌNG: Chỉ Seeker (hoặc cả Admin)
+        public async Task<IActionResult> ApplyToJob(int id, ApplyToJobDto request)
+        {
+            var seekerId = GetUserIdFromToken(); // Lấy ID của Seeker đang đăng nhập
+            var errorMessage = await _projectService.ApplyToJobAsync(id, seekerId, request);
+
+            if (errorMessage != null)
+            {
+                // Nếu có lỗi (đã ứng tuyển, job không tồn tại...)
+                return BadRequest(errorMessage);
+            }
+
+            return Ok("Ứng tuyển thành công!");
+        }
+
+        // --- API MỚI: EMPLOYER XEM DANH SÁCH CV ĐÃ NỘP ---
+        [HttpGet("{id}/applications")] // Route: GET /api/projects/5/applications
+        [Authorize(Roles = "Employer")] // Chỉ Employer
+        public async Task<IActionResult> GetJobApplications(int id)
+        {
+            var employerId = GetUserIdFromToken();
+            var applications = await _projectService.GetJobApplicationsAsync(id, employerId);
+
+            if (applications == null)
+            {
+                // Lý do: 1. Job không tồn tại. 2. Job này không phải của bạn.
+                return Forbid("Bạn không có quyền xem ứng viên của job này.");
+            }
+
+            return Ok(applications);
         }
     }
 }

@@ -46,6 +46,8 @@ namespace Freelancer.Models
         [Required]
         public EmployerStatus Status { get; set; } = EmployerStatus.Pending; // Mặc định là chờ duyệt
 
+        public string? CompanyLogoUrl { get; set; }
+
         public virtual User User { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text; // <--- Import
 using Microsoft.OpenApi.Models;
+using Freelancer.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,14 @@ builder.Services.AddScoped<IProfileService, ProfileService>();
 builder.Services.AddScoped<ISocialPostService, SocialPostService>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<ISeekerService, SeekerService>();
+builder.Services.AddScoped<IApplicationService, ApplicationService>();
+builder.Services.AddScoped<IConversationService, ConversationService>();
+builder.Services.AddScoped<IFileService, FileService>();
+builder.Services.AddScoped<IFriendshipService, FriendshipService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
+
+
 
 // (Thêm các service khác của bạn ở đây)
 // builder.Services.AddScoped<IUserService, UserService>();
@@ -54,7 +63,12 @@ builder.Services.AddControllers();
 
 // Thêm Swagger (để tạo giao diện test API)
 builder.Services.AddEndpointsApiExplorer();
+
+// --- THÊM DÒNG NÀY (ĐỂ BẬT SIGNALR) ---
+builder.Services.AddSignalR();
 // --- THAY THẾ DÒNG "builder.Services.AddSwaggerGen();" BẰNG CÁI NÀY ---
+// (Chúng ta cũng cần HttpContextAccessor để lấy domain)
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddSwaggerGen(options =>
 {
     // 1. Định nghĩa "Security Definition" (Cách Swagger hiểu về Token)
@@ -125,11 +139,17 @@ if (app.Environment.IsDevelopment())
 
 // Tự động chuyển hướng sang HTTPS
 app.UseHttpsRedirection();
+// Cho phép truy cập các tệp trong wwwroot (như logo, avatar, cv)
+app.UseStaticFiles();
 app.UseAuthentication(); // Bật xác thực
 app.UseAuthorization(); // Bật phân quyền
 
 // (Bạn có thể thêm UseAuthentication() ở đây)
 app.UseAuthorization();
+// --- THÊM DÒNG NÀY (ĐỂ ĐĂNG KÝ HUB) ---
+// (Nó sẽ tạo ra 1 endpoint /chathub)
+app.MapHub<ChatHub>("/chathub");
+// --- KẾT THÚC ---
 
 // Map các request tới đúng Controller
 app.MapControllers();
