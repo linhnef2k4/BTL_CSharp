@@ -1,44 +1,45 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 // --- LUỒNG 1 & 2 (SEEKER & AUTH) ---
-import MainLayout from './layouts/MainLayout';
-import AuthLayout from './layouts/AuthLayout'; 
-import Home from './pages/core/Home';
-import Login from './pages/auth/Login'; 
-import Register from './pages/auth/Register'; 
-import ForgotPassword from './pages/auth/ForgotPassword'; 
-import JobListings from './components/jobs/JobListings';
-import JobDetail from './components/jobs/JobDetail';
-import MessagesPage from './pages/messages/MessagesPage';
-import VipPackage from './pages/core/VipPackage';
-import CVBuilder from './pages/cv/CVBuilder';
-const Profile = () => <div className="p-8 text-4xl">Trang Thông tin cá nhân</div>;
+import MainLayout from './layouts/MainLayout.jsx';
+import AuthLayout from './layouts/AuthLayout.jsx'; 
+import Home from './pages/core/Home.jsx';
+import Login from './pages/auth/Login.jsx'; 
+import Register from './pages/auth/Register.jsx'; 
+import ForgotPassword from './pages/auth/ForgotPassword.jsx'; 
+import JobListings from './components/jobs/JobListings.jsx';
+import JobDetail from './components/jobs/JobDetail.jsx';
+import MessagesPage from './pages/messages/MessagesPage.jsx';
+import VipPackage from './pages/core/VipPackage.jsx';
+import CVBuilder from './pages/cv/CVBuilder.jsx';
+// <<< 1. IMPORT COMPONENT THẬT TỪ BƯỚC 6
+import Profile from './pages/core/Profile.jsx'; 
+// const Profile = () => <...>; // (Xóa dòng placeholder này nếu có)
 const ChangePassword = () => <div className="p-8 text-4xl">Trang Đổi Mật Khẩu</div>;
 
-// --- LUỒNG 3 & 4 (EMPLOYER) ---
-import EmployerLayout from './layouts/EmployerLayout';
-import EmployerRegister from './pages/employer/EmployerRegister'; 
-import EmployerDashboard from './pages/employer/EmployerDashboard';
-import PostJob from './pages/employer/PostJob';
-import ManageJobs from './pages/employer/ManageJobs';
-import FindCandidates from './pages/employer/FindCandidates';
-import EmployerMessagesPage from './pages/employer/EmployerMessagesPage';
-import EmployerVipPage from './pages/employer/EmployerVipPage';
-import SupportPage from './pages/employer/SupportPage';
-import SettingsPage from './pages/employer/SettingsPage';
+// --- CÁC LUỒNG KHÁC (giữ nguyên) ---
+import EmployerLayout from './layouts/EmployerLayout.jsx';
+import EmployerRegister from './pages/employer/EmployerRegister.jsx'; 
+import EmployerDashboard from './pages/employer/EmployerDashboard.jsx';
+import PostJob from './pages/employer/PostJob.jsx';
+import ManageJobs from './pages/employer/ManageJobs.jsx';
+import FindCandidates from './pages/employer/FindCandidates.jsx';
+import EmployerMessagesPage from './pages/employer/EmployerMessagesPage.jsx';
+import EmployerVipPage from './pages/employer/EmployerVipPage.jsx';
+import SupportPage from './pages/employer/SupportPage.jsx';
+import SettingsPage from './pages/employer/SettingsPage.jsx';
 
-// --- "LUỒNG" (FLOW) "5" (FIFTH): "ADMIN" (ADMIN) ---
-import AdminLayout from './layouts/AdminLayout'; 
-import AdminDashboard from './pages/admin/AdminDashboard'; 
-import AdminUsersPage from './pages/admin/AdminUsersPage';
-import AdminModerateEmployersPage from './pages/admin/AdminModerateEmployersPage';
-import AdminModerateJobsPage from './pages/admin/AdminModerateJobsPage';
-import AdminModeratePostsPage from './pages/admin/AdminModeratePostsPage';
-import AdminSupportPage from './pages/admin/AdminSupportPage';
-// --- "HÀNG XỊN" (REAL) MỚI ĐÃ ĐƯỢC IMPORT ---
-import AdminPaymentsPage from './pages/admin/AdminPaymentsPage'; // <-- 1. IMPORT HÀNG "XỊN"
-import AdminAnalyticsPage from './pages/admin/AdminAnalyticsPage';
-import AdminSystemPage from './pages/admin/AdminSystemPage';
+import AdminLayout from './layouts/AdminLayout.jsx'; 
+import AdminDashboard from './pages/admin/AdminDashboard.jsx'; 
+import AdminUsersPage from './pages/admin/AdminUsersPage.jsx';
+import AdminModerateEmployersPage from './pages/admin/AdminModerateEmployersPage.jsx';
+import AdminModerateJobsPage from './pages/admin/AdminModerateJobsPage.jsx';
+import AdminModeratePostsPage from './pages/admin/AdminModeratePostsPage.jsx';
+import AdminSupportPage from './pages/admin/AdminSupportPage.jsx';
+import AdminPaymentsPage from './pages/admin/AdminPaymentsPage.jsx';
+import AdminAnalyticsPage from './pages/admin/AdminAnalyticsPage.jsx';
+import AdminSystemPage from './pages/admin/AdminSystemPage.jsx';
+
 function App() {
   return (
     <Routes>
@@ -51,7 +52,11 @@ function App() {
         <Route path="/messages" element={<MessagesPage />} /> 
         <Route path="/cv-builder" element={<CVBuilder />} />
         <Route path="/vip-package" element={<VipPackage />} />
-        <Route path="/profile" element={<Profile />} />
+        
+        {/* <<< 2. ĐÃ CẬP NHẬT ROUTE NÀY (giữ nguyên) >>> */}
+        {/* Route này giờ sẽ render component thật từ Bước 6 */}
+        <Route path="/profile" element={<Profile />} /> 
+        
         <Route path="/change-password" element={<ChangePassword />} />
       </Route>
 
@@ -61,7 +66,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
       </Route>
-
+      
       {/* === LUỒNG 3: EMPLOYER (Dùng EmployerLayout) === */}
       <Route path="/employer" element={<EmployerLayout />}>
         <Route index element={<Navigate to="dashboard" replace />} />
@@ -87,10 +92,7 @@ function App() {
         <Route path="moderate-jobs" element={<AdminModerateJobsPage />} /> 
         <Route path="moderate-posts" element={<AdminModeratePostsPage />} /> 
         <Route path="support" element={<AdminSupportPage />} /> 
-        
-        {/* 3. CHỖ NÀY (THIS) "GIỜ" (NOW) "ĐÃ" (IS) "LÀ" (USING) "HÀNG" (THE) "XỊN" (REAL) "100%" */}
         <Route path="payments" element={<AdminPaymentsPage />} /> 
-        
         <Route path="analytics" element={<AdminAnalyticsPage />} />
         <Route path="system" element={<AdminSystemPage />} />
       </Route>

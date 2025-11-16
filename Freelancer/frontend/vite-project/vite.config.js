@@ -9,4 +9,13 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"), // 👈 alias gốc cho thư mục src
     },
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://localhost:7051',
+        secure: false,
+        changeOrigin: true,
+      },
+    },
+  },
 });

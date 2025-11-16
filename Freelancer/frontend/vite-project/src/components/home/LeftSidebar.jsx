@@ -1,23 +1,54 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Bookmark, Users, Trash2 } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext'; // <<< 1. IMPORT USEAUTH
 
-const LeftSidebar = ({ user }) => {
+// Hàm tạo avatar (giống như trong NavBar)
+const getAvatarUrl = (user) => {
+  if (user?.seeker?.avatarUrl) {
+    return user.seeker.avatarUrl;
+  }
+  const name = user?.fullName?.replace(/\s/g, '+') || '?';
+  return `https://ui-avatars.com/api/?name=${name}&background=random&color=fff`;
+}
+
+const LeftSidebar = () => {
+  // <<< 2. LẤY DATA TỪ CONTEXT
+  const { user, isLoading } = useAuth();
+
+  // <<< 3. XỬ LÝ LOADING VÀ CHƯA LOGIN
+  // Nếu đang tải hoặc chưa đăng nhập, không hiển thị gì
+  if (isLoading || !user) {
+    // Hoặc bạn có thể trả về 1 skeleton loading
+    return (
+      <div className="sticky top-20 space-y-4">
+        <div className="overflow-hidden rounded-2xl bg-white shadow-md">
+          <div className="h-24 w-full bg-gray-200 animate-pulse"></div>
+          <div className="relative flex justify-center -mt-10">
+            <div className="h-20 w-20 rounded-full border-4 border-white bg-gray-300 animate-pulse"></div>
+          </div>
+          <div className="mt-4 px-4 pb-4 text-center">
+            <div className="h-6 w-3/4 mx-auto bg-gray-300 rounded animate-pulse mb-2"></div>
+            <div className="h-4 w-1/2 mx-auto bg-gray-300 rounded animate-pulse"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // <<< 4. KHI ĐÃ CÓ DATA USER
   return (
     <div className="sticky top-20 space-y-4">
       
-      {/* 🔹 CARD THÔNG TIN USER */}
+      {/* 🔹 CARD THÔNG TIN USER (ĐÃ CẬP NHẬT) */}
       <div
         className="overflow-hidden rounded-2xl bg-white shadow-md
                    transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-1"
       >
-        {/* Cover Image hiện đại */}
+        {/* Cover Image (Giữ nguyên) */}
         <div className="relative h-24 w-full overflow-hidden">
           <img
-            src={
-              user.cover ||
-              'https://images.unsplash.com/photo-1503264116251-35a269479413?auto=format&fit=crop&w=1200&q=80'
-            }
+            src={'https://images.unsplash.com/photo-1503264116251-35a269479413?auto=format&fit=crop&w=1200&q=80'}
             alt="cover"
             className="h-full w-full object-cover"
           />
@@ -25,31 +56,36 @@ const LeftSidebar = ({ user }) => {
           <div className="absolute right-0 top-0 h-24 w-24 rounded-bl-full bg-blue-400/20 blur-2xl"></div>
         </div>
 
-        {/* Avatar nổi bật */}
+        {/* Avatar (Đã cập nhật) */}
         <div className="relative flex justify-center -mt-10">
           <div className="relative">
             <img
-              src={user.avatar}
+              src={getAvatarUrl(user)} // <<< Dùng data thật
               alt="Avatar"
               className="h-20 w-20 rounded-full border-4 border-white shadow-lg object-cover"
             />
-            <div className="absolute inset-0 rounded-full ring-2 ring-blue-500/30 animate-pulse"></div>
+            {/* Vòng pulse chỉ hiển thị nếu là VIP */}
+            {user.seeker?.isVip && (
+              <div className="absolute inset-0 rounded-full ring-2 ring-yellow-500/30 animate-pulse"></div>
+            )}
           </div>
         </div>
 
-        {/* Thông tin user */}
+        {/* Thông tin user (Đã cập nhật) */}
         <div className="mt-4 px-4 pb-4 text-center">
           <h3 className="text-lg font-semibold text-gray-800 cursor-pointer hover:text-blue-600 transition-colors">
-            {user.name}
+            {user.fullName} {/* <<< Dùng data thật */}
           </h3>
-          <p className="text-sm text-gray-500">{user.title}</p>
+          <p className="text-sm text-gray-500">
+            {user.seeker?.headline || '(Chưa cập nhật tiêu đề)'} {/* <<< Dùng data thật */}
+          </p>
 
-          {/* 🌟 Line chia sang trọng dưới phần title */}
           <div className="mx-auto my-3 w-16 border-b-2 border-blue-500/40 rounded-full"></div>
 
-          {/* Trạng thái VIP */}
+          {/* Trạng thái VIP (Đã cập nhật logic) */}
           <div className="mt-3 flex justify-center">
-            {user.status === 'VIP' ? (
+            {/* <<< Dùng data thật (user.seeker.isVip) */}
+            {user.seeker?.isVip ? ( 
               <span className="rounded-full bg-yellow-100 px-3 py-1 text-xs font-semibold text-yellow-800 shadow-sm">
                 ⭐ VIP Member
               </span>
@@ -60,25 +96,11 @@ const LeftSidebar = ({ user }) => {
             )}
           </div>
 
-          {/* Connections */}
-          <div className="mt-3 flex items-center justify-center gap-2 text-sm text-gray-600">
-            <Users className="h-4 w-4 text-blue-500" />
-            <span>Kết nối:</span>
-            <span className="font-semibold text-blue-600">{user.connections}</span>
-          </div>
-
-          {/* Ứng viên tiềm năng */}
-          {user.isPotential && (
-            <div className="mt-3">
-              <span className="inline-block rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700 shadow-sm">
-                🌱 Ứng viên tiềm năng
-              </span>
-            </div>
-          )}
+          {/* <<< Đã xóa phần Connections và Ứng viên tiềm năng */}
         </div>
       </div>
 
-      {/* 🔹 CARD NAVIGATION */}
+      {/* 🔹 CARD NAVIGATION (Giữ nguyên) */}
       <div
         className="rounded-2xl bg-white p-4 shadow-md
                    transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-1"

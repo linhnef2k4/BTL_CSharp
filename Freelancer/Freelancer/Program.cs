@@ -12,6 +12,21 @@ var builder = WebApplication.CreateBuilder(args);
 
 // --- 1. Cấu hình Services (Dependency Injection) ---
 
+// <<< THÊM VÀO: ĐỊNH NGHĨA CHÍNH SÁCH CORS ---
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins("http://localhost:5173") // Cho phép origin của Vite
+                                .AllowAnyHeader()
+                                .AllowAnyMethod()
+                                .AllowCredentials(); // Cần thiết nếu dùng SignalR hoặc cookie
+                      });
+});
+// --- KẾT THÚC THÊM VÀO ---
+
 // Lấy chuỗi kết nối từ appsettings.json
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -141,6 +156,12 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 // Cho phép truy cập các tệp trong wwwroot (như logo, avatar, cv)
 app.UseStaticFiles();
+
+// <<< THÊM VÀO: SỬ DỤNG CHÍNH SÁCH CORS ---
+// (Phải đặt trước UseAuthentication và UseAuthorization)
+app.UseCors(MyAllowSpecificOrigins);
+// --- KẾT THÚC THÊM VÀO ---
+
 app.UseAuthentication(); // Bật xác thực
 app.UseAuthorization(); // Bật phân quyền
 

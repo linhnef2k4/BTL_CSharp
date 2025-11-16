@@ -16,16 +16,9 @@ import {
   ChevronDown,
   Lock
 } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext'; // <<< 1. IMPORT USEAUTH
 
-// --- Dữ liệu giả để test ---
-const isAuthenticated = true;
-const user = { 
-  name: 'Hồng Trâm', 
-  avatar: 'https://ui-avatars.com/api/?name=Hong+Tram&background=random',
-  role: 'Seeker'
-};
-
-// --- Component NavItem ---
+// --- Component NavItem (Giữ nguyên) ---
 const NavItem = ({ to, icon, label }) => {
   return (
     <NavLink
@@ -44,7 +37,6 @@ const NavItem = ({ to, icon, label }) => {
         whileTap={{ scale: 0.95 }}
         className="relative flex flex-col items-center justify-center px-3 py-1"
       >
-        {/* Nền hover mờ nhẹ phía sau icon */}
         <span className="absolute inset-0 rounded-full bg-blue-100/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
         <div className="z-10">{icon}</div>
         <span className="text-xs font-medium mt-1 z-10">{label}</span>
@@ -53,8 +45,11 @@ const NavItem = ({ to, icon, label }) => {
   );
 };
 
-// --- Component chính ---
+// --- Component chính (ĐÃ CẬP NHẬT) ---
 const NavBar = () => {
+  // <<< 2. LẤY DATA TỪ CONTEXT
+  const { isAuthenticated, user, logout, isLoading } = useAuth();
+  
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [isNotifyOpen, setIsNotifyOpen] = useState(false); 
 
@@ -73,6 +68,30 @@ const NavBar = () => {
     setIsUserDropdownOpen(false); 
   };
 
+  // <<< 3. HÀM ĐĂNG XUẤT MỚI
+  const handleLogout = () => {
+    logout(); // Gọi hàm logout từ context
+    setIsUserDropdownOpen(false); // Đóng dropdown
+  };
+  
+  // <<< 4. TẠO AVATAR TỪ TÊN
+  const getAvatarUrl = (name) => {
+    if (!name) return 'https://ui-avatars.com/api/?name=?&background=random';
+    const Fname = name.replace(/\s/g, '+'); 
+    return `https://ui-avatars.com/api/?name=${Fname}&background=random&color=fff`;
+  }
+
+  // <<< 5. XỬ LÝ TRẠNG THÁI LOADING
+  if (isLoading) {
+    return (
+       <nav className="sticky top-0 z-50 flex h-16 items-center justify-between 
+                     px-4 backdrop-blur-lg bg-gradient-to-r from-white/85 via-blue-50/80 to-white/85 
+                     shadow-lg border-b border-blue-100">
+          {/* Loading... */}
+       </nav>
+    );
+  }
+
   return (
     <motion.nav 
       initial={{ y: -50, opacity: 0 }}
@@ -82,7 +101,7 @@ const NavBar = () => {
                  px-4 backdrop-blur-lg bg-gradient-to-r from-white/85 via-blue-50/80 to-white/85 
                  shadow-lg border-b border-blue-100"
     >
-      {/* --- KHU VỰC 1: Logo + Search --- */}
+      {/* --- KHU VỰC 1: Logo + Search (Giữ nguyên) --- */}
       <div className="flex items-center space-x-3">
         <Link to="/" className="text-3xl font-bold text-blue-600 hover:scale-105 transition-transform">
           J<span className="text-gray-800">C</span>
@@ -93,13 +112,13 @@ const NavBar = () => {
             type="text"
             placeholder="Tìm kiếm công việc, người dùng..."
             className="h-10 w-72 rounded-full bg-gray-100/70 py-2 pl-10 pr-4 
-                       focus:outline-none focus:ring-2 focus:ring-blue-400 
-                       hover:bg-gray-100 transition-all duration-300"
+                     focus:outline-none focus:ring-2 focus:ring-blue-400 
+                     hover:bg-gray-100 transition-all duration-300"
           />
         </div>
       </div>
 
-      {/* --- KHU VỰC 2: Navigation Center --- */}
+      {/* --- KHU VỰC 2: Navigation Center (Giữ nguyên) --- */}
       <div className="flex h-full items-center justify-center space-x-1">
         <NavItem to="/" icon={<Home size={22} />} label="Trang Chủ" />
         <NavItem to="/jobs" icon={<Briefcase size={22} />} label="Tìm Việc" />
@@ -108,11 +127,12 @@ const NavBar = () => {
         <NavItem to="/vip-package" icon={<Star size={22} />} label="Gói VIP" />
       </div>
 
-      {/* --- KHU VỰC 3: Notify & User --- */}
+      {/* --- KHU VỰC 3: Notify & User (ĐÃ CẬP NHẬT) --- */}
       <div className="flex items-center space-x-3">
         {isAuthenticated ? (
-          <>
-            {/* --- Bell Notification --- */}
+          // <<< SỬA LỖI: Dùng React.Fragment thay vì <>
+          <React.Fragment>
+            {/* --- Bell Notification (Giữ nguyên) --- */}
             <div className="relative">
               <motion.button
                 onClick={toggleNotifyDropdown}
@@ -146,7 +166,7 @@ const NavBar = () => {
               </AnimatePresence>
             </div>
 
-            {/* --- User Dropdown --- */}
+            {/* --- User Dropdown (CẬP NHẬT DATA) --- */}
             <div className="relative">
               <motion.button
                 onClick={toggleUserDropdown}
@@ -155,12 +175,14 @@ const NavBar = () => {
                            hover:bg-gray-100/70 transition-all duration-300"
               >
                 <motion.img
-                  src={user.avatar}
+                  src={getAvatarUrl(user.fullName)}
                   alt="Avatar"
                   className="h-9 w-9 rounded-full border-2 border-blue-200"
                   whileHover={{ rotate: 8 }}
                 />
-                <span className="hidden font-semibold text-gray-700 md:block">{user.name}</span>
+                <span className="hidden font-semibold text-gray-700 md:block">
+                  {user.fullName} 
+                </span>
                 <ChevronDown size={16} className={`transition-transform ${isUserDropdownOpen ? 'rotate-180' : ''}`} />
               </motion.button>
 
@@ -200,16 +222,20 @@ const NavBar = () => {
 
                     <hr className="my-1 border-blue-100" />
 
-                    <Link to="/login" className="flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50">
-                      <LogIn size={16} /> Đăng xuất
-                    </Link>
+                    <button 
+                      onClick={handleLogout} 
+                      className="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                    >
+                      <LogOut size={16} /> Đăng xuất
+                    </button>
                   </motion.div>
                 )}
               </AnimatePresence>
             </div>
-          </>
+          </React.Fragment> // <<< SỬA LỖI: Dùng React.Fragment thay vì </>
         ) : (
-          <>
+          // <<< SỬA LỖI: Dùng React.Fragment thay vì <>
+          <React.Fragment>
             <Link
               to="/login"
               className="flex items-center space-x-2 rounded-full px-4 py-2 font-medium text-gray-700 
@@ -226,7 +252,7 @@ const NavBar = () => {
               <UserPlus size={20} />
               <span>Đăng ký</span>
             </Link>
-          </>
+          </React.Fragment> // <<< SỬA LỖI: Dùng React.Fragment thay vì </>
         )}
       </div>
     </motion.nav>

@@ -1,11 +1,11 @@
-// src/pages/auth/Register.jsx
-import React from 'react';
+import React, { useState } from 'react'; // <<< Thêm useState
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Mail, Lock, User, CheckSquare } from 'lucide-react'; // Thêm icon mới
+import { Mail, Lock, User, CheckSquare, AlertTriangle, CheckCircle } from 'lucide-react'; // <<< Thêm icon báo lỗi/thành công
+import axios from 'axios'; // <<< Thêm axios
 
 // 1. Schema validation cho Register
 const schema = yup.object().shape({
@@ -19,16 +19,50 @@ const schema = yup.object().shape({
 
 const Register = () => {
   const navigate = useNavigate();
+  // <<< Thêm state để lưu lỗi/thành công từ API
+  const [apiError, setApiError] = useState(null);
+  const [apiSuccess, setApiSuccess] = useState(null);
+
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
     resolver: yupResolver(schema),
   });
 
-  // 2. Hàm xử lý khi submit (tạm thời)
-  const onSubmit = (data) => {
-    console.log('Dữ liệu đăng ký:', data);
-    // (Sau này bạn sẽ gọi API ở đây)
-    // await api.post('/auth/register', data);
-    // navigate('/login'); // Đăng ký xong thì bay về trang login
+  // 2. Hàm xử lý khi submit (ĐÃ CẬP NHẬT)
+  const onSubmit = async (data) => {
+    setApiError(null);
+    setApiSuccess(null);
+
+    // DTO của bạn có thể chỉ cần 3 trường này.
+    // confirmPassword chỉ dùng để validate ở frontend.
+    const payload = {
+      fullName: data.fullName,
+      email: data.email,
+      password: data.password,
+    };
+
+    try {
+      // Nhờ proxy, ta chỉ cần gọi '/api/...'
+      const response = await axios.post('/api/Auth/register', payload);
+
+      // Đăng ký thành công, backend trả về "Đăng ký thành công!"
+      setApiSuccess(response.data || 'Đăng ký thành công! Sẽ chuyển đến trang đăng nhập...');
+      
+      // Chờ 2 giây để user đọc thông báo, sau đó chuyển về trang login
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
+
+    } catch (error) {
+      // Xử lý lỗi
+      console.error('Lỗi đăng ký:', error);
+      if (error.response && error.response.status === 400) {
+        // Lỗi 400 (BadRequest) từ backend (vd: Email đã tồn tại)
+        setApiError(error.response.data || 'Email đã tồn tại hoặc thông tin không hợp lệ.');
+      } else {
+        // Lỗi server hoặc mạng
+        setApiError('Đã có lỗi xảy ra. Vui lòng thử lại sau.');
+      }
+    }
   };
 
   // 3. Animation (giữ nguyên, tái sử dụng)
@@ -57,6 +91,22 @@ const Register = () => {
         <h2 className="text-3xl font-bold text-gray-900">Tạo tài khoản</h2>
         <p className="mt-2 text-sm text-gray-600">Bắt đầu hành trình mới của bạn</p>
       </div>
+      
+      {/* <<< THÊM VÀO: HIỂN THỊ LỖI API */}
+      {apiError && (
+        <div className="flex items-center p-3 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
+          <AlertTriangle className="flex-shrink-0 inline w-5 h-5 mr-3" />
+          <span className="font-medium">{apiError}</span>
+        </div>
+      )}
+      
+      {/* <<< THÊM VÀO: HIỂN THỊ THÀNH CÔNG */}
+      {apiSuccess && (
+        <div className="flex items-center p-3 text-sm text-green-700 bg-green-100 rounded-lg" role="alert">
+          <CheckCircle className="flex-shrink-0 inline w-5 h-5 mr-3" />
+          <span className="font-medium">{apiSuccess}</span>
+        </div>
+      )}
       
       {/* 4. Form */}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -120,7 +170,7 @@ const Register = () => {
         {/* 5. Nút Submit */}
         <motion.button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || !!apiSuccess} // <<< CẬP NHẬT: Vô hiệu hóa khi đang gửi hoặc đã thành công
           className="flex w-full justify-center items-center gap-2 rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.98 }}

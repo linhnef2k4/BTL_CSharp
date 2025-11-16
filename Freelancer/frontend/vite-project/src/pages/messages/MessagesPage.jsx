@@ -1,23 +1,93 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
+import axios from 'axios';
+import { useAuth } from '../../context/AuthContext';
 import ChatList from '../../components/messages/ChatList';
 import ChatWindow from '../../components/messages/ChatWindow';
 import ChatDetails from '../../components/messages/ChatDetails';
 
-// Dữ liệu "giả" (sẽ dùng chung)
-const MOCK_CONTACTS = [
-  { id: 1, name: 'Trịnh Xuân Thi', avatar: 'https://i.pravatar.cc/150?img=1', lastMessage: 'Báo nó gửi file đi...', time: '45 phút trước', online: true, status: 'Hoạt động 45 phút trước' },
-  { id: 2, name: 'Nhóm 4 anh Tài', avatar: 'https://i.pravatar.cc/150?img=2', lastMessage: 'Huy: Thật nghiệp hết 😃', time: '10 giờ', online: false, isGroup: true, status: 'Nhóm' },
-  { id: 3, name: 'Troam', avatar: 'https://i.pravatar.cc/150?img=3', lastMessage: 'KK oce - 11 giờ - Trả lời?', time: '11 giờ', online: false, status: 'Hoạt động 11 giờ trước' },
-  { id: 4, name: 'Ngọc Ánh', avatar: 'https://i.pravatar.cc/150?img=4', lastMessage: 'Cuộc gọi video đã kết thúc', time: '11 giờ', online: false, status: 'Hoạt động 1 ngày trước' },
-  { id: 5, name: 'Trai Làng', avatar: 'https://i.pravatar.cc/150?img=5', lastMessage: 'b MNN là tồn thương 🙂', time: '11 giờ', online: true, isGroup: true, status: 'Nhóm' },
-  { id: 6, name: 'Phan Bá Khánh Linh', avatar: 'https://i.pravatar.cc/150?img=6', lastMessage: 'Yêu - 15 giờ', time: '15 giờ', online: false, status: 'Hoạt động 15 giờ trước' },
-];
-
 const MessagesPage = () => {
-  // "Bộ não" quản lý: Ai đang được chọn?
-  const [activeChat, setActiveChat] = useState(MOCK_CONTACTS[0]); // Mặc định chọn người đầu tiên
-  // Quản lý cột phải (Info)
+  const { user } = useAuth();
+  const [conversations, setConversations] = useState([]);
+  const [activeChat, setActiveChat] = useState(null);
+  const [connection, setConnection] = useState(null);
   const [showDetails, setShowDetails] = useState(true);
+
+  // Ref để giữ giá trị mới nhất của activeChat trong callback của SignalR
+  const activeChatRef = useRef(activeChat);
+  useEffect(() => {
+    activeChatRef.current = activeChat;
+  }, [activeChat]);
+
+  // 1. Khởi tạo SignalR & Lấy danh sách chat
+  useEffect(() => {
+    const initChat = async () => {
+      const token = localStorage.getItem('authToken');
+      if (!token) return;
+
+      // A. Lấy danh sách hội thoại (API 2)
+      try {
+        const res = await axios.get('/api/conversations', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setConversations(res.data);
+        // Mặc định chọn hội thoại đầu tiên nếu có
+        if (res.data.length > 0 && !activeChat) {
+             // Logic chọn mặc định có thể thêm ở đây nếu muốn
+        }
+      } catch (err) {
+        console.error("Lỗi lấy danh sách chat:", err);
+      }
+
+      // B. Kết nối SignalR
+      const newConnection = new HubConnectionBuilder()
+        .withUrl("https://localhost:7051/chathub", {
+          accessTokenFactory: () => token // Gửi token để authorize
+        })
+        .withAutomaticReconnect()
+        .configureLogging(LogLevel.Information)
+        .build();
+
+      newConnection.on("ReceiveMessage", (messageDto) => {
+        // Khi có tin nhắn mới:
+        setConversations(prev => {
+          // 1. Tìm xem cuộc trò chuyện đã tồn tại chưa
+          const existingConvIndex = prev.findIndex(c => c.id === messageDto.conversationId); // Lưu ý: Backend cần trả về conversationId trong MessageDto (hoặc bạn phải suy luận)
+          
+          // Tạm thời logic: Nếu tìm thấy thì update, nếu không thì reload lại list (cho an toàn)
+          // Để đơn giản cho UI: Ta sẽ update LastMessage của conversation tương ứng
+          const updatedList = [...prev];
+          if (existingConvIndex !== -1) {
+             const conv = updatedList[existingConvIndex];
+             conv.lastMessage = messageDto.content;
+             conv.lastMessageDate = messageDto.sentDate;
+             conv.isRead = false;
+             // Đưa lên đầu
+             updatedList.splice(existingConvIndex, 1);
+             updatedList.unshift(conv);
+          }
+          return updatedList;
+        });
+      });
+
+      try {
+        await newConnection.start();
+        console.log("SignalR Connected!");
+        setConnection(newConnection);
+      } catch (e) {
+        console.error("SignalR Connection Error: ", e);
+      }
+    };
+
+    initChat();
+
+    // Cleanup khi rời trang
+    return () => {
+      if (connection) {
+        connection.stop();
+      }
+    };
+  }, []);
 
   return (
     // Layout 3 cột, full-screen (trừ cái navbar 16 (h-16))
@@ -26,7 +96,7 @@ const MessagesPage = () => {
       {/* CỘT 1: DANH BẠ (ChatList) */}
       <div className="w-96 flex-shrink-0 border-r border-gray-200">
         <ChatList
-          contacts={MOCK_CONTACTS}
+          conversations={conversations} // Truyền danh sách thật
           activeChat={activeChat}
           onSelectChat={setActiveChat} // <-- Khi click, "báo" lên đây
         />
@@ -36,8 +106,24 @@ const MessagesPage = () => {
       <div className="flex-1">
         {activeChat ? (
           <ChatWindow
-            activeUser={activeChat}
-            onToggleDetails={() => setShowDetails(prev => !prev)} // <-- Ra lệnh "đóng/mở"
+            activeChat={activeChat} // Truyền object ConversationDto
+            currentUser={user}
+            connection={connection} // Truyền kết nối SignalR xuống để gửi tin
+            onToggleDetails={() => setShowDetails(prev => !prev)}
+            // Callback để update lại list khi mình tự gửi tin nhắn
+            onMessageSent={(convId, msgText) => {
+                setConversations(prev => {
+                    const idx = prev.findIndex(c => c.id === convId);
+                    if (idx === -1) return prev;
+                    const updated = [...prev];
+                    const conv = updated[idx];
+                    conv.lastMessage = msgText;
+                    conv.lastMessageDate = new Date().toISOString();
+                    updated.splice(idx, 1);
+                    updated.unshift(conv);
+                    return updated;
+                });
+            }}
           />
         ) : (
           <div className="flex h-full items-center justify-center">
@@ -50,7 +136,7 @@ const MessagesPage = () => {
       {showDetails && activeChat && (
         <div className="w-96 flex-shrink-0 border-l border-gray-200">
           <ChatDetails
-            activeUser={activeChat}
+            activeChat={activeChat}
           />
         </div>
       )}
