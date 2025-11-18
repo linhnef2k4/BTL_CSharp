@@ -44,6 +44,7 @@ namespace Freelancer.Models
 
         // Giữ lại các trường hệ thống
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+        public DateTime? UpdatedDate { get; set; } // Thời gian sửa lần cuối
 
         [Required]
         public ProjectStatus Status { get; set; } = ProjectStatus.Pending; // Để Admin duyệt
@@ -51,6 +52,9 @@ namespace Freelancer.Models
         // --- Liên kết tới Employer (Rất quan trọng) ---
         [Required]
         public int EmployerId { get; set; } // ID của nhà tuyển dụng đã đăng bài
+
+        public bool IsDeleted { get; set; } = false;
+        public DateTime? DeletedDate { get; set; }
 
         [ForeignKey("EmployerId")]
         public virtual Employer Employer { get; set; }

@@ -3,6 +3,42 @@
   "WorkspaceRootPath": "D:\\BTL_CSharp\\Freelancer\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\dtos\\seekerprofiledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\dtos\\seekerprofiledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\services\\profileservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\services\\profileservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\dtos\\userprofiledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\dtos\\userprofiledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\services\\projectservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\services\\projectservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\dtos\\updateprofilerequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\dtos\\updateprofilerequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\dtos\\updateprojectdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\dtos\\updateprojectdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\interfaces\\iprojectservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\interfaces\\iprojectservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\dtos\\projectdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\dtos\\projectdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\controllers\\projectscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\controllers\\projectscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\controllers\\socialpostcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\controllers\\socialpostcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -71,18 +107,6 @@
       "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\dtos\\usersearchdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\services\\profileservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\services\\profileservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\dtos\\updateprofilerequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\dtos\\updateprofilerequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\dtos\\userprofiledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\dtos\\userprofiledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
@@ -126,7 +150,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
@@ -143,6 +167,123 @@
             {
               "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "UserProfileDto.cs",
+              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\DTOs\\UserProfileDto.cs",
+              "RelativeDocumentMoniker": "Freelancer\\DTOs\\UserProfileDto.cs",
+              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\DTOs\\UserProfileDto.cs",
+              "RelativeToolTip": "Freelancer\\DTOs\\UserProfileDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-16T13:13:22.815Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ProfileService.cs",
+              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Services\\ProfileService.cs",
+              "RelativeDocumentMoniker": "Freelancer\\Services\\ProfileService.cs",
+              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Services\\ProfileService.cs",
+              "RelativeToolTip": "Freelancer\\Services\\ProfileService.cs",
+              "ViewState": "AgIAACMAAAAAAAAAAAAqwCwAAABKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-16T13:15:54.996Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "SeekerProfileDto.cs",
+              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\DTOs\\SeekerProfileDto.cs",
+              "RelativeDocumentMoniker": "Freelancer\\DTOs\\SeekerProfileDto.cs",
+              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\DTOs\\SeekerProfileDto.cs",
+              "RelativeToolTip": "Freelancer\\DTOs\\SeekerProfileDto.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAYAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T09:01:32.723Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ProjectService.cs",
+              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Services\\ProjectService.cs",
+              "RelativeDocumentMoniker": "Freelancer\\Services\\ProjectService.cs",
+              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Services\\ProjectService.cs",
+              "RelativeToolTip": "Freelancer\\Services\\ProjectService.cs",
+              "ViewState": "AgIAAN0BAAAAAAAAAAAYwBgCAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T08:33:10.598Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "UpdateProjectDto.cs",
+              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\DTOs\\UpdateProjectDto.cs",
+              "RelativeDocumentMoniker": "Freelancer\\DTOs\\UpdateProjectDto.cs",
+              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\DTOs\\UpdateProjectDto.cs",
+              "RelativeToolTip": "Freelancer\\DTOs\\UpdateProjectDto.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAxwCUAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T08:39:36.037Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "ProjectDto.cs",
+              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\DTOs\\ProjectDto.cs",
+              "RelativeDocumentMoniker": "Freelancer\\DTOs\\ProjectDto.cs",
+              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\DTOs\\ProjectDto.cs",
+              "RelativeToolTip": "Freelancer\\DTOs\\ProjectDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T08:39:54.626Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "UpdateProfileRequestDto.cs",
+              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\DTOs\\UpdateProfileRequestDto.cs",
+              "RelativeDocumentMoniker": "Freelancer\\DTOs\\UpdateProfileRequestDto.cs",
+              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\DTOs\\UpdateProfileRequestDto.cs",
+              "RelativeToolTip": "Freelancer\\DTOs\\UpdateProfileRequestDto.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAAwAsAAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-16T13:13:21.274Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "IProjectService.cs",
+              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Interfaces\\IProjectService.cs",
+              "RelativeDocumentMoniker": "Freelancer\\Interfaces\\IProjectService.cs",
+              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Interfaces\\IProjectService.cs",
+              "RelativeToolTip": "Freelancer\\Interfaces\\IProjectService.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAowBIAAABYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T08:30:37.27Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "ProjectsController.cs",
+              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Controllers\\ProjectsController.cs",
+              "RelativeDocumentMoniker": "Freelancer\\Controllers\\ProjectsController.cs",
+              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Controllers\\ProjectsController.cs",
+              "RelativeToolTip": "Freelancer\\Controllers\\ProjectsController.cs",
+              "ViewState": "AgIAAIkAAAAAAAAAAAArwIoAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T08:25:04.077Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
               "Title": "ISocialPostService.cs",
               "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Interfaces\\ISocialPostService.cs",
               "RelativeDocumentMoniker": "Freelancer\\Interfaces\\ISocialPostService.cs",
@@ -154,7 +295,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 12,
               "Title": "SocialPostComment.cs",
               "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Models\\SocialPostComment.cs",
               "RelativeDocumentMoniker": "Freelancer\\Models\\SocialPostComment.cs",
@@ -166,7 +307,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 10,
               "Title": "SocialPostService.cs",
               "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Services\\SocialPostService.cs",
               "RelativeDocumentMoniker": "Freelancer\\Services\\SocialPostService.cs",
@@ -178,20 +319,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 9,
               "Title": "SocialPostController.cs",
               "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Controllers\\SocialPostController.cs",
               "RelativeDocumentMoniker": "Freelancer\\Controllers\\SocialPostController.cs",
               "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Controllers\\SocialPostController.cs",
               "RelativeToolTip": "Freelancer\\Controllers\\SocialPostController.cs",
-              "ViewState": "AgIAALsAAAAAAAAAAAAgwOIAAAAKAAAAAAAAAA==",
+              "ViewState": "AgIAALsAAAAAAAAAAAA3wOIAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-15T14:22:26.442Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 33,
               "Title": "20251116151810_AddSoftDeleteToSocialPosts.cs",
               "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Migrations\\20251116151810_AddSoftDeleteToSocialPosts.cs",
               "RelativeDocumentMoniker": "Freelancer\\Migrations\\20251116151810_AddSoftDeleteToSocialPosts.cs",
@@ -203,7 +344,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 13,
               "Title": "SocialPost.cs",
               "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Models\\SocialPost.cs",
               "RelativeDocumentMoniker": "Freelancer\\Models\\SocialPost.cs",
@@ -215,7 +356,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 14,
               "Title": "ApplicationsController.cs",
               "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Controllers\\ApplicationsController.cs",
               "RelativeDocumentMoniker": "Freelancer\\Controllers\\ApplicationsController.cs",
@@ -227,7 +368,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 15,
               "Title": "CommentDto.cs",
               "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\DTOs\\CommentDto.cs",
               "RelativeDocumentMoniker": "Freelancer\\DTOs\\CommentDto.cs",
@@ -239,7 +380,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 28,
+              "DocumentIndex": 34,
               "Title": "20251116144901_AddNestedComments_ForcedNull.cs",
               "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Migrations\\20251116144901_AddNestedComments_ForcedNull.cs",
               "RelativeDocumentMoniker": "Freelancer\\Migrations\\20251116144901_AddNestedComments_ForcedNull.cs",
@@ -251,7 +392,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 17,
               "Title": "CreateCommentDto.cs",
               "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\DTOs\\CreateCommentDto.cs",
               "RelativeDocumentMoniker": "Freelancer\\DTOs\\CreateCommentDto.cs",
@@ -263,7 +404,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 19,
               "Title": "FriendshipsController.cs",
               "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Controllers\\FriendshipsController.cs",
               "RelativeDocumentMoniker": "Freelancer\\Controllers\\FriendshipsController.cs",
@@ -275,7 +416,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 16,
               "Title": "ApplicationDbContext.cs",
               "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Data\\ApplicationDbContext.cs",
               "RelativeDocumentMoniker": "Freelancer\\Data\\ApplicationDbContext.cs",
@@ -287,7 +428,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 18,
               "Title": "20251116142530_AddNestedComments_v2.cs",
               "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Migrations\\20251116142530_AddNestedComments_v2.cs",
               "RelativeDocumentMoniker": "Freelancer\\Migrations\\20251116142530_AddNestedComments_v2.cs",
@@ -299,7 +440,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 21,
               "Title": "20251116141709_AddNestedComments.cs",
               "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Migrations\\20251116141709_AddNestedComments.cs",
               "RelativeDocumentMoniker": "Freelancer\\Migrations\\20251116141709_AddNestedComments.cs",
@@ -311,7 +452,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 20,
               "Title": "ConversationDto.cs",
               "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\DTOs\\ConversationDto.cs",
               "RelativeDocumentMoniker": "Freelancer\\DTOs\\ConversationDto.cs",
@@ -323,7 +464,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 22,
               "Title": "ConversationService.cs",
               "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Services\\ConversationService.cs",
               "RelativeDocumentMoniker": "Freelancer\\Services\\ConversationService.cs",
@@ -335,7 +476,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 23,
               "Title": "FriendshipService.cs",
               "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Services\\FriendshipService.cs",
               "RelativeDocumentMoniker": "Freelancer\\Services\\FriendshipService.cs",
@@ -347,7 +488,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 24,
               "Title": "IFriendshipService.cs",
               "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Interfaces\\IFriendshipService.cs",
               "RelativeDocumentMoniker": "Freelancer\\Interfaces\\IFriendshipService.cs",
@@ -359,7 +500,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 25,
               "Title": "UserSearchDto.cs",
               "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\DTOs\\UserSearchDto.cs",
               "RelativeDocumentMoniker": "Freelancer\\DTOs\\UserSearchDto.cs",
@@ -371,43 +512,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "ProfileService.cs",
-              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Services\\ProfileService.cs",
-              "RelativeDocumentMoniker": "Freelancer\\Services\\ProfileService.cs",
-              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Services\\ProfileService.cs",
-              "RelativeToolTip": "Freelancer\\Services\\ProfileService.cs",
-              "ViewState": "AgIAAE0AAAAAAAAAAAAgwFgAAAAzAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-16T13:15:54.996Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 18,
-              "Title": "UpdateProfileRequestDto.cs",
-              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\DTOs\\UpdateProfileRequestDto.cs",
-              "RelativeDocumentMoniker": "Freelancer\\DTOs\\UpdateProfileRequestDto.cs",
-              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\DTOs\\UpdateProfileRequestDto.cs",
-              "RelativeToolTip": "Freelancer\\DTOs\\UpdateProfileRequestDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAyAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-16T13:13:21.274Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 19,
-              "Title": "UserProfileDto.cs",
-              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\DTOs\\UserProfileDto.cs",
-              "RelativeDocumentMoniker": "Freelancer\\DTOs\\UserProfileDto.cs",
-              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\DTOs\\UserProfileDto.cs",
-              "RelativeToolTip": "Freelancer\\DTOs\\UserProfileDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-16T13:13:22.815Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 26,
               "Title": "appsettings.json",
               "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\appsettings.json",
               "RelativeDocumentMoniker": "Freelancer\\appsettings.json",
@@ -419,7 +524,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 27,
               "Title": "ChatHub.cs",
               "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Hubs\\ChatHub.cs",
               "RelativeDocumentMoniker": "Freelancer\\Hubs\\ChatHub.cs",
@@ -431,7 +536,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 28,
               "Title": "MessageDto.cs",
               "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\DTOs\\MessageDto.cs",
               "RelativeDocumentMoniker": "Freelancer\\DTOs\\MessageDto.cs",
@@ -443,7 +548,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 30,
               "Title": "IConversationService.cs",
               "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Interfaces\\IConversationService.cs",
               "RelativeDocumentMoniker": "Freelancer\\Interfaces\\IConversationService.cs",
@@ -455,7 +560,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 29,
               "Title": "ConversationsController.cs",
               "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Controllers\\ConversationsController.cs",
               "RelativeDocumentMoniker": "Freelancer\\Controllers\\ConversationsController.cs",
@@ -467,7 +572,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 31,
               "Title": "User.cs",
               "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Models\\User.cs",
               "RelativeDocumentMoniker": "Freelancer\\Models\\User.cs",
@@ -479,7 +584,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 32,
               "Title": "CreateReactionDto.cs",
               "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\DTOs\\CreateReactionDto.cs",
               "RelativeDocumentMoniker": "Freelancer\\DTOs\\CreateReactionDto.cs",

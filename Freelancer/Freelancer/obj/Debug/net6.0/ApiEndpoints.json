@@ -436,6 +436,43 @@
   },
   {
     "ContainingType": "Freelancer.Controllers.ProjectsController",
+    "Method": "UpdateProject",
+    "RelativePath": "api/Projects/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "Freelancer.DTOs.UpdateProjectDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.ProjectsController",
+    "Method": "DeleteProject",
+    "RelativePath": "api/Projects/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.ProjectsController",
     "Method": "GetJobApplications",
     "RelativePath": "api/Projects/{id}/applications",
     "HttpMethod": "GET",
@@ -489,6 +526,48 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.ProjectsController",
+    "Method": "GetMyTrashedProjects",
+    "RelativePath": "api/Projects/trash",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.ProjectsController",
+    "Method": "DeleteProjectPermanent",
+    "RelativePath": "api/Projects/trash/{id}/permanent",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.ProjectsController",
+    "Method": "RestoreProject",
+    "RelativePath": "api/Projects/trash/{id}/restore",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {
@@ -657,6 +736,58 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.SocialPostController",
+    "Method": "GetMyPosts",
+    "RelativePath": "api/social-posts/my-posts",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.SocialPostController",
+    "Method": "GetMyTrash",
+    "RelativePath": "api/social-posts/trash",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.SocialPostController",
+    "Method": "DeletePostPermanent",
+    "RelativePath": "api/social-posts/trash/{postId}/permanent",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "postId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.SocialPostController",
+    "Method": "RestorePost",
+    "RelativePath": "api/social-posts/trash/{postId}/restore",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "postId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {

@@ -15,5 +15,19 @@ namespace Freelancer.Interfaces
         Task<string> ApplyToJobAsync(int projectId, int seekerId, ApplyToJobDto request);
         // --- THÊM HÀM MỚI (EMPLOYER XEM CV) ---
         Task<IEnumerable<JobApplicationDto>> GetJobApplicationsAsync(int projectId, int employerId);
+        // 1. Sửa Job (Update)
+        Task<string?> UpdateProjectAsync(int projectId, int employerId, UpdateProjectDto request);
+
+        // 2. Xóa mềm Job (Soft Delete)
+        Task<string?> SoftDeleteProjectAsync(int projectId, int employerId);
+
+        // 3. Lấy danh sách Job trong thùng rác
+        Task<IEnumerable<ProjectDto>> GetMyTrashedProjectsAsync(int employerId);
+
+        // 4. Khôi phục Job
+        Task<string?> RestoreProjectAsync(int projectId, int employerId);
+
+        // 5. Xóa vĩnh viễn Job
+        Task<string?> DeleteProjectPermanentAsync(int projectId, int employerId);
     }
 }

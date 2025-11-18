@@ -119,5 +119,73 @@ namespace Freelancer.Controllers
 
             return Ok(applications);
         }
+
+        // --- 1. API SỬA JOB (Update) ---
+        [HttpPut("{id}")]
+        [Authorize(Roles = "Employer")]
+        public async Task<IActionResult> UpdateProject(int id, UpdateProjectDto request)
+        {
+            var employerId = GetUserIdFromToken();
+            var error = await _projectService.UpdateProjectAsync(id, employerId, request);
+
+            if (error != null)
+            {
+                return BadRequest(error);
+            }
+
+            return Ok("Cập nhật tin tuyển dụng thành công.");
+        }
+
+        // --- 2. API XÓA JOB (Soft Delete) ---
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Employer")]
+        public async Task<IActionResult> DeleteProject(int id)
+        {
+            var employerId = GetUserIdFromToken();
+            var error = await _projectService.SoftDeleteProjectAsync(id, employerId);
+
+            if (error != null)
+            {
+                return BadRequest(error);
+            }
+
+            return Ok("Đã xóa tin tuyển dụng thành công.");
+        }
+
+        // --- 3. API LẤY THÙNG RÁC JOB (Xem Job đã xóa) ---
+        [HttpGet("trash")]
+        [Authorize(Roles = "Employer")]
+        public async Task<IActionResult> GetMyTrashedProjects()
+        {
+            var employerId = GetUserIdFromToken();
+            var projects = await _projectService.GetMyTrashedProjectsAsync(employerId);
+            return Ok(projects);
+        }
+
+        // --- 4. API KHÔI PHỤC JOB ---
+        [HttpPost("trash/{id}/restore")]
+        [Authorize(Roles = "Employer")]
+        public async Task<IActionResult> RestoreProject(int id)
+        {
+            var employerId = GetUserIdFromToken();
+            var error = await _projectService.RestoreProjectAsync(id, employerId);
+
+            if (error != null) return BadRequest(error);
+
+            return Ok("Khôi phục Job thành công.");
+        }
+
+        // --- 5. API XÓA VĨNH VIỄN JOB ---
+        [HttpDelete("trash/{id}/permanent")]
+        [Authorize(Roles = "Employer")]
+        public async Task<IActionResult> DeleteProjectPermanent(int id)
+        {
+            var employerId = GetUserIdFromToken();
+            var error = await _projectService.DeleteProjectPermanentAsync(id, employerId);
+
+            if (error != null) return BadRequest(error);
+
+            return Ok("Đã xóa vĩnh viễn Job.");
+        }
     }
 }

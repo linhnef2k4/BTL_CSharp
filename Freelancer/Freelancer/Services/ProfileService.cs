@@ -34,19 +34,24 @@ namespace Freelancer.Services
                 Id = user.Id,
                 FullName = user.FullName,
                 Email = user.Email,
+                Role = user.Role,
+               
                 PhoneNumber = user.PhoneNumber,
                 Gender = user.Gender,
                 DateOfBirth = user.DateOfBirth,
+
 
                 // Map Seeker (nếu có)
                 Seeker = user.Seeker == null ? null : new SeekerProfileDto
                 {
                     Headline = user.Seeker.Headline,
                     IsVip = user.Seeker.IsVip,
-                    Rank = user.Seeker.Rank,
                     ResumeUrl = user.Seeker.ResumeUrl,
                     YearsOfExperience = user.Seeker.YearsOfExperience,
-                    Location = user.Seeker.Location
+                    Location = user.Seeker.Location,
+                    Skills = user.Seeker.Skills,
+                    Level = user.Seeker.Level,
+                    Avatar = user.Seeker.AvatarUrl,
                 },
 
                 // Map Employer (nếu có)

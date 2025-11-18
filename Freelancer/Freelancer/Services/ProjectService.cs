@@ -384,6 +384,176 @@ namespace Freelancer.Services
                 SeekerHeadline = app.Seeker.Headline,
                 SeekerEmail = app.Seeker.User.Email
             });
+
+
+
         }
+        // ... (Các using và các hàm cũ trong ProjectService) ...
+
+        // --- 1. HÀM XÓA MỀM (Soft Delete) ---
+        // Đánh dấu IsDeleted = true thay vì xóa khỏi database
+        public async Task<string?> SoftDeleteProjectAsync(int projectId, int employerId)
+        {
+            var project = await _context.Projects.FindAsync(projectId);
+
+            if (project == null)
+            {
+                return "Không tìm thấy bài đăng tuyển dụng.";
+            }
+
+            // Kiểm tra quyền sở hữu
+            if (project.EmployerId != employerId)
+            {
+                return "Bạn không có quyền xóa bài đăng này.";
+            }
+
+            // Thực hiện xóa mềm
+            project.IsDeleted = true;
+            project.DeletedDate = DateTime.UtcNow;
+            // Tùy chọn: Có thể đổi trạng thái về Closed hoặc giữ nguyên
+            // project.Status = ProjectStatus.Closed; 
+
+            await _context.SaveChangesAsync();
+            return null; // Thành công (không có lỗi trả về)
+        }
+
+        // --- 2. HÀM LẤY DANH SÁCH TRONG THÙNG RÁC ---
+        // Lấy các bài CỦA TÔI và ĐÃ BỊ XÓA
+        public async Task<IEnumerable<ProjectDto>> GetMyTrashedProjectsAsync(int employerId)
+        {
+            var projects = await _context.Projects
+                .Where(p => p.EmployerId == employerId && p.IsDeleted == true) // Chỉ lấy bài đã xóa mềm
+                .Include(p => p.Employer)
+                .OrderByDescending(p => p.DeletedDate) // Sắp xếp bài mới xóa lên đầu
+                .ToListAsync();
+
+            // Map sang DTO để trả về
+            return projects.Select(p => new ProjectDto
+            {
+                Id = p.Id,
+                Title = p.Title,
+                Location = p.Location,
+                MinSalary = p.MinSalary,
+                MaxSalary = p.MaxSalary,
+                WorkType = p.WorkType,
+                Level = p.Level,
+                CreatedDate = p.CreatedDate,
+                Status = p.Status.ToString(),
+                EmployerId = p.Employer.Id,
+                CompanyName = p.Employer.CompanyName
+                // Bạn có thể thêm thuộc tính DeletedDate vào ProjectDto nếu muốn hiển thị ngày xóa
+            });
+        }
+
+        // --- 3. HÀM KHÔI PHỤC BÀI VIẾT ---
+        // Đánh dấu IsDeleted = false
+        public async Task<string?> RestoreProjectAsync(int projectId, int employerId)
+        {
+            var project = await _context.Projects.FindAsync(projectId);
+
+            if (project == null)
+            {
+                return "Không tìm thấy bài đăng tuyển dụng.";
+            }
+
+            // Kiểm tra quyền sở hữu
+            if (project.EmployerId != employerId)
+            {
+                return "Bạn không có quyền khôi phục bài đăng này.";
+            }
+
+            // Kiểm tra xem nó có thực sự đang ở trong thùng rác không
+            if (!project.IsDeleted)
+            {
+                return "Bài đăng này không nằm trong thùng rác.";
+            }
+
+            // Thực hiện khôi phục
+            project.IsDeleted = false;
+            project.DeletedDate = null;
+
+            await _context.SaveChangesAsync();
+            return null; // Thành công
+        }
+
+        // --- 4. HÀM XÓA VĨNH VIỄN (Hard Delete) ---
+        // Xóa hoàn toàn khỏi database
+        public async Task<string?> DeleteProjectPermanentAsync(int projectId, int employerId)
+        {
+            var project = await _context.Projects.FindAsync(projectId);
+
+            if (project == null)
+            {
+                return "Không tìm thấy bài đăng tuyển dụng.";
+            }
+
+            // Kiểm tra quyền sở hữu
+            if (project.EmployerId != employerId)
+            {
+                return "Bạn không có quyền xóa vĩnh viễn bài đăng này.";
+            }
+
+            // Xóa cứng (Hard Delete)
+            _context.Projects.Remove(project);
+
+            await _context.SaveChangesAsync();
+            return null; // Thành công
+        }
+
+        // (Trong file Services/ProjectService.cs)
+
+        // --- HÀM SỬA JOB ---
+        // --- HÀM SỬA JOB (ĐÃ RÚT GỌN) ---
+        public async Task<string?> UpdateProjectAsync(int projectId, int employerId, UpdateProjectDto request)
+        {
+            var project = await _context.Projects.FindAsync(projectId);
+
+            // 1. Kiểm tra tồn tại
+            if (project == null)
+            {
+                return "Không tìm thấy bài đăng tuyển dụng.";
+            }
+
+            // 2. Kiểm tra quyền sở hữu
+            if (project.EmployerId != employerId)
+            {
+                return "Bạn không có quyền sửa bài đăng này.";
+            }
+
+            // 3. Kiểm tra trạng thái "Đã xóa"
+            if (project.IsDeleted)
+            {
+                return "Không thể sửa bài đăng đã bị xóa.";
+            }
+
+            // 4. Cập nhật thông tin
+            project.Title = request.Title;
+            project.Description = request.Description;
+            project.Requirements = request.Requirements;
+            project.Benefits = request.Benefits;
+            project.Location = request.Location;
+            project.MinSalary = request.MinSalary;
+            project.MaxSalary = request.MaxSalary;
+            project.WorkType = request.WorkType;
+            project.Level = request.Level;
+
+            // 5. (ĐÃ SỬA) Cập nhật trạng thái (Chỉ cho phép mở lại Approved)
+            // Chúng ta bỏ qua phần "Closed" vì bạn không muốn dùng
+            /* if (request.Status.HasValue)
+            {
+                 // Logic cũ đã bị xóa
+            }
+            */
+
+            // 6. Cập nhật ngày sửa
+            project.UpdatedDate = DateTime.UtcNow;
+
+            // 7. Lưu vào DB
+            await _context.SaveChangesAsync();
+
+            return null; // Thành công
+        }
+
+        // ... (Kết thúc class)
     }
 }
