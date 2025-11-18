@@ -259,6 +259,22 @@
   },
   {
     "ContainingType": "Freelancer.Controllers.FriendshipsController",
+    "Method": "SearchUsers",
+    "RelativePath": "api/friends/search",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "query",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.FriendshipsController",
     "Method": "SendFriendRequest",
     "RelativePath": "api/friends/send-request/{receiverId}",
     "HttpMethod": "POST",
@@ -512,6 +528,43 @@
       {
         "Name": "request",
         "Type": "Freelancer.DTOs.CreateSocialPostDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.SocialPostController",
+    "Method": "UpdatePost",
+    "RelativePath": "api/social-posts/{postId}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "postId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "Freelancer.DTOs.CreateSocialPostDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.SocialPostController",
+    "Method": "SoftDeletePost",
+    "RelativePath": "api/social-posts/{postId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "postId",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],

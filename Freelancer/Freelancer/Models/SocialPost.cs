@@ -15,11 +15,24 @@ namespace Freelancer.Models
 
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
 
+        // --- NÂNG CẤP "THÙNG RÁC" (SOFT DELETE) ---
+
+        // Cờ (flag) để "giấu" bài post
+        public bool IsDeleted { get; set; } = false;
+
+        // Ngày "giấu" (để sau này có thể lọc 7 ngày)
+        public DateTime? DeletedDate { get; set; }
+        // --- KẾT THÚC NÂNG CẤP ---
+
         // --- LIÊN KẾT TỚI NGƯỜI ĐĂNG ---
         [Required]
         public int AuthorId { get; set; } // Khóa ngoại tới User
 
         [ForeignKey("AuthorId")]
         public virtual User Author { get; set; }
+
+        
+
+       
     }
 }

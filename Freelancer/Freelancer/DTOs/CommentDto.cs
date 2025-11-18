@@ -19,5 +19,8 @@
         // 2. Cảm xúc của user đang xem (nếu có)
         // (Ví dụ: "Like", hoặc null nếu chưa thả)
         public string? MyReaction { get; set; }
+        // --- NÂNG CẤP (Bình luận lồng nhau) ---
+        // Danh sách các comment trả lời cho comment này
+        public List<CommentDto> Replies { get; set; } = new List<CommentDto>();
     }
 }

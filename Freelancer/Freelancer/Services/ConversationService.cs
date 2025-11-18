@@ -55,23 +55,24 @@ namespace Freelancer.Services
         // --- API 2: LẤY "HỘP THƯ" ---
         public async Task<IEnumerable<ConversationDto>> GetMyConversationsAsync(int currentUserId)
         {
-            var conversations = await _context.ConversationUsers
-                .Where(cu => cu.UserId == currentUserId) // Lấy các phòng của tôi
-                .Select(cu => cu.Conversation)
-                .Include(c => c.Participants) // Lấy danh sách người tham gia
-                    .ThenInclude(p => p.User) // Lấy thông tin User (Tên)
-                        .ThenInclude(u => u.Seeker) // Lấy Seeker (Headline)
+            // SỬA LỖI: Bắt đầu từ _context.Conversations (thay vì .ConversationUsers)
+            var conversations = await _context.Conversations
+                .Where(c => c.Participants.Any(p => p.UserId == currentUserId)) // <-- Tìm phòng có TÔI
+                .Include(c => c.Participants)                   // <-- Include (Hợp lệ)
+                    .ThenInclude(p => p.User)
+                        .ThenInclude(u => u.Seeker)
                 .Include(c => c.Messages) // Lấy tin nhắn
+                                          // Sắp xếp theo tin nhắn mới nhất
                 .OrderByDescending(c => c.Messages.Max(m => (DateTime?)m.SentDate) ?? c.CreatedDate)
                 .ToListAsync();
 
-            // Map sang DTO
+            // Map sang DTO (Phần này giữ nguyên)
             var dtos = new List<ConversationDto>();
             foreach (var conv in conversations)
             {
                 // Tìm "Người kia" (không phải mình)
                 var otherParticipant = conv.Participants.FirstOrDefault(p => p.UserId != currentUserId)?.User;
-                if (otherParticipant == null) continue; // Phòng chat lỗi (chỉ có 1 mình)
+                if (otherParticipant == null) continue;
 
                 var lastMessage = conv.Messages.OrderByDescending(m => m.SentDate).FirstOrDefault();
 
@@ -83,7 +84,7 @@ namespace Freelancer.Services
                     OtherParticipantHeadline = otherParticipant.Seeker?.Headline ?? "Thành viên",
                     LastMessage = lastMessage?.Content ?? "Chưa có tin nhắn",
                     LastMessageDate = lastMessage?.SentDate ?? conv.CreatedDate,
-                    IsRead = lastMessage?.IsRead ?? true // Nếu tin nhắn cuối là của mình, thì coi như "đã đọc"
+                    IsRead = (lastMessage == null) || (lastMessage.SenderId == currentUserId) || (lastMessage.IsRead)
                 });
             }
             return dtos;

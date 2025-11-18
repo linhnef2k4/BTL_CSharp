@@ -62,20 +62,30 @@ namespace Freelancer.Data
                 .HasForeignKey(project => project.EmployerId)
                 .OnDelete(DeleteBehavior.Restrict); // Không cho xóa Employer nếu họ còn Project
 
-            // --- THÊM CẤU HÌNH CHO COMMENT ---
+            // --- CẤU HÌNH CHO SOCIALPOSTCOMMENT (MỚI) ---
             modelBuilder.Entity<SocialPostComment>(entity =>
             {
-                // Liên kết Comment -> User (Author)
+                // (Cấu hình Comment -> Author, giữ nguyên)
                 entity.HasOne(comment => comment.Author)
-                    .WithMany() // Một User có nhiều comment
+                    .WithMany()
                     .HasForeignKey(comment => comment.AuthorId)
-                    .OnDelete(DeleteBehavior.Restrict); // Không xóa User nếu họ comment
+                    .OnDelete(DeleteBehavior.Restrict);
 
-                // Liên kết Comment -> SocialPost
+                // (Cấu hình Comment -> Post, giữ nguyên)
                 entity.HasOne(comment => comment.Post)
-                    .WithMany() // Một Post có nhiều comment
+                    .WithMany()
                     .HasForeignKey(comment => comment.PostId)
-                    .OnDelete(DeleteBehavior.Cascade); // Xóa Post thì xóa luôn Comment
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                // --- ĐOẠN "DẠY" CHA-CON LÀ ĐÂY ---
+
+                // Comment -> ParentComment (Tự liên kết "Trả lời")
+                entity.HasOne(comment => comment.ParentComment) // Một 'con' (Reply) có MỘT 'cha'
+                    .WithMany(parent => parent.Replies) // Một 'cha' có NHIỀU 'con' (Replies)
+                    .HasForeignKey(comment => comment.ParentCommentId) // Liên kết bằng cột ParentCommentId
+                    .OnDelete(DeleteBehavior.Restrict); // Cài đặt an toàn: Không xóa lồng nhau
+                // --- THÊM DÒNG NÀY ĐỂ "ÉP" CỘT LÀ NULLABLE ---
+                entity.Property(e => e.ParentCommentId).IsRequired(false);
             });
 
             // --- THÊM CẤU HÌNH CHO REACTION ---

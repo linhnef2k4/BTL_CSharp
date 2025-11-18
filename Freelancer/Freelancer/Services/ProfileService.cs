@@ -84,6 +84,9 @@ namespace Freelancer.Services
 
             // 2. Cập nhật thông tin User (chung)
             user.FullName = request.FullName;
+            user.PhoneNumber = request.PhoneNumber;
+            user.Gender = request.Gender;
+            user.DateOfBirth = request.DateOfBirth;
             // (Lưu ý: Chúng ta đã XÓA user.Address)
             // (Bạn có thể cập nhật user.PhoneNumber, Gender... nếu DTO có)
 

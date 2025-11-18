@@ -138,5 +138,92 @@ namespace Freelancer.Controllers
 
             return Ok("Thả cảm xúc (comment) thành công.");
         }
+        // --- API 7: SỬA BÀI VIẾT (Update) ---
+        [HttpPut("{postId}")] // Route: PUT /api/social-posts/123
+        [Authorize]
+        public async Task<IActionResult> UpdatePost(int postId, CreateSocialPostDto request)
+        {
+            var currentUserId = GetUserIdFromToken();
+            var error = await _socialPostService.UpdatePostAsync(postId, currentUserId, request);
+
+            if (error != null)
+            {
+                return Forbid(error); // 403 Forbidden (Không có quyền)
+            }
+
+            return Ok("Cập nhật bài viết thành công.");
+        }
+
+        // --- API 8: XÓA BÀI VIẾT (Xóa mềm) ---
+        [HttpDelete("{postId}")] // Route: DELETE /api/social-posts/123
+        [Authorize]
+        public async Task<IActionResult> SoftDeletePost(int postId)
+        {
+            var currentUserId = GetUserIdFromToken();
+            var error = await _socialPostService.SoftDeletePostAsync(postId, currentUserId);
+
+            if (error != null)
+            {
+                return Forbid(error); // 403 Forbidden
+            }
+
+            return Ok("Đã chuyển bài viết vào thùng rác.");
+        }
+
+        // --- THÊM 3 HÀM NÀY VÀO CUỐI TỆP "Controllers/SocialPostController.cs" ---
+
+        // --- API 9: LẤY THÙNG RÁC CỦA TÔI ---
+        [HttpGet("trash")] // Route: GET /api/social-posts/trash
+        [Authorize]
+        public async Task<IActionResult> GetMyTrash()
+        {
+            var currentUserId = GetUserIdFromToken();
+            var posts = await _socialPostService.GetMyTrashAsync(currentUserId);
+            return Ok(posts);
+        }
+
+        // --- API 10: KHÔI PHỤC TỪ THÙNG RÁC ---
+        [HttpPost("trash/{postId}/restore")] // Route: POST /api/social-posts/trash/123/restore
+        [Authorize]
+        public async Task<IActionResult> RestorePost(int postId)
+        {
+            var currentUserId = GetUserIdFromToken();
+            var error = await _socialPostService.RestorePostAsync(postId, currentUserId);
+
+            if (error != null)
+            {
+                return Forbid(error); // 403 Forbidden hoặc 404
+            }
+
+            return Ok("Khôi phục bài viết thành công.");
+        }
+
+        // --- API 11: XÓA VĨNH VIỄN ---
+        [HttpDelete("trash/{postId}/permanent")] // Route: DELETE /api/social-posts/trash/123/permanent
+        [Authorize]
+        public async Task<IActionResult> DeletePostPermanent(int postId)
+        {
+            var currentUserId = GetUserIdFromToken();
+            var error = await _socialPostService.DeletePostPermanentAsync(postId, currentUserId);
+
+            if (error != null)
+            {
+                return Forbid(error); // 403 Forbidden hoặc 404
+            }
+
+            return Ok("Đã xóa vĩnh viễn bài viết.");
+        }
+
+        // --- THÊM HÀM NÀY VÀO CUỐI TỆP "Controllers/SocialPostController.cs" ---
+
+        // --- API 12: LẤY CÁC BÀI VIẾT ĐÃ ĐĂNG CỦA TÔI ---
+        [HttpGet("my-posts")] // Route: GET /api/social-posts/my-posts
+        [Authorize]
+        public async Task<IActionResult> GetMyPosts()
+        {
+            var currentUserId = GetUserIdFromToken();
+            var posts = await _socialPostService.GetMyPostsAsync(currentUserId);
+            return Ok(posts);
+        } 
     }
 }

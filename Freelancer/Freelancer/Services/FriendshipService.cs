@@ -159,5 +159,52 @@ namespace Freelancer.Services
             }
             return friendDtos;
         }
+
+
+        public async Task<IEnumerable<UserSearchDto>> SearchUsersAsync(int currentUserId, string searchQuery)
+        {
+            // 1. Bắt đầu tìm kiếm
+            var queryable = _context.Users
+                .Include(u => u.Seeker)
+                .AsQueryable();
+
+            // 2. Lọc theo Tên HOẶC Email
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                bool isEmailSearch = searchQuery.Contains("@");
+
+                if (isEmailSearch)
+                {
+                    // Nếu là email, tìm CHÍNH XÁC
+                    queryable = queryable.Where(u => u.Email == searchQuery);
+                }
+                else
+                {
+                    // Nếu là tên, tìm GẦN ĐÚNG
+                    queryable = queryable.Where(u => u.FullName.ToLower().Contains(searchQuery.ToLower()));
+                }
+            }
+            else
+            {
+                // Nếu không có query, trả về danh sách rỗng
+                return new List<UserSearchDto>();
+            }
+
+            // 3. Lọc BỎ CHÍNH MÌNH (Đúng như ý bạn!)
+            queryable = queryable.Where(u => u.Id != currentUserId);
+
+            // 4. Chạy query và Map sang DTO
+            var users = await queryable
+                .Take(20) // Lấy 20 kết quả
+                .ToListAsync();
+
+            return users.Select(u => new UserSearchDto
+            {
+                UserId = u.Id,
+                FullName = u.FullName,
+                Headline = u.Seeker?.Headline ?? "Thành viên",
+                Role = u.Role
+            });
+        }
     }
 }

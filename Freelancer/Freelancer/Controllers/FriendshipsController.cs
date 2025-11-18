@@ -81,5 +81,13 @@ namespace Freelancer.Controllers
             var friends = await _friendshipService.GetFriendsAsync(currentUserId);
             return Ok(friends);
         }
+
+        [HttpGet("search")] // Route: GET /api/friends/search?query=...
+        public async Task<IActionResult> SearchUsers([FromQuery] string query)
+        {
+            var currentUserId = GetUserIdFromToken();
+            var users = await _friendshipService.SearchUsersAsync(currentUserId, query);
+            return Ok(users);
+        }
     }
 }
