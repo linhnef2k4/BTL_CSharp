@@ -189,6 +189,9 @@ namespace Freelancer.Migrations
                     b.Property<DateTime>("SentDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ConversationId");
@@ -246,7 +249,8 @@ namespace Freelancer.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("EmployerId")
+                    b.Property<int?>("EmployerId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("OrderInfo")
@@ -260,6 +264,10 @@ namespace Freelancer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("SeekerId")
+                        .IsRequired()
+                        .HasColumnType("int");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -269,6 +277,8 @@ namespace Freelancer.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("EmployerId");
+
+                    b.HasIndex("SeekerId");
 
                     b.ToTable("PaymentTransactions");
                 });
@@ -339,6 +349,33 @@ namespace Freelancer.Migrations
                     b.HasIndex("EmployerId");
 
                     b.ToTable("Projects");
+                });
+
+            modelBuilder.Entity("Freelancer.Models.SavedPost", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("SavedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("UserId", "PostId")
+                        .IsUnique();
+
+                    b.ToTable("SavedPosts");
                 });
 
             modelBuilder.Entity("Freelancer.Models.Seeker", b =>
@@ -659,7 +696,15 @@ namespace Freelancer.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Freelancer.Models.Seeker", "Seeker")
+                        .WithMany()
+                        .HasForeignKey("SeekerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Employer");
+
+                    b.Navigation("Seeker");
                 });
 
             modelBuilder.Entity("Freelancer.Models.Project", b =>
@@ -671,6 +716,25 @@ namespace Freelancer.Migrations
                         .IsRequired();
 
                     b.Navigation("Employer");
+                });
+
+            modelBuilder.Entity("Freelancer.Models.SavedPost", b =>
+                {
+                    b.HasOne("Freelancer.Models.SocialPost", "Post")
+                        .WithMany()
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Freelancer.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Freelancer.Models.Seeker", b =>

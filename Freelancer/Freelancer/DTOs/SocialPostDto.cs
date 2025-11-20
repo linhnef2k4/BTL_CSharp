@@ -23,5 +23,7 @@
         // 3. Cảm xúc của user đang xem (nếu có)
         // (Ví dụ: "Like", hoặc null nếu chưa thả)
         public string? MyReaction { get; set; }
+
+        public bool IsSaved { get; set; }
     }
 }

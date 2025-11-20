@@ -22,7 +22,9 @@ namespace Freelancer.Hubs
 
         // --- HÀM GỬI TIN NHẮN ---
         // (Frontend sẽ gọi hàm "SendMessage" này)
-        public async Task SendMessage(int conversationId, string content)
+        // --- HÀM GỬI TIN NHẮN (ĐÃ CẬP NHẬT LOẠI) ---
+        // type: "Text", "Image", "SharePost"...
+        public async Task SendMessage(int conversationId, string content, string type = "Text")
         {
             // 1. Lấy ID người gửi (từ Token)
             var senderId = int.Parse(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -38,33 +40,42 @@ namespace Freelancer.Hubs
                 return;
             }
 
-            // 3. Tạo Model Message
+            // 3. Parse Enum (Hỗ trợ cả "File")
+            if (!Enum.TryParse<MessageType>(type, true, out var messageType))
+            {
+                messageType = MessageType.Text;
+            }
+
+
+            // 4. Tạo Model Message
             var message = new Message
             {
                 ConversationId = conversationId,
                 SenderId = senderId,
                 Content = content,
+                Type = messageType, // <-- Lưu loại tin nhắn
                 SentDate = System.DateTime.UtcNow,
                 IsRead = false // Mới gửi, chưa đọc
             };
 
-            // 4. Lưu vào Database
+            // 5. Lưu vào Database
             _context.Messages.Add(message);
             await _context.SaveChangesAsync();
 
-            // 5. Chuẩn bị DTO để gửi đi
+            // 6. Chuẩn bị DTO để gửi đi
             var sender = await _context.Users.FindAsync(senderId);
             var messageDto = new MessageDto
             {
                 Id = message.Id,
                 Content = message.Content,
+                Type = message.Type.ToString(), // <-- Trả về loại tin nhắn
                 SentDate = message.SentDate,
                 IsRead = message.IsRead,
                 SenderId = message.SenderId,
                 SenderFullName = sender.FullName
             };
 
-            // 6. Gửi tin nhắn đến NHỮNG NGƯỜI KHÁC trong phòng
+            // 7. Gửi tin nhắn đến NHỮNG NGƯỜI KHÁC trong phòng
 
             // Lấy ID của TẤT CẢ người tham gia (trừ mình)
             var participantIds = await _context.ConversationUsers

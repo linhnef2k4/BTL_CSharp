@@ -27,5 +27,9 @@ namespace Freelancer.Interfaces
         // 3. Xóa vĩnh viễn
         Task<string?> DeletePostPermanentAsync(int postId, int currentUserId);
         Task<IEnumerable<SocialPostDto>> GetMyPostsAsync(int currentUserId);
+
+        Task<bool> SavePostAsync(int postId, int userId);
+        Task<bool> UnsavePostAsync(int postId, int userId);
+        Task<IEnumerable<SocialPostDto>> GetSavedPostsAsync(int userId);
     }
 }

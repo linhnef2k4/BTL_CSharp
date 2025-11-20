@@ -106,5 +106,33 @@ namespace Freelancer.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        // --- API UPLOAD FILE CHAT (Ảnh hoặc Tệp) ---
+        [HttpPost("chat-file")] // POST /api/upload/chat-file
+        [Authorize]
+        public async Task<IActionResult> UploadChatFile(IFormFile file)
+        {
+            // Kiểm tra file rỗng
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("Vui lòng chọn tệp.");
+            }
+
+            // Kiểm tra định dạng (Optional)
+            // Ví dụ: Chỉ cho phép ảnh, pdf, docx...
+
+            try
+            {
+                // 1. Lưu tệp vào thư mục "chat-files"
+                var fileUrl = await _fileService.SaveFileAsync(file, "chat-files");
+
+                // 2. Trả về URL (Frontend sẽ dùng URL này để gửi tin nhắn)
+                return Ok(new { Url = fileUrl });
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

@@ -224,6 +224,50 @@ namespace Freelancer.Controllers
             var currentUserId = GetUserIdFromToken();
             var posts = await _socialPostService.GetMyPostsAsync(currentUserId);
             return Ok(posts);
-        } 
+        }
+
+        // --- CÁC API MỚI CHO LƯU BÀI VIẾT ---
+
+        // 1. LƯU BÀI VIẾT
+        [HttpPost("{postId}/save")] // POST /api/social-posts/123/save
+        [Authorize]
+        public async Task<IActionResult> SavePost(int postId)
+        {
+            var userId = GetUserIdFromToken();
+            var success = await _socialPostService.SavePostAsync(postId, userId);
+
+            if (!success)
+            {
+                return NotFound("Bài viết không tồn tại hoặc đã bị xóa.");
+            }
+
+            return Ok("Đã lưu bài viết.");
+        }
+
+        // 2. BỎ LƯU BÀI VIẾT
+        [HttpDelete("{postId}/unsave")] // DELETE /api/social-posts/123/unsave
+        [Authorize]
+        public async Task<IActionResult> UnsavePost(int postId)
+        {
+            var userId = GetUserIdFromToken();
+            var success = await _socialPostService.UnsavePostAsync(postId, userId);
+
+            if (!success)
+            {
+                return BadRequest("Bạn chưa lưu bài viết này.");
+            }
+
+            return Ok("Đã bỏ lưu bài viết.");
+        }
+
+        // 3. XEM DANH SÁCH ĐÃ LƯU
+        [HttpGet("saved")] // GET /api/social-posts/saved
+        [Authorize]
+        public async Task<IActionResult> GetSavedPosts()
+        {
+            var userId = GetUserIdFromToken();
+            var posts = await _socialPostService.GetSavedPostsAsync(userId);
+            return Ok(posts);
+        }
     }
 }

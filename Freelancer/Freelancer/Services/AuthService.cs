@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Freelancer.Services
@@ -13,12 +14,14 @@ namespace Freelancer.Services
     public class AuthService : IAuthService
     {
         private readonly ApplicationDbContext _context;
-        private readonly IConfiguration _config; // Cần IConfiguration để đọc "Jwt:Key"
+        private readonly IConfiguration _config;
+        private readonly IEmailService _emailService; // <-- THÊM
 
-        public AuthService(ApplicationDbContext context, IConfiguration config)
+        public AuthService(ApplicationDbContext context, IConfiguration config, IEmailService emailService)
         {
             _context = context;
             _config = config;
+            _emailService = emailService; // <-- GÁN
         }
 
         public async Task<bool> RegisterAsync(RegisterRequestDto registerRequest)
@@ -135,6 +138,73 @@ namespace Freelancer.Services
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+        public async Task<string?> ChangePasswordAsync(int userId, ChangePasswordDto request)
+        {
+            // 1. Tìm user trong DB
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+            {
+                return "Không tìm thấy người dùng.";
+            }
+
+            // 2. Kiểm tra mật khẩu CŨ có đúng không
+            bool isOldPasswordCorrect = BCrypt.Net.BCrypt.Verify(request.OldPassword, user.PasswordHash);
+            if (!isOldPasswordCorrect)
+            {
+                return "Mật khẩu hiện tại không đúng.";
+            }
+
+            // 3. Kiểm tra mật khẩu MỚI có trùng với mật khẩu CŨ không (Optional)
+            if (request.OldPassword == request.NewPassword)
+            {
+                return "Mật khẩu mới không được trùng với mật khẩu cũ.";
+            }
+
+            // 4. Mã hóa mật khẩu MỚI
+            string newPasswordHash = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+
+            // 5. Cập nhật vào DB
+            user.PasswordHash = newPasswordHash;
+            await _context.SaveChangesAsync();
+
+            return null; // Thành công
+        }
+
+        // --- HÀM 1: QUÊN MẬT KHẨU (GỬI EMAIL THẬT) ---
+        public async Task<string?> ForgotPasswordAsync(string email)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (user == null)
+            {
+                return null;
+            }
+
+            // Tạo token ngẫu nhiên
+            var token = Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
+
+            // Lưu vào DB
+            user.ResetToken = token;
+            user.ResetTokenExpires = DateTime.UtcNow.AddMinutes(15);
+
+            await _context.SaveChangesAsync();
+
+            // --- GỬI EMAIL ---
+            // Giả sử link frontend của bạn là http://localhost:3000/reset-password
+            var resetLink = $"http://localhost:3000/reset-password?token={token}&email={email}";
+
+            string emailBody = $@"
+                <h3>Yêu cầu đặt lại mật khẩu</h3>
+                <p>Bạn vừa yêu cầu đặt lại mật khẩu cho tài khoản Freelancer.</p>
+                <p>Vui lòng nhấn vào link dưới đây để đặt lại mật khẩu (hết hạn sau 15 phút):</p>
+                <a href='{resetLink}'>Đặt lại mật khẩu ngay</a>
+                <br/><br/>
+                <p>Nếu bạn không yêu cầu, vui lòng bỏ qua email này.</p>";
+
+            await _emailService.SendEmailAsync(email, "Đặt lại mật khẩu - Freelancer App", emailBody);
+
+            // Trả về "Success" thay vì token (vì token đã nằm trong mail)
+            return "Success";
         }
     }
 }

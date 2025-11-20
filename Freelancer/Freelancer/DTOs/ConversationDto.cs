@@ -15,5 +15,6 @@
         public string LastMessage { get; set; }
         public DateTime LastMessageDate { get; set; }
         public bool IsRead { get; set; } // Tin nhắn cuối cùng đã đọc chưa
+        public int UnreadCount { get; set; }
     }
 }

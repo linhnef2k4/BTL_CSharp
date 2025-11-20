@@ -32,7 +32,10 @@ namespace Freelancer.Data
 
         public DbSet<PaymentTransaction> PaymentTransactions { get; set; }
         public DbSet<Notification> Notifications { get; set; }
-       
+
+
+        public DbSet<SavedPost> SavedPosts { get; set; } // <-- THÊM DÒNG NÀY
+
         // (Nếu bạn có Model "Skill", bạn cũng thêm DbSet ở đây)
 
 
@@ -224,6 +227,21 @@ namespace Freelancer.Data
                     .OnDelete(DeleteBehavior.Restrict);
             });
 
+            modelBuilder.Entity<SavedPost>(entity =>
+            {
+                // Đảm bảo một người chỉ lưu một bài viết 1 lần
+                entity.HasIndex(sp => new { sp.UserId, sp.PostId }).IsUnique();
+
+                entity.HasOne(sp => sp.User)
+                    .WithMany()
+                    .HasForeignKey(sp => sp.UserId)
+                    .OnDelete(DeleteBehavior.Restrict); // Không xóa User nếu họ lưu bài
+
+                entity.HasOne(sp => sp.Post)
+                    .WithMany()
+                    .HasForeignKey(sp => sp.PostId)
+                    .OnDelete(DeleteBehavior.Cascade); // Xóa bài post -> Xóa luôn trong danh sách đã lưu
+            });
         }
     }
 }

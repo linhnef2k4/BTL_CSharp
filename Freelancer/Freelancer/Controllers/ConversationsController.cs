@@ -66,5 +66,19 @@ namespace Freelancer.Controllers
             }
             return Ok(messages);
         }
+
+        [HttpGet("{conversationId}/media")]
+        public async Task<IActionResult> GetConversationMedia(int conversationId, [FromQuery] string? type)
+        {
+            var currentUserId = GetUserIdFromToken();
+            var mediaFiles = await _conversationService.GetConversationMediaAsync(conversationId, currentUserId, type);
+
+            if (mediaFiles == null)
+            {
+                return Forbid("Bạn không có quyền xem cuộc trò chuyện này.");
+            }
+
+            return Ok(mediaFiles);
+        }
     }
 }

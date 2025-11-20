@@ -16,10 +16,17 @@ namespace Freelancer.Models
         [Key]
         public string Id { get; set; } = Guid.NewGuid().ToString(); // Mã giao dịch duy nhất
 
-        [Required]
-        public int EmployerId { get; set; } // Ai là người thanh toán
+        // --- SỬA ĐỔI Ở ĐÂY ---
+        // Không bắt buộc EmployerId nữa
+        public int? EmployerId { get; set; }
         [ForeignKey("EmployerId")]
         public virtual Employer Employer { get; set; }
+
+        // Thêm SeekerId (cũng nullable)
+        public int? SeekerId { get; set; }
+        [ForeignKey("SeekerId")]
+        public virtual Seeker Seeker { get; set; }
+        // --- KẾT THÚC SỬA ---
 
         public decimal Amount { get; set; } // Số tiền
         public string PaymentMethod { get; set; } = "VNPay";

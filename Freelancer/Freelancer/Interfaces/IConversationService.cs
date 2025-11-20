@@ -14,5 +14,7 @@ namespace Freelancer.Interfaces
 
         // API 3: Lấy lịch sử tin nhắn (kèm kiểm tra quyền)
         Task<IEnumerable<MessageDto>> GetMessagesAsync(int conversationId, int currentUserId);
+
+        Task<IEnumerable<MessageDto>> GetConversationMediaAsync(int conversationId, int currentUserId, string? typeFilter);
     }
 }

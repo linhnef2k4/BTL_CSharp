@@ -64,5 +64,23 @@ namespace Freelancer.Controllers
                 return Redirect("http://localhost:3000/payment/failed");
             }
         }
+
+        // --- API 3: TẠO LINK THANH TOÁN (CHO SEEKER) ---
+        [HttpPost("create-vip-order/seeker")] // POST /api/payment/create-vip-order/seeker
+        [Authorize(Roles = "Seeker")] // Chỉ Seeker
+        public async Task<IActionResult> CreateVipOrderForSeeker()
+        {
+            try
+            {
+                var seekerId = GetUserIdFromToken(); // ID của Seeker cũng là UserId
+                var paymentUrl = await _paymentService.CreateVipPaymentUrlForSeekerAsync(seekerId, HttpContext);
+
+                return Ok(new { PaymentUrl = paymentUrl });
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

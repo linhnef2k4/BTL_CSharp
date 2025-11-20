@@ -192,17 +192,21 @@ namespace Freelancer.Services
                 FullName = user.FullName,
                 Email = user.Email,
                 Role = user.Role,
+                PhoneNumber = user.PhoneNumber,
+                Gender = user.Gender,
+                DateOfBirth = user.DateOfBirth,
 
                 // Map hồ sơ Seeker (nếu có)
                 Seeker = user.Seeker == null ? null : new SeekerProfileDto
                 {
                     Headline = user.Seeker.Headline,
                     IsVip = user.Seeker.IsVip,
-
-                    // --- SỬA LỖI TYPO TẠI ĐÂY ---
+                    ResumeUrl = user.Seeker.ResumeUrl,
+                    YearsOfExperience = user.Seeker.YearsOfExperience,
                     Location = user.Seeker.Location,
-                    Level = user.Seeker.Level,   // <-- Sửa "use" thành "user.Seeker.Level"
-                    Skills = user.Seeker.Skills  // <-- Sửa "us" thành "user.Seeker.Skills"
+                    Skills = user.Seeker.Skills,
+                    Level = user.Seeker.Level,
+                    Avatar = user.Seeker.AvatarUrl,
                 },
 
                 // Map hồ sơ Employer (nếu có)
@@ -210,11 +214,11 @@ namespace Freelancer.Services
                 {
                     CompanyName = user.Employer.CompanyName,
                     TaxCode = user.Employer.TaxCode,
-                    Address = user.Employer.Address,
                     CompanySize = user.Employer.CompanySize,
                     CompanyWebsite = user.Employer.CompanyWebsite,
-                    Status = user.Employer.Status.ToString(),
-                    IsVip = user.Employer.IsVip
+                    Address = user.Employer.Address,
+                    IsVip = user.Employer.IsVip,
+                    Status = user.Employer.Status.ToString() // Chuyển Enum thành chuỗi
                 }
             };
 

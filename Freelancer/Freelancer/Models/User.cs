@@ -29,7 +29,10 @@ namespace Freelancer.Models
         public DateTime? DateOfBirth { get; set; }
 
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
-
+        // --- THÊM 2 TRƯỜNG NÀY ---
+        public string? ResetToken { get; set; } // Mã reset mật khẩu
+        public DateTime? ResetTokenExpires { get; set; } // Thời gian hết hạn
+        // --- KẾT THÚC THÊM ---
         // --- QUẢN LÝ VAI TRÒ ---
         [Required]
         public string Role { get; set; } // Sẽ lưu là "Seeker" hoặc "Employer"

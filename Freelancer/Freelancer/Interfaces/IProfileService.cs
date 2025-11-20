@@ -9,5 +9,6 @@ namespace Freelancer.Interfaces
         Task<bool> RequestEmployerRoleAsync(int userId, EmployerRequestDto request);
 
         Task<UserProfileDto> GetUserProfileByIdAsync(int userId);
+        
     }
 }

@@ -79,5 +79,19 @@ namespace Freelancer.Controllers
 
             return Ok("Yêu cầu đã được gửi. Vui lòng chờ Admin duyệt.");
         }
+
+        [HttpGet("{userId}")] // Route: GET /api/profile/123
+        [AllowAnonymous] // Cho phép xem công khai (hoặc bỏ dòng này nếu bắt buộc đăng nhập)
+        public async Task<IActionResult> GetUserProfile(int userId)
+        {
+            var profile = await _profileService.GetUserProfileByIdAsync(userId);
+
+            if (profile == null)
+            {
+                return NotFound("Không tìm thấy hồ sơ người dùng.");
+            }
+
+            return Ok(profile);
+        }
     }
 }

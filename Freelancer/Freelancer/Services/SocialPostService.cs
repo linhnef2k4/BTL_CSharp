@@ -53,66 +53,65 @@ namespace Freelancer.Services
 
         // (Nhớ thêm using System.Linq; và System.Collections.Generic; nếu chưa có)
 
+        // --- 1. CẬP NHẬT HÀM GetFeedAsync (Để lấy IsSaved) ---
         public async Task<IEnumerable<SocialPostDto>> GetFeedAsync(int? currentUserId)
         {
-            // 1. Lấy các bài post
+            // (Lấy posts như cũ...)
             var posts = await _context.SocialPosts
-                // --- ĐÂY LÀ DÒNG BẠN VỪA THÊM ---
-                .Where(p => p.IsDeleted == false) // Chỉ lấy bài chưa bị "xóa mềm"
-                                                  // --- KẾT THÚC ---
-                .Include(post => post.Author)
-                    .ThenInclude(author => author.Seeker)
+                .Where(p => p.IsDeleted == false)
+                .Include(post => post.Author).ThenInclude(author => author.Seeker)
                 .OrderByDescending(post => post.CreatedDate)
                 .Take(50)
                 .ToListAsync();
 
-            if (!posts.Any())
-            {
-                return new List<SocialPostDto>(); // Trả về list rỗng
-            }
+            if (!posts.Any()) return new List<SocialPostDto>();
 
-            // Lấy danh sách ID của 50 bài post này
             var postIds = posts.Select(p => p.Id).ToList();
 
-            // 2. Lấy TỔNG SỐ COMMENT cho 50 bài post (Chỉ 1 query)
+            // (Lấy commentCounts, reactionCounts, myReactions như cũ...)
+            // ... (Code cũ lấy count/reaction) ...
             var commentCounts = await _context.SocialPostComments
-                .Where(c => postIds.Contains(c.PostId))
-                .GroupBy(c => c.PostId)
-                .Select(g => new { PostId = g.Key, Count = g.Count() })
-                .ToDictionaryAsync(x => x.PostId, x => x.Count);
+               .Where(c => postIds.Contains(c.PostId))
+               .GroupBy(c => c.PostId)
+               .Select(g => new { PostId = g.Key, Count = g.Count() })
+               .ToDictionaryAsync(x => x.PostId, x => x.Count);
 
-            // 3. Lấy SỐ LƯỢNG CẢM XÚC (Like, Love...) cho 50 bài post (Chỉ 1 query)
             var reactionCountsList = await _context.SocialPostReactions
                 .Where(r => postIds.Contains(r.PostId))
                 .GroupBy(r => new { r.PostId, r.ReactionType })
-                .Select(g => new
-                {
-                    PostId = g.Key.PostId,
-                    ReactionType = g.Key.ReactionType,
-                    Count = g.Count()
-                })
+                .Select(g => new { PostId = g.Key.PostId, ReactionType = g.Key.ReactionType, Count = g.Count() })
                 .ToListAsync();
 
-            // 4. Lấy CẢM XÚC CỦA TÔI (MyReaction) (Chỉ 1 query, nếu đã đăng nhập)
             var myReactions = new Dictionary<int, string>();
+
+            // --- (MỚI) Lấy danh sách bài ĐÃ LƯU của User ---
+            var savedPostIds = new HashSet<int>(); // Dùng HashSet cho nhanh
             if (currentUserId.HasValue)
             {
+                // Lấy reaction cũ
                 myReactions = await _context.SocialPostReactions
                     .Where(r => postIds.Contains(r.PostId) && r.UserId == currentUserId.Value)
                     .ToDictionaryAsync(x => x.PostId, x => x.ReactionType);
+
+                // Lấy bài đã lưu
+                savedPostIds = (await _context.SavedPosts
+                    .Where(sp => sp.UserId == currentUserId.Value && postIds.Contains(sp.PostId))
+                    .Select(sp => sp.PostId)
+                    .ToListAsync())
+                    .ToHashSet();
             }
 
-            // 5. "Ghép" tất cả dữ liệu lại
+            // "Ghép" dữ liệu lại
             var resultDtos = new List<SocialPostDto>();
             foreach (var post in posts)
             {
-                // Lấy ReactionCounts của post này
                 var postReactionCounts = reactionCountsList
                     .Where(r => r.PostId == post.Id)
                     .ToDictionary(r => r.ReactionType, r => r.Count);
 
                 resultDtos.Add(new SocialPostDto
                 {
+                    // ... (Gán các trường cũ)
                     Id = post.Id,
                     Content = post.Content,
                     ImageUrl = post.ImageUrl,
@@ -120,14 +119,14 @@ namespace Freelancer.Services
                     AuthorId = post.Author.Id,
                     AuthorFullName = post.Author.FullName,
                     AuthorHeadline = post.Author.Seeker?.Headline ?? "Thành viên",
-
-                    // Gán dữ liệu mới
-                    CommentCount = commentCounts.ContainsKey(post.Id) ? commentCounts[post.Id] : 0,
+                    CommentCount = commentCounts.GetValueOrDefault(post.Id),
                     ReactionCounts = postReactionCounts,
-                    MyReaction = myReactions.ContainsKey(post.Id) ? myReactions[post.Id] : null
+                    MyReaction = myReactions.GetValueOrDefault(post.Id),
+
+                    // --- GÁN GIÁ TRỊ MỚI ---
+                    IsSaved = savedPostIds.Contains(post.Id) // Kiểm tra xem ID bài này có trong list đã lưu không
                 });
             }
-
             return resultDtos;
         }
 
@@ -628,6 +627,71 @@ namespace Freelancer.Services
             }
 
             return resultDtos;
+        }
+        // --- 2. CÁC HÀM LOGIC MỚI ---
+
+        public async Task<bool> SavePostAsync(int postId, int userId)
+        {
+            // Kiểm tra bài viết tồn tại và chưa bị xóa
+            var postExists = await _context.SocialPosts.AnyAsync(p => p.Id == postId && !p.IsDeleted);
+            if (!postExists) return false;
+
+            // Kiểm tra đã lưu chưa
+            var alreadySaved = await _context.SavedPosts.AnyAsync(sp => sp.PostId == postId && sp.UserId == userId);
+            if (alreadySaved) return true; // Đã lưu rồi thì return true luôn
+
+            var savedPost = new SavedPost { PostId = postId, UserId = userId };
+            _context.SavedPosts.Add(savedPost);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> UnsavePostAsync(int postId, int userId)
+        {
+            var savedPost = await _context.SavedPosts
+                .FirstOrDefaultAsync(sp => sp.PostId == postId && sp.UserId == userId);
+
+            if (savedPost == null) return false; // Chưa lưu nên không thể bỏ lưu
+
+            _context.SavedPosts.Remove(savedPost);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<IEnumerable<SocialPostDto>> GetSavedPostsAsync(int userId)
+        {
+            // Lấy danh sách SavedPost của user
+            var savedPosts = await _context.SavedPosts
+                .Where(sp => sp.UserId == userId)
+                .Include(sp => sp.Post) // Include bài Post
+                    .ThenInclude(p => p.Author).ThenInclude(u => u.Seeker) // Include tác giả
+                .OrderByDescending(sp => sp.SavedDate)
+                .ToListAsync();
+
+            // Lọc ra các bài post chưa bị xóa mềm (quan trọng)
+            var validPosts = savedPosts
+                .Select(sp => sp.Post)
+                .Where(p => !p.IsDeleted)
+                .ToList();
+
+            if (!validPosts.Any()) return new List<SocialPostDto>();
+
+            // (Lưu ý: Để đơn giản, đoạn này mình không lấy CommentCount/ReactionCount.
+            // Nếu muốn đầy đủ, bạn cần copy logic "ghép dữ liệu" từ GetFeedAsync xuống đây)
+
+            return validPosts.Select(post => new SocialPostDto
+            {
+                Id = post.Id,
+                Content = post.Content,
+                ImageUrl = post.ImageUrl,
+                CreatedDate = post.CreatedDate,
+                AuthorId = post.Author.Id,
+                AuthorFullName = post.Author.FullName,
+                AuthorHeadline = post.Author.Seeker?.Headline ?? "Thành viên",
+                IsSaved = true, // Đang ở trang "Đã lưu" nên chắc chắn là true
+                CommentCount = 0, // Tạm thời để 0
+                ReactionCounts = new Dictionary<string, int>()
+            });
         }
     }
 }
