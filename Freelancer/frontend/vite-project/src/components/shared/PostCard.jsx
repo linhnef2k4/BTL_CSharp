@@ -1,610 +1,210 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
 import { 
   ThumbsUp, MessageSquare, Share2, Bookmark, MoreHorizontal, 
-  EyeOff, Send, Loader2, ArrowLeft, X, CheckCircle 
+  Trash2, Edit, Globe
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
-// <<< 1. Đảm bảo đường dẫn này đúng
-import { useAuth } from '../../context/AuthContext'; 
+import { AnimatePresence, motion } from 'framer-motion';
+import { Link, useNavigate } from 'react-router-dom'; // Thêm useNavigate
+import CommentSection from './CommentSection';
+import { formatTimeAgo } from '../../utils/dateUtils';
+import socialService from '../../../services/socialService';
 
-// --- HÀM HELPER ---
-
-// Hàm tạo avatar (an toàn)
-const getAvatarUrl = (user) => {
-  // DTO (SocialPostDto/SocialCommentDto) có 'authorAvatarUrl'
-  if (user?.authorAvatarUrl) { 
-    return user.authorAvatarUrl;
-  }
-  // Fallback dùng tên
-  const name = user?.authorFullName?.replace(/\s/g, '+') || '?';
+const getAvatarUrl = (fullName, avatarUrl) => {
+  if (avatarUrl) return avatarUrl;
+  const name = fullName ? fullName.replace(/\s/g, '+') : 'User';
   return `https://ui-avatars.com/api/?name=${name}&background=random&color=fff`;
-}
-
-// <<< 2. SỬA LỖI THỜI GIAN: Hàm tính toán thời gian
-const formatTimeAgo = (dateString) => {
-  if (!dateString) return '...'; 
-  try {
-    const date = new Date(dateString);
-    const now = new Date();
-    const seconds = Math.round((now.getTime() - date.getTime()) / 1000);
-    
-    if (seconds < 0) return 'Vừa xong'; 
-    if (seconds < 60) return 'Vừa xong';
-    
-    const minutes = Math.round(seconds / 60);
-    if (minutes < 60) return `${minutes} phút trước`;
-    
-    const hours = Math.round(minutes / 60);
-    if (hours < 24) return `${hours} giờ trước`;
-    
-    const days = Math.round(hours / 24);
-    return `${days} ngày trước`;
-  } catch (e) {
-    return '...'; 
-  }
 };
 
-// ===========================================
-// === 1. COMPONENT SHARE MODAL (Tích hợp API) ===
-// (Giữ nguyên logic, không cần sửa)
-// ===========================================
-const ShareModal = ({ isOpen, onClose, postId }) => {
-  const [friends, setFriends] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSending, setIsSending] = useState(false);
-  const [selectedUsers, setSelectedUsers] = useState([]);
-  const [message, setMessage] = useState("");
+const PostCard = ({ post, currentUser, onDeleteSuccess }) => {
+  const navigate = useNavigate(); // Hook để chuyển trang
 
-  useEffect(() => {
-    if (isOpen) {
-      const fetchFriends = async () => {
-        setIsLoading(true);
-        const token = localStorage.getItem('authToken');
-        if (!token) {
-          setIsLoading(false);
-          return;
-        }
-        try {
-          const response = await axios.get('/api/friends', {
-            headers: { Authorization: `Bearer ${token}` }
-          });
-          setFriends(response.data);
-        } catch (error) {
-          console.error("Lỗi khi tải danh sách bạn bè:", error);
-        } finally {
-          setIsLoading(false);
-        }
-      };
-      fetchFriends();
-    } else {
-      setSelectedUsers([]);
-      setMessage("");
-    }
-  }, [isOpen]);
-
-  const toggleUserSelection = (id) => {
-    setSelectedUsers((prev) =>
-      prev.includes(id) ? prev.filter((uid) => uid !== id) : [...prev, id]
-    );
-  };
-
-  const handleSendShare = async () => {
-    setIsSending(true);
-    console.log("Chia sẻ post", postId, "cho", selectedUsers, "với lời nhắn:", message);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setIsSending(false);
-    onClose();
-  };
-
-  const backdropVariants = { hidden: { opacity: 0 }, visible: { opacity: 1 } };
-  const modalVariants = { hidden: { opacity: 0, scale: 0.9, y: 40 }, visible: { opacity: 1, scale: 1, y: 0 }, exit: { opacity: 0, scale: 0.95, y: 20 } };
-
-  return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          variants={backdropVariants}
-          initial="hidden"
-          animate="visible"
-          exit="hidden"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-          onClick={onClose}
-        >
-          <motion.div
-            variants={modalVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            className="relative w-full max-w-md rounded-2xl bg-white shadow-2xl border border-gray-100 overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* HEADER */}
-            <div className="flex items-center justify-between border-b px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
-               <button onClick={onClose} className="rounded-full p-2 hover:bg-white/20 transition"><ArrowLeft size={20} /></button>
-               <h3 className="text-lg font-semibold tracking-wide">Chia sẻ cho bạn bè</h3>
-               <button onClick={onClose} className="rounded-full p-2 hover:bg-white/20 transition"><X size={20} /></button>
-            </div>
-
-            {/* DANH SÁCH BẠN BÈ THẬT */}
-            <div className="flex space-x-4 overflow-x-auto px-4 py-5 scrollbar-thin">
-              {isLoading ? (
-                <Loader2 className="h-6 w-6 text-blue-500 animate-spin mx-auto" />
-              ) : friends.length === 0 ? (
-                <span className="text-sm text-gray-500">Bạn chưa có bạn bè để chia sẻ.</span>
-              ) : (
-                friends.map((friend) => {
-                  const isSelected = selectedUsers.includes(friend.friendId);
-                  return (
-                    <motion.button
-                      key={friend.friendId}
-                      onClick={() => toggleUserSelection(friend.friendId)}
-                      whileHover={{ scale: 1.08 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="relative flex flex-col items-center w-20 flex-shrink-0"
-                    >
-                      <div className="relative">
-                        <img
-                          src={getAvatarUrl({ authorFullName: friend.friendFullName })} // Dùng tên thật
-                          alt={friend.friendFullName}
-                          className={`h-14 w-14 rounded-full object-cover border-2 ${
-                            isSelected ? 'border-blue-500 shadow-lg' : 'border-transparent'
-                          } transition-all duration-200`}
-                        />
-                        {isSelected && (
-                          <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            className="absolute -right-1 -bottom-1 rounded-full bg-white"
-                          >
-                            <CheckCircle size={20} className="text-blue-500 fill-current" />
-                          </motion.div>
-                        )}
-                      </div>
-                      <span className="mt-2 text-xs text-gray-700 text-center font-medium leading-tight">
-                        {friend.friendFullName}
-                      </span>
-                    </motion.button>
-                  );
-                })
-              )}
-            </div>
-            {/* INPUT TIN NHẮN */}
-            <div className="px-4 pb-3">
-              <input 
-                type="text" 
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Thêm lời nhắn..." 
-                className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-300 outline-none"
-              />
-            </div>
-            {/* NÚT GỬI */}
-            <div className="px-4 pb-5">
-              <motion.button
-                onClick={handleSendShare}
-                disabled={selectedUsers.length === 0 || isSending}
-                className={`flex w-full items-center justify-center gap-2 rounded-xl py-2.5 font-semibold text-white shadow-md transition-all duration-200 ${
-                  selectedUsers.length > 0
-                    ? 'bg-blue-600 hover:bg-blue-700'
-                    : 'bg-gray-300 cursor-not-allowed'
-                } disabled:opacity-70`}
-              >
-                {isSending ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
-                {isSending ? 'Đang gửi...' : selectedUsers.length > 0 ? `Gửi (${selectedUsers.length})` : 'Chọn bạn để gửi'}
-              </motion.button>
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
-};
-
-
-// =============================================
-// === 3. SỬA LỖI: COMPONENT COMMENT SECTION ===
-// =============================================
-const CommentSection = ({ postId, currentUser }) => {
-  const [comments, setComments] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [newComment, setNewComment] = useState("");
-  const [isPosting, setIsPosting] = useState(false);
-
-  const token = localStorage.getItem('authToken');
-
-  // API 3: Lấy comment
-  useEffect(() => {
-    const fetchComments = async () => {
-      setIsLoading(true);
-      try {
-        const headers = {};
-        if (token) {
-          headers.Authorization = `Bearer ${token}`;
-        }
-        const response = await axios.get(`/api/social-posts/${postId}/comments`, { headers });
-        setComments(response.data);
-      } catch (error) {
-        console.error("Lỗi tải comment:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchComments();
-  }, [postId, token]);
-
-  // API 4: Đăng comment
-  const handlePostComment = async (e) => {
-    e.preventDefault();
-    if (!newComment.trim() || !token) return;
-
-    setIsPosting(true);
-    try {
-      const payload = { content: newComment }; 
-      const response = await axios.post(`/api/social-posts/${postId}/comments`, payload, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setComments([response.data, ...comments]);
-      setNewComment(""); 
-    } catch (error) {
-      console.error("Lỗi đăng comment:", error);
-    } finally {
-      setIsPosting(false);
-    }
-  };
-
-  // API 6: Thích comment
-  const handleLikeComment = async (commentId) => {
-    if (!token) {
-      alert("Vui lòng đăng nhập để thích bình luận.");
-      return;
-    }
-    
-    // Cập nhật UI trước
-    setComments(prevComments => 
-      prevComments.map(c => 
-        c.id === commentId 
-          ? { ...c, isLikedByCurrentUser: !c.isLikedByCurrentUser } // (Giả định DTO comment cũng có 'isLikedByCurrentUser')
-          : c
-      )
-    );
-
-    try {
-      const payload = { reactionType: "Like" }; 
-      await axios.post(`/api/social-posts/comments/${commentId}/react`, payload, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-    } catch (error) {
-      console.error("Lỗi khi like comment:", error);
-      // Rollback UI nếu lỗi
-      setComments(prevComments => 
-        prevComments.map(c => 
-          c.id === commentId 
-            ? { ...c, isLikedByCurrentUser: !c.isLikedByCurrentUser } 
-            : c
-        )
-      );
-    }
-  };
-  
-  // (Hàm này tạm thời chưa làm gì cả vì chưa có API Reply)
-  const handleReplyComment = (commentId) => {
-    console.log("Trả lời comment", commentId);
-  };
-
-
-  return (
-    <div className="pt-4 border-t border-gray-100">
-      {/* Form đăng comment */}
-      {currentUser && (
-        <form onSubmit={handlePostComment} className="flex items-start gap-3 mb-4">
-          <img 
-            src={getAvatarUrl(currentUser.seeker)} 
-            alt="My Avatar" 
-            className="h-9 w-9 rounded-full object-cover"
-          />
-          <div className="flex-1 relative">
-            <input
-              type="text"
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              placeholder="Viết bình luận..."
-              className="w-full rounded-full border border-gray-200 bg-gray-100 px-4 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
-            />
-            <button 
-              type="submit" 
-              disabled={isPosting || !newComment.trim()}
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full text-blue-600 hover:bg-blue-100 disabled:text-gray-400"
-            >
-              {isPosting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-            </button>
-          </div>
-        </form>
-      )}
-
-      {/* Danh sách comment */}
-      <div className="space-y-3">
-        {isLoading ? (
-          <Loader2 className="h-5 w-5 text-blue-500 animate-spin mx-auto" />
-        ) : (
-          comments.map(comment => {
-            // <<< 4. SỬA LỖI CRASH (Giả định DTO Comment giống DTO Post)
-            const displayAuthor = {
-              id: comment.authorId,
-              fullName: comment.authorFullName,
-              avatarUrl: comment.authorAvatarUrl
-            };
-            
-            return (
-              <div key={comment.id} className="flex items-start gap-3">
-                <img 
-                  src={getAvatarUrl(displayAuthor)} // <<< Dùng displayAuthor
-                  alt={displayAuthor.fullName}
-                  className="h-9 w-9 rounded-full object-cover"
-                />
-                <div className="flex-1">
-                  <div className="bg-gray-100 rounded-xl px-3 py-2">
-                    <span className="font-semibold text-sm text-gray-800 hover:text-blue-500 cursor-pointer">
-                      {displayAuthor.fullName} {/* <<< Dùng displayAuthor */}
-                    </span>
-                    <p className="text-sm text-gray-700 whitespace-pre-wrap">{comment.content}</p>
-                  </div>
-                  {/* <<< 5. SỬA DESIGN (Thêm Like/Reply) */}
-                  <div className="flex gap-2 px-2 mt-1">
-                    <button 
-                      onClick={() => handleLikeComment(comment.id)}
-                      className={`text-xs font-medium ${comment.isLikedByCurrentUser ? 'text-blue-500' : 'text-gray-500 hover:text-blue-500'}`}
-                    >
-                      Thích
-                    </button>
-                    <span className="text-xs text-gray-400">·</span>
-                    <button 
-                      onClick={() => handleReplyComment(comment.id)}
-                      className="text-xs font-medium text-gray-500 hover:text-blue-500"
-                    >
-                      Trả lời
-                    </button>
-                    <span className="text-xs text-gray-400">·</span>
-                    {/* <<< 6. SỬA LỖI TIME (Giả định DTO Comment) */}
-                    <span className="text-xs text-gray-400">{formatTimeAgo(comment.createdDate)}</span>
-                  </div>
-                </div>
-              </div>
-            );
-          })
-        )}
-      </div>
-    </div>
-  );
-};
-
-
-// ===================================
-// === 7. COMPONENT ACTION BUTTON ===
-// ===================================
-const ActionButton = ({ icon, label, onClick, isActive = false, activeColor = '' }) => {
-  const color = isActive ? activeColor : 'text-gray-600';
-  const fill = isActive ? 'fill-current' : 'fill-none';
-
-  return (
-    <motion.button
-      onClick={onClick}
-      whileHover={{ scale: 1.08 }}
-      whileTap={{ scale: 0.95 }}
-      className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 transition-all duration-200 hover:bg-gray-50 ${color}`}
-    >
-      {React.cloneElement(icon, { className: `${fill} ${icon.props.className}` })}
-      <span className={`text-sm font-medium ${isActive ? activeColor : 'text-gray-700'}`}>{label}</span>
-    </motion.button>
-  );
-};
-
-
-// ===================================
-// === 8. COMPONENT POSTCARD (MAIN) ===
-// ===================================
-const PostCard = ({ post, currentUser }) => {
-  
-  // <<< 9. SỬA LỖI DTO (Đọc từ JSON bạn gửi)
   const { 
-    id: postId, 
-    authorId,
-    authorFullName,
-    authorHeadline,
-    content, 
-    imageUrl, 
-    commentCount, 
-    createdDate, // <<< Sửa từ createdAt
-    reactionCounts, // <<< Sửa từ likeCount
-    myReaction // <<< Sửa từ isLikedByCurrentUser
-  } = post || {}; 
+    id, authorId, authorFullName, authorHeadline, authorAvatarUrl,
+    content, imageUrl, commentCount, createdDate, 
+    reactionCounts, myReaction, isSaved: initialSavedState 
+  } = post;
 
-  if (!postId) {
-    return null; // Không render gì nếu post lỗi
-  }
-  
-  // <<< 10. SỬA LỖI DTO (State dựa trên DTO mới)
   const [likeCount, setLikeCount] = useState(reactionCounts?.Like || 0);
-  const [isLiked, setIsLiked] = useState(!!myReaction); // (!!null = false, !!"Like" = true)
-
-  const [isSaved, setIsSaved] = useState(false);
+  const [isLiked, setIsLiked] = useState(myReaction === 'Like');
+  const [isSaved, setIsSaved] = useState(initialSavedState);
   const [isCommentsOpen, setIsCommentsOpen] = useState(false);
-  const [isOptionsOpen, setIsOptionsOpen] = useState(false);
-  const [isShareOpen, setIsShareOpen] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
 
-  const { isAuthenticated } = useAuth();
-  const token = localStorage.getItem('authToken');
+  const isMyPost = currentUser && currentUser.id === authorId;
 
-  // <<< 11. SỬA LỖI DTO (Kiểm tra an toàn)
-  const isMyPost = currentUser && authorId && authorId === currentUser.id;
-
-  // API 5: Thích bài viết (Giữ nguyên, đã đúng)
+  // --- HANDLERS ---
   const handleLike = async () => {
-    if (!isAuthenticated || !token) {
-      alert("Vui lòng đăng nhập để thích bài viết.");
-      return;
-    }
-    
-    const originalIsLiked = isLiked;
-    const originalLikeCount = likeCount;
-    const newIsLiked = !isLiked;
-    const newLikeCount = newIsLiked ? likeCount + 1 : likeCount - 1;
-    setIsLiked(newIsLiked);
-    setLikeCount(newLikeCount);
-
+    if (!currentUser) return alert("Vui lòng đăng nhập!");
+    const prevLiked = isLiked;
+    setIsLiked(!isLiked);
+    setLikeCount(prev => !prevLiked ? prev + 1 : prev - 1);
     try {
-      const payload = { reactionType: "Like" }; 
-      await axios.post(`/api/social-posts/${postId}/react`, payload, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await socialService.reactToPost(id, "Like");
     } catch (error) {
-      console.error("Lỗi khi like post:", error);
-      setIsLiked(originalIsLiked);
-      setLikeCount(originalLikeCount);
+      setIsLiked(prevLiked);
+      setLikeCount(prev => prevLiked ? prev + 1 : prev - 1);
     }
   };
 
-  const handleSave = () => setIsSaved((prev) => !prev);
-  const toggleComments = () => setIsCommentsOpen((prev) => !prev);
-
-  const dropdownVariants = {
-    hidden: { opacity: 0, scale: 0.95 },
-    visible: { opacity: 1, scale: 1 },
+  const handleSave = async () => {
+    if (!currentUser) return alert("Vui lòng đăng nhập!");
+    const prevSaved = isSaved;
+    setIsSaved(!isSaved);
+    setShowMenu(false);
+    try {
+        if (prevSaved) await socialService.unsavePost(id);
+        else await socialService.savePost(id);
+    } catch (error) {
+        setIsSaved(prevSaved);
+    }
   };
 
-  // <<< 12. SỬA LỖI DTO (Tạo object author "giả" từ DTO phẳng)
-  const displayAuthor = { 
-    id: authorId, 
-    fullName: authorFullName, 
-    headline: authorHeadline 
+  const handleDelete = async () => {
+    if (!window.confirm("Bạn chắc chắn muốn chuyển bài viết này vào thùng rác?")) return;
+    try {
+        await socialService.deletePost(id);
+        if (onDeleteSuccess) onDeleteSuccess(id);
+    } catch (error) {
+        alert("Có lỗi xảy ra khi xóa bài viết.");
+    }
   };
-  const authorProfileUrl = authorId ? `/profile/${authorId}` : '#';
+
+  // Hàm chuyển hướng đến Profile
+  const handleGoToProfile = (e) => {
+    e.stopPropagation();
+    navigate(`/user/${authorId}`);
+  };
 
   return (
-    <>
-      <div className="rounded-2xl bg-white shadow-md transition-all duration-300 hover:shadow-lg border border-gray-100 overflow-hidden">
-        {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3">
-          <div className="flex items-center gap-3">
-            <Link to={authorProfileUrl}>
-              <img
-                src={getAvatarUrl(displayAuthor)} // <<< Dùng displayAuthor
-                alt="Avatar"
-                className="h-11 w-11 rounded-full border border-gray-200 object-cover cursor-pointer transition-transform hover:scale-105"
-              />
-            </Link>
-            <div>
-              <Link to={authorProfileUrl}>
-                <h4 className="font-semibold text-gray-900 cursor-pointer hover:text-blue-500 transition-colors">
-                  {displayAuthor.fullName} {/* <<< Dùng displayAuthor */}
-                </h4>
-              </Link>
-              {/* <<< 13. SỬA LỖI TIME (Dùng createdDate) */}
-              <p className="text-xs text-gray-500">{formatTimeAgo(createdDate)}</p>
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-5 transition-all hover:shadow-md">
+      {/* Header */}
+      <div className="p-4 flex justify-between items-start">
+        <div className="flex gap-3">
+          {/* Click Avatar -> Profile */}
+          <div onClick={handleGoToProfile} className="cursor-pointer">
+            <img 
+              src={getAvatarUrl(authorFullName, authorAvatarUrl)} 
+              alt={authorFullName} 
+              className="w-11 h-11 rounded-full object-cover border border-gray-100 hover:opacity-90 transition"
+            />
+          </div>
+          <div>
+            {/* Click Tên -> Profile */}
+            <div onClick={handleGoToProfile} className="font-bold text-gray-900 hover:text-blue-600 cursor-pointer leading-tight text-[15px]">
+              {authorFullName}
+            </div>
+            <span className="text-xs text-gray-500 line-clamp-1">{authorHeadline || "Thành viên"}</span>
+            <div className="flex items-center gap-1 text-xs text-gray-400 mt-0.5">
+              <span>{formatTimeAgo(createdDate)}</span>
+              <span>•</span>
+              <Globe size={12} />
             </div>
           </div>
+        </div>
 
-          {/* 3 chấm (Xóa chức năng Delete vì chưa có API) */}
-          <div className="relative">
-            <button
-              onClick={() => setIsOptionsOpen((prev) => !prev)}
-              className="rounded-full p-2 text-gray-500 hover:bg-gray-100 transition"
+        {/* Menu Dropdown */}
+        <div className="relative">
+            <button 
+                onClick={() => setShowMenu(!showMenu)}
+                className="p-2 text-gray-400 hover:bg-gray-100 rounded-full transition"
             >
-              <MoreHorizontal size={20} />
+                <MoreHorizontal size={20} />
             </button>
-            <AnimatePresence>
-              {isOptionsOpen && (
-                <motion.div
-                  variants={dropdownVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="hidden"
-                  className="absolute right-0 z-10 mt-2 w-44 rounded-xl bg-white shadow-xl ring-1 ring-black ring-opacity-5 overflow-hidden"
-                  onMouseLeave={() => setIsOptionsOpen(false)}
-                >
-                  <button
-                    onClick={() => setIsOptionsOpen(false)}
-                    className="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                  >
-                    <EyeOff size={16} /> Ẩn bài viết
-                  </button>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+            {showMenu && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-1 z-10 overflow-hidden">
+                    <button 
+                        onClick={handleSave}
+                        className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                    >
+                        <Bookmark size={16} className={isSaved ? "fill-yellow-500 text-yellow-500" : ""} />
+                        {isSaved ? 'Bỏ lưu bài viết' : 'Lưu bài viết'}
+                    </button>
+                    {isMyPost && (
+                        <>
+                            <button className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
+                                <Edit size={16} /> Chỉnh sửa
+                            </button>
+                            <button 
+                                onClick={handleDelete}
+                                className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
+                            >
+                                <Trash2 size={16} /> Xóa bài viết
+                            </button>
+                        </>
+                    )}
+                </div>
+            )}
         </div>
-
-        {/* Content */}
-        <div className="px-4 pb-2">
-          <p className="text-gray-800 text-[15px] leading-relaxed whitespace-pre-wrap">{content}</p>
-        </div>
-
-        {/* Image (nếu có) */}
-        {imageUrl && (
-          <div className="max-h-[500px] overflow-hidden bg-gray-100">
-            <img src={imageUrl} alt="Post content" className="w-full object-cover transition-transform duration-300 hover:scale-[1.02]" />
-          </div>
-        )}
-
-        {/* Stats */}
-        <div className="flex justify-between px-4 py-2 text-sm text-gray-500 border-t border-gray-100">
-          {/* <<< 14. SỬA LỖI COUNT (Dùng likeCount) */}
-          <span>{likeCount} lượt thích</span>
-          <span>{commentCount} bình luận</span>
-        </div>
-
-        {/* Action buttons */}
-        <div className="flex px-2 pb-2 border-t border-gray-100">
-          <ActionButton
-            icon={<ThumbsUp size={20} />}
-            label="Thích"
-            onClick={handleLike}
-            isActive={isLiked} // <<< 15. SỬA LỖI LIKE (Dùng isLiked)
-            activeColor="text-blue-500"
-          />
-          <ActionButton
-            icon={<MessageSquare size={20} />}
-            label="Bình luận"
-            onClick={toggleComments} // <<< SỬA LỖI: Nút này sẽ toggle
-          />
-          <ActionButton
-            icon={<Share2 size={20} />}
-            label="Chia sẻ"
-            onClick={() => setIsShareOpen(true)}
-          />
-          <ActionButton
-            icon={<Bookmark size={20} />}
-            label="Lưu"
-            onClick={handleSave}
-            isActive={isSaved}
-            activeColor="text-yellow-500"
-          />
-        </div>
-
-        {/* <<< 16. SỬA LỖI COMMENT DROPDOWN */}
-        <AnimatePresence>
-          {isCommentsOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.25 }}
-              className="px-4 pb-4"
-            >
-              <CommentSection postId={postId} currentUser={currentUser} />
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
 
-      {/* Share Modal */}
-      <ShareModal 
-        isOpen={isShareOpen} 
-        onClose={() => setIsShareOpen(false)} 
-        postId={postId} 
-      />
-    </>
+      {/* Content */}
+      <div className="px-4 pb-3">
+        <p className="text-gray-800 whitespace-pre-wrap text-[15px] leading-relaxed">{content}</p>
+      </div>
+
+      {/* Image */}
+      {imageUrl && (
+        <div className="w-full bg-gray-50 border-t border-b border-gray-100">
+            <img src={imageUrl} alt="Post content" className="w-full h-auto max-h-[600px] object-contain" />
+        </div>
+      )}
+
+      {/* Stats & Actions (Giữ nguyên như cũ) */}
+      <div className="px-4 py-3 flex justify-between items-center border-b border-gray-100">
+         <div className="flex items-center gap-1.5">
+            {likeCount > 0 && (
+                <>
+                    <div className="bg-blue-500 rounded-full p-1">
+                        <ThumbsUp size={10} className="text-white fill-white" />
+                    </div>
+                    <span className="text-sm text-gray-500 hover:underline cursor-pointer">{likeCount}</span>
+                </>
+            )}
+         </div>
+         <button 
+            onClick={() => setIsCommentsOpen(!isCommentsOpen)}
+            className="text-sm text-gray-500 hover:underline"
+         >
+            {commentCount} bình luận
+         </button>
+      </div>
+
+      <div className="flex px-2 py-1">
+        <button 
+            onClick={handleLike}
+            className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg font-medium text-sm transition ${isLiked ? 'text-blue-600' : 'text-gray-600 hover:bg-gray-100'}`}
+        >
+            <ThumbsUp size={18} className={isLiked ? "fill-blue-600" : ""} />
+            Thích
+        </button>
+        <button 
+            onClick={() => setIsCommentsOpen(!isCommentsOpen)}
+            className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg font-medium text-sm text-gray-600 hover:bg-gray-100 transition"
+        >
+            <MessageSquare size={18} />
+            Bình luận
+        </button>
+        <button 
+            className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg font-medium text-sm text-gray-600 hover:bg-gray-100 transition"
+        >
+            <Share2 size={18} />
+            Chia sẻ
+        </button>
+      </div>
+
+      <AnimatePresence>
+        {isCommentsOpen && (
+            <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                className="px-4 pb-4 overflow-hidden"
+            >
+                <CommentSection postId={id} currentUser={currentUser} />
+            </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 };
 

@@ -1,150 +1,126 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Loader2, AlertTriangle } from 'lucide-react';
-// <<< 1. Đảm bảo các đường dẫn import này là chính xác
-import { useAuth } from '../../context/AuthContext.jsx'; 
-import CreatePostWidget from './CreatePostWidget.jsx';
-import PostCard from '../shared/PostCard.jsx';
-import CreatePostModal from './CreatePostModal.jsx';
-
-// --- Dữ liệu "giả" ĐÃ BỊ XÓA ---
+import { useAuth } from '../../context/AuthContext';
+import CreatePostWidget from './CreatePostWidget';
+import PostCard from '../shared/PostCard';
+import CreatePostModal from './CreatePostModal';
+import socialService from '../../../services/socialService';
 
 const MainFeed = () => {
-  // <<< 2. LẤY DATA TỪ CONTEXT
   const { user, isAuthenticated, isLoading: isAuthLoading } = useAuth();
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [posts, setPosts] = useState([]); // <<< 3. State thật
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
   
-  // <<< 4. useEffect ĐỂ LẤY FEED (API 1: GET /api/social-posts/feed)
-  useEffect(() => {
-    const fetchFeed = async () => {
-      setIsLoading(true);
-      setError(null);
-      
-      try {
-        // API này (GetFeed) cho phép cả guest (AllowAnonymous)
-        // Nhưng nếu ta đã login, ta nên gửi token
-        const token = localStorage.getItem('authToken');
-        const headers = {};
-        if (token) {
-          headers.Authorization = `Bearer ${token}`;
-        }
+  const [posts, setPosts] = useState([]);
+  const [isLoadingFeed, setIsLoadingFeed] = useState(true);
+  const [error, setError] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-        const response = await axios.get('/api/social-posts/feed', { headers });
-        setPosts(response.data);
-      } catch (err) {
-        console.error("Lỗi khi tải feed:", err);
-        setError("Không thể tải bài viết. Vui lòng thử lại sau.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    // Chỉ fetch feed sau khi AuthContext đã check xong
-    if (!isAuthLoading) {
-      fetchFeed();
-    }
-  }, [isAuthLoading, isAuthenticated]); // Fetch lại khi đăng nhập/đăng xuất
-
-  // <<< 5. HÀM TẠO BÀI POST MỚI (API 2: POST /api/social-posts)
-  // Khớp với CreateSocialPostDto (content, imageUrl)
-  // (Chúng ta sẽ giả định CreatePostModal xử lý việc upload và trả về imageUrl)
-  const handleCreatePost = async (content, imageUrl) => {
-    if (!content.trim()) return;
-
-    const token = localStorage.getItem('authToken');
-    if (!isAuthenticated || !token) {
-      alert("Bạn cần đăng nhập để đăng bài.");
-      return;
-    }
-    
-    // Khớp với CreateSocialPostDto
-    const payload = {
-      content: content,
-      imageUrl: imageUrl || null
-    };
-
+  // Fetch Feed
+  const fetchFeed = async () => {
+    setIsLoadingFeed(true);
     try {
-      // Gọi API 2 (POST /api/social-posts)
-      const response = await axios.post('/api/social-posts', payload, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      // API trả về bài post vừa tạo
-      const newPost = response.data;
-      
-      // Thêm bài post mới vào đầu danh sách
-      setPosts([newPost, ...posts]);
-      setIsModalOpen(false); 
+      const response = await socialService.getFeed();
+      setPosts(response.data);
+      setError(null);
     } catch (err) {
-      console.error("Lỗi khi tạo bài post:", err);
-      // (Bạn có thể hiển thị lỗi này trên Modal)
+      console.error("Lỗi tải feed:", err);
+      setError("Không thể tải bài viết. Vui lòng kiểm tra kết nối mạng.");
+    } finally {
+      setIsLoadingFeed(false);
     }
   };
 
-  // <<< 6. XỬ LÝ RENDER
-  
-  // Chờ AuthContext kiểm tra xong
+  useEffect(() => {
+    if (!isAuthLoading) {
+      fetchFeed();
+    }
+  }, [isAuthLoading, isAuthenticated]);
+
+  // Handler: Tạo bài viết mới
+  const handleCreatePost = async (content, imageUrl) => {
+    try {
+      const response = await socialService.createPost({
+        content: content,
+        imageUrl: imageUrl || null
+      });
+      // Thêm bài mới lên đầu danh sách
+      setPosts([response.data, ...posts]);
+    } catch (err) {
+      console.error("Lỗi tạo bài viết:", err);
+      alert("Đăng bài thất bại!");
+    }
+  };
+
+  // Handler: Xóa bài viết (cập nhật state)
+  const handlePostDelete = (deletedId) => {
+      setPosts(posts.filter(p => p.id !== deletedId));
+  };
+
+  // --- RENDER ---
   if (isAuthLoading) {
     return (
-      <div className="flex justify-center items-center h-40">
-        <Loader2 className="h-8 w-8 text-blue-500 animate-spin" />
-      </div>
+       <div className="flex justify-center pt-10">
+          <Loader2 className="h-8 w-8 text-blue-500 animate-spin" />
+       </div>
     );
   }
 
   return (
     <>
-      <div className="space-y-6">
-        {/* Chỉ hiển thị widget tạo post nếu ĐÃ ĐĂNG NHẬP */}
+      <div className="max-w-2xl mx-auto pb-20">
+        {/* Widget tạo bài (chỉ hiện khi login) */}
         {isAuthenticated && user && (
-          <CreatePostWidget 
-            user={user} // Pass user thật
-            onClick={() => setIsModalOpen(true)}
-          />
+            <CreatePostWidget 
+                user={user} 
+                onClick={() => setIsModalOpen(true)} 
+            />
         )}
 
-        {/* Xử lý loading/error của feed */}
-        {isLoading && (
-          <div className="flex justify-center items-center h-40">
-            <Loader2 className="h-8 w-8 text-blue-500 animate-spin" />
-          </div>
+        {/* Loading State */}
+        {isLoadingFeed && (
+            <div className="space-y-4">
+                {[1, 2].map(i => (
+                    <div key={i} className="bg-white h-48 rounded-2xl shadow-sm animate-pulse"></div>
+                ))}
+            </div>
         )}
 
+        {/* Error State */}
         {error && (
-           <div className="flex flex-col items-center p-4 text-red-700 bg-red-100 rounded-lg" role="alert">
-            <AlertTriangle className="h-6 w-6 mb-2" />
-            <span className="font-medium">{error}</span>
-          </div>
+            <div className="bg-red-50 text-red-600 p-4 rounded-xl flex items-center gap-3 border border-red-100">
+                <AlertTriangle size={20} />
+                <span>{error}</span>
+                <button onClick={fetchFeed} className="underline font-medium ml-auto">Thử lại</button>
+            </div>
         )}
 
-        {/* Hiển thị danh sách bài post thật */}
-        {!isLoading && !error && posts.map((post) => (
-          <PostCard 
-            key={post.id} 
-            post={post} 
-            currentUser={user} // Pass user thật (có thể là null nếu là guest)
-            // (onDeletePost sẽ được thêm sau khi có API)
-          />
-        ))}
-
-        {!isLoading && !error && posts.length === 0 && (
-          <div className="p-4 text-center text-gray-500">
-            Chưa có bài viết nào. Hãy là người đầu tiên!
-          </div>
+        {/* Empty State */}
+        {!isLoadingFeed && !error && posts.length === 0 && (
+            <div className="text-center py-10 bg-white rounded-2xl shadow-sm">
+                <img src="https://illustrations.popsy.co/gray/surr-waiting.svg" className="h-40 mx-auto mb-4 opacity-80" alt="Empty" />
+                <p className="text-gray-500">Chưa có bài viết nào. Hãy là người đầu tiên chia sẻ!</p>
+            </div>
         )}
+
+        {/* List Posts */}
+        <div className="space-y-5">
+            {posts.map(post => (
+                <PostCard 
+                    key={post.id} 
+                    post={post} 
+                    currentUser={user} 
+                    onDeleteSuccess={handlePostDelete}
+                />
+            ))}
+        </div>
       </div>
 
-      {/* Modal vẫn hoạt động, nhưng chỉ mở được nếu user đã login */}
+      {/* Modal */}
       {user && (
-        <CreatePostModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          user={user}
-          onCreatePost={handleCreatePost} // <<< Truyền hàm API thật
+        <CreatePostModal 
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            user={user}
+            onCreatePost={handleCreatePost}
         />
       )}
     </>

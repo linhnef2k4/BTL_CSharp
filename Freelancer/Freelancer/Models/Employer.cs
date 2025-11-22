@@ -33,7 +33,7 @@ namespace Freelancer.Models
         [StringLength(255)]
         public string? CompanyWebsite { get; set; }
 
-        // 5. Trụ sở chính (dùng lại thuộc tính Address đã có)
+        // 5. Trụ sở chính (dùng lại thuộc tính Address đã có)  
         public string? Address { get; set; }
 
         // 6. Có phải tài khoản VIP

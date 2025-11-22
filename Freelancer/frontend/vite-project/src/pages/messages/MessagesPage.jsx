@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
-import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
+import api from '../../../services/api';
 import ChatList from '../../components/messages/ChatList';
 import ChatWindow from '../../components/messages/ChatWindow';
 import ChatDetails from '../../components/messages/ChatDetails';
@@ -9,137 +9,151 @@ import ChatDetails from '../../components/messages/ChatDetails';
 const MessagesPage = () => {
   const { user } = useAuth();
   const [conversations, setConversations] = useState([]);
-  const [activeChat, setActiveChat] = useState(null);
+  const [activeChatId, setActiveChatId] = useState(null);
+  const [messages, setMessages] = useState([]);
   const [connection, setConnection] = useState(null);
-  const [showDetails, setShowDetails] = useState(true);
+  
+  // --- KHẮC PHỤC LỖI KHÔNG LOAD TIN NHẮN NGAY ---
+  // Dùng Ref để lưu trữ ID cuộc hội thoại đang mở
+  // Giúp SignalR đọc được giá trị mới nhất mà không cần phụ thuộc state
+  const activeChatIdRef = useRef(activeChatId);
 
-  // Ref để giữ giá trị mới nhất của activeChat trong callback của SignalR
-  const activeChatRef = useRef(activeChat);
   useEffect(() => {
-    activeChatRef.current = activeChat;
-  }, [activeChat]);
+    activeChatIdRef.current = activeChatId;
+  }, [activeChatId]);
+  // ----------------------------------------------
 
-  // 1. Khởi tạo SignalR & Lấy danh sách chat
+  // 1. Khởi tạo SignalR
   useEffect(() => {
-    const initChat = async () => {
-      const token = localStorage.getItem('authToken');
-      if (!token) return;
+    const token = localStorage.getItem('authToken');
+    if (!token) return;
 
-      // A. Lấy danh sách hội thoại (API 2)
-      try {
-        const res = await axios.get('/api/conversations', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setConversations(res.data);
-        // Mặc định chọn hội thoại đầu tiên nếu có
-        if (res.data.length > 0 && !activeChat) {
-             // Logic chọn mặc định có thể thêm ở đây nếu muốn
-        }
-      } catch (err) {
-        console.error("Lỗi lấy danh sách chat:", err);
-      }
+    const newConnection = new HubConnectionBuilder()
+      .withUrl("https://localhost:7051/chathub", {
+        accessTokenFactory: () => token
+      })
+      .withAutomaticReconnect()
+      .configureLogging(LogLevel.Information)
+      .build();
 
-      // B. Kết nối SignalR
-      const newConnection = new HubConnectionBuilder()
-        .withUrl("https://localhost:7051/chathub", {
-          accessTokenFactory: () => token // Gửi token để authorize
-        })
-        .withAutomaticReconnect()
-        .configureLogging(LogLevel.Information)
-        .build();
-
-      newConnection.on("ReceiveMessage", (messageDto) => {
-        // Khi có tin nhắn mới:
-        setConversations(prev => {
-          // 1. Tìm xem cuộc trò chuyện đã tồn tại chưa
-          const existingConvIndex = prev.findIndex(c => c.id === messageDto.conversationId); // Lưu ý: Backend cần trả về conversationId trong MessageDto (hoặc bạn phải suy luận)
-          
-          // Tạm thời logic: Nếu tìm thấy thì update, nếu không thì reload lại list (cho an toàn)
-          // Để đơn giản cho UI: Ta sẽ update LastMessage của conversation tương ứng
-          const updatedList = [...prev];
-          if (existingConvIndex !== -1) {
-             const conv = updatedList[existingConvIndex];
-             conv.lastMessage = messageDto.content;
-             conv.lastMessageDate = messageDto.sentDate;
-             conv.isRead = false;
-             // Đưa lên đầu
-             updatedList.splice(existingConvIndex, 1);
-             updatedList.unshift(conv);
-          }
-          return updatedList;
-        });
-      });
-
-      try {
-        await newConnection.start();
-        console.log("SignalR Connected!");
-        setConnection(newConnection);
-      } catch (e) {
-        console.error("SignalR Connection Error: ", e);
-      }
-    };
-
-    initChat();
-
-    // Cleanup khi rời trang
-    return () => {
-      if (connection) {
-        connection.stop();
-      }
-    };
+    setConnection(newConnection);
   }, []);
 
-  return (
-    // Layout 3 cột, full-screen (trừ cái navbar 16 (h-16))
-    <div className="flex h-[calc(100vh-4rem)] bg-white">
-      
-      {/* CỘT 1: DANH BẠ (ChatList) */}
-      <div className="w-96 flex-shrink-0 border-r border-gray-200">
-        <ChatList
-          conversations={conversations} // Truyền danh sách thật
-          activeChat={activeChat}
-          onSelectChat={setActiveChat} // <-- Khi click, "báo" lên đây
-        />
-      </div>
+  // 2. Kết nối & Lắng nghe
+  useEffect(() => {
+    if (connection) {
+      connection.start()
+        .then(() => {
+          console.log('SignalR Connected!');
 
-      {/* CỘT 2: KHUNG CHAT (ChatWindow) */}
-      <div className="flex-1">
-        {activeChat ? (
-          <ChatWindow
-            activeChat={activeChat} // Truyền object ConversationDto
-            currentUser={user}
-            connection={connection} // Truyền kết nối SignalR xuống để gửi tin
-            onToggleDetails={() => setShowDetails(prev => !prev)}
-            // Callback để update lại list khi mình tự gửi tin nhắn
-            onMessageSent={(convId, msgText) => {
-                setConversations(prev => {
-                    const idx = prev.findIndex(c => c.id === convId);
-                    if (idx === -1) return prev;
-                    const updated = [...prev];
-                    const conv = updated[idx];
-                    conv.lastMessage = msgText;
-                    conv.lastMessageDate = new Date().toISOString();
-                    updated.splice(idx, 1);
-                    updated.unshift(conv);
-                    return updated;
-                });
-            }}
+          connection.on('ReceiveMessage', (message) => {
+            // Dùng Ref để lấy ID hiện tại
+            const currentOpenChatId = activeChatIdRef.current;
+
+            // A. Nếu đang mở đúng chat -> Thêm tin nhắn vào màn hình ngay
+            if (currentOpenChatId && message.conversationId === currentOpenChatId) {
+                setMessages((prev) => [...prev, message]);
+            }
+
+            // B. Cập nhật danh sách bên trái (Preview & Unread)
+            setConversations((prev) => {
+               const updatedList = prev.map(conv => {
+                   if (conv.id === message.conversationId) {
+                       return { 
+                           ...conv, 
+                           lastMessage: message.type === 'Image' ? 'Đã gửi một ảnh' : (message.type === 'File' ? 'Đã gửi một tệp' : message.content),
+                           lastMessageDate: message.sentDate,
+                           unreadCount: (currentOpenChatId === message.conversationId) ? 0 : (conv.unreadCount + 1)
+                       };
+                   }
+                   return conv;
+               });
+               // Đẩy chat mới lên đầu
+               return updatedList.sort((a, b) => new Date(b.lastMessageDate) - new Date(a.lastMessageDate));
+            });
+          });
+        })
+        .catch(err => console.error('SignalR Connect Error:', err));
+    }
+
+    return () => {
+      if (connection) connection.stop();
+    };
+  }, [connection]); // Chỉ chạy 1 lần khi có connection
+
+  // 3. Lấy danh sách Chat ban đầu
+  useEffect(() => {
+    const fetchConversations = async () => {
+      try {
+        const res = await api.get('/conversations');
+        setConversations(res.data);
+      } catch (error) {
+        console.error("Lỗi tải conversations:", error);
+      }
+    };
+    fetchConversations();
+  }, []);
+
+  // 4. Lấy lịch sử tin nhắn khi chọn chat
+  useEffect(() => {
+    if (activeChatId) {
+      const fetchMessages = async () => {
+        try {
+          const res = await api.get(`/conversations/${activeChatId}/messages`);
+          setMessages(res.data);
+          
+          // Reset unread count ở danh sách locally
+          setConversations(prev => prev.map(c => c.id === activeChatId ? {...c, unreadCount: 0} : c));
+        } catch (error) {
+          console.error("Lỗi tải messages:", error);
+        }
+      };
+      fetchMessages();
+    }
+  }, [activeChatId]);
+
+  const activeChat = conversations.find(c => c.id === activeChatId);
+
+  return (
+    <div className="container mx-auto max-w-7xl px-4 py-6 h-[calc(100vh-80px)]">
+      <div className="bg-white rounded-2xl shadow-xl overflow-hidden h-full flex border border-gray-100">
+        
+        {/* LEFT SIDEBAR */}
+        <div className={`w-full md:w-80 lg:w-96 flex flex-col border-r border-gray-100 ${activeChatId ? 'hidden md:flex' : 'flex'}`}>
+          <ChatList 
+            conversations={conversations} 
+            activeChatId={activeChatId}
+            onSelectChat={setActiveChatId}
           />
-        ) : (
-          <div className="flex h-full items-center justify-center">
-            <p className="text-gray-500">Chọn một đoạn chat để bắt đầu</p>
+        </div>
+
+        {/* MAIN CHAT */}
+        <div className={`flex-1 flex flex-col ${!activeChatId ? 'hidden md:flex' : 'flex'}`}>
+          {activeChatId && activeChat ? (
+            <ChatWindow 
+              chat={activeChat}
+              messages={messages}
+              currentUser={user}
+              connection={connection}
+              onBack={() => setActiveChatId(null)}
+            />
+          ) : (
+            <div className="flex-1 flex flex-col items-center justify-center text-gray-400 p-8 bg-gray-50">
+              <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                 <span className="text-4xl">💬</span>
+              </div>
+              <p className="text-lg font-medium">Chọn một cuộc hội thoại để bắt đầu</p>
+            </div>
+          )}
+        </div>
+
+        {/* RIGHT DETAILS (Ẩn trên màn nhỏ) */}
+        {activeChatId && activeChat && (
+          <div className="hidden xl:block w-80 border-l border-gray-100">
+            <ChatDetails chat={activeChat} />
           </div>
         )}
       </div>
-
-      {/* CỘT 3: THÔNG TIN (ChatDetails) */}
-      {showDetails && activeChat && (
-        <div className="w-96 flex-shrink-0 border-l border-gray-200">
-          <ChatDetails
-            activeChat={activeChat}
-          />
-        </div>
-      )}
     </div>
   );
 };

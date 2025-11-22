@@ -105,3 +105,4 @@ D:\BTL_CSharp\Freelancer\Freelancer\bin\Debug\net6.0\System.Security.Cryptograph
 D:\BTL_CSharp\Freelancer\Freelancer\bin\Debug\net6.0\System.Text.Encoding.CodePages.dll
 D:\BTL_CSharp\Freelancer\Freelancer\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll
 D:\BTL_CSharp\Freelancer\Freelancer\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Text.Encoding.CodePages.dll
+D:\BTL_CSharp\Freelancer\Freelancer\bin\Debug\net6.0\Freelancer.staticwebassets.runtime.json
