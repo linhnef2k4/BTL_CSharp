@@ -1,119 +1,117 @@
-import React, { useState } from 'react';
-import { Send, MoreHorizontal, Trash2, EyeOff } from 'lucide-react';
-import { AnimatePresence, motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { Send, MoreHorizontal, Trash2, ThumbsUp, MessageCircle } from 'lucide-react';
+import socialService from '../../../services/socialService';
+import { formatTimeAgo } from '../../utils/dateUtils';
 
-// Component con cho 1 bình luận (ĐÃ NÂNG CẤP SIÊU XỊN)
-const Comment = ({ comment, currentUser, postAuthor }) => {
-  const [isLiked, setIsLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(0);
+// Helper lấy avatar
+const getAvatarUrl = (fullName, avatarUrl) => {
+  if (avatarUrl) return avatarUrl;
+  const name = fullName ? fullName.replace(/\s/g, '+') : 'User';
+  return `https://ui-avatars.com/api/?name=${name}&background=random&color=fff`;
+};
+
+// 1. Component hiển thị từng Comment (hỗ trợ đệ quy)
+const CommentItem = ({ comment, postId, currentUser, onReplySuccess }) => {
+  const [isLiked, setIsLiked] = useState(comment.myReaction === 'Like');
+  const [likeCount, setLikeCount] = useState(comment.reactionCounts?.Like || 0);
   const [isReplying, setIsReplying] = useState(false);
-  const [isOptionsOpen, setIsOptionsOpen] = useState(false);
-  // Thêm state cho replies
-  const [replies, setReplies] = useState([]); 
+  const [replyContent, setReplyContent] = useState('');
+  const [isSendingReply, setIsSendingReply] = useState(false);
 
-  const handleLike = () => {
-    setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
-    setIsLiked(prev => !prev);
-  };
-  
-  const handleReplySubmit = (replyText) => {
-    const newReply = {
-      id: replies.length + 1,
-      author: currentUser,
-      text: replyText,
-    };
-    setReplies([...replies, newReply]);
-    setIsReplying(false); // Đóng input sau khi trả lời
+  // Xử lý Like Comment
+  const handleLike = async () => {
+    if (!currentUser) return alert("Vui lòng đăng nhập!");
+    const prevLiked = isLiked;
+    setIsLiked(!isLiked);
+    setLikeCount(prev => !prevLiked ? prev + 1 : prev - 1);
+
+    try {
+      await socialService.reactToComment(comment.id, "Like");
+    } catch (error) {
+      // Rollback
+      setIsLiked(prevLiked);
+      setLikeCount(prev => prevLiked ? prev + 1 : prev - 1);
+    }
   };
 
-  const isMyComment = comment.author.name === currentUser.name;
-  const isPostAuthor = comment.author.name === postAuthor.name;
+  // Xử lý Gửi Reply
+  const handleSendReply = async () => {
+    if (!replyContent.trim()) return;
+    setIsSendingReply(true);
+    try {
+      await socialService.postComment(postId, {
+        content: replyContent,
+        parentCommentId: comment.id
+      });
+      setReplyContent('');
+      setIsReplying(false);
+      onReplySuccess(); // Gọi callback để reload list
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSendingReply(false);
+    }
+  };
 
   return (
-    <div className="flex items-start space-x-2">
-      <img src={comment.author.avatar} alt="Avatar" className="mt-1 h-8 w-8 rounded-full" />
+    <div className="flex gap-3 mt-4 w-full">
+      <img 
+        src={getAvatarUrl(comment.authorFullName, comment.authorAvatarUrl)} 
+        alt="avatar" 
+        className="w-8 h-8 rounded-full flex-shrink-0 object-cover"
+      />
       <div className="flex-1">
-        <div className="group relative">
-          <div className="inline-block rounded-lg bg-gray-100 px-3 py-2">
-            <span className="font-semibold text-sm">{comment.author.name}</span>
-            {/* Tag "Tác giả" (như ảnh) */}
-            {isPostAuthor && (
-              <span className="ml-2 text-xs font-medium text-gray-500">· Tác giả</span>
-            )}
-            <p className="text-sm">{comment.text}</p>
-            {/* Hiển thị số Like (nếu có) */}
-            {likeCount > 0 && (
-              <span className="absolute -bottom-3 -right-3 rounded-full bg-white px-1 py-0.5 text-xs shadow">
-                👍 {likeCount}
-              </span>
-            )}
+        <div className="bg-gray-100 rounded-2xl px-4 py-2 inline-block min-w-[200px]">
+          <div className="font-bold text-sm text-gray-900">
+            {comment.authorFullName}
           </div>
-          
-          {/* Nút 3 chấm (MỚI) */}
-          <button 
-            onClick={() => setIsOptionsOpen(prev => !prev)}
-            className="absolute right-0 top-0 hidden rounded-full p-1 text-gray-500 opacity-0 group-hover:opacity-100 md:inline-block"
-          >
-            <MoreHorizontal size={16} />
-          </button>
-          
-          {/* Dropdown cho comment */}
-          <AnimatePresence>
-            {isOptionsOpen && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                className="absolute right-0 top-8 z-10 w-32 rounded-md bg-white py-1 shadow-lg"
-                onMouseLeave={() => setIsOptionsOpen(false)} // Tự đóng
-              >
-                {isMyComment ? (
-                  <button className="flex w-full items-center gap-2 px-3 py-1 text-sm text-red-600 hover:bg-gray-100">
-                    <Trash2 size={14} /> Xóa
-                  </button>
-                ) : (
-                  <button className="flex w-full items-center gap-2 px-3 py-1 text-sm hover:bg-gray-100">
-                    <EyeOff size={14} /> Ẩn
-                  </button>
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
+          <p className="text-sm text-gray-800 whitespace-pre-wrap">{comment.content}</p>
         </div>
         
-        {/* Nút Like, Trả lời (ĐÃ NÂNG CẤP) */}
-        <div className="pl-2 mt-1 flex space-x-3 text-xs text-gray-500">
+        {/* Actions Line */}
+        <div className="flex items-center gap-4 mt-1 ml-2 text-xs text-gray-500 font-medium">
+          <span>{formatTimeAgo(comment.createdDate)}</span>
           <button 
             onClick={handleLike}
-            className={`font-semibold hover:underline ${isLiked ? 'text-blue-600' : ''}`}
+            className={`hover:underline ${isLiked ? 'text-blue-600 font-bold' : ''}`}
           >
-            Thích
+            Thích {likeCount > 0 && `(${likeCount})`}
           </button>
-          <button 
-            onClick={() => setIsReplying(prev => !prev)}
-            className="font-semibold hover:underline"
-          >
-            Trả lời
+          <button onClick={() => setIsReplying(!isReplying)} className="hover:underline">
+            Phản hồi
           </button>
-          <span>· 5 phút</span>
-        </div>
-        
-        {/* Hiển thị các trả lời */}
-        <div className="mt-2 space-y-2 pl-4">
-          {replies.map(reply => (
-            <Comment 
-              key={reply.id} 
-              comment={reply} 
-              currentUser={currentUser} 
-              postAuthor={postAuthor} 
-            />
-          ))}
         </div>
 
-        {/* Input Trả lời (MỚI) */}
+        {/* Input Reply */}
         {isReplying && (
-          <div className="mt-2">
-            <CommentInput currentUser={currentUser} onSubmit={handleReplySubmit} isReply={true} />
+          <div className="flex gap-2 mt-2 items-center">
+             <input
+              type="text"
+              value={replyContent}
+              onChange={(e) => setReplyContent(e.target.value)}
+              placeholder={`Trả lời ${comment.authorFullName}...`}
+              className="flex-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-blue-500 focus:border-blue-500 px-3 py-1.5 outline-none"
+              autoFocus
+              onKeyDown={(e) => e.key === 'Enter' && handleSendReply()}
+            />
+            <button onClick={handleSendReply} disabled={isSendingReply} className="text-blue-600 p-1">
+              <Send size={16} />
+            </button>
+          </div>
+        )}
+
+        {/* Đệ quy: Render Replies */}
+        {comment.replies && comment.replies.length > 0 && (
+          <div className="mt-2 pl-3 border-l-2 border-gray-200">
+            {comment.replies.map(reply => (
+              <CommentItem 
+                key={reply.id} 
+                comment={reply} 
+                postId={postId} 
+                currentUser={currentUser}
+                onReplySuccess={onReplySuccess} 
+              />
+            ))}
           </div>
         )}
       </div>
@@ -121,80 +119,94 @@ const Comment = ({ comment, currentUser, postAuthor }) => {
   );
 };
 
-// Tách Input ra làm component con cho "sạch"
-const CommentInput = ({ currentUser, onSubmit, isReply = false }) => {
-  const [text, setText] = useState('');
+// 2. Component Chính
+const CommentSection = ({ postId, currentUser }) => {
+  const [comments, setComments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [newComment, setNewComment] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = () => {
-    if (!text.trim()) return;
-    onSubmit(text);
-    setText('');
+  const fetchComments = async () => {
+    try {
+        const res = await socialService.getComments(postId);
+        setComments(res.data);
+    } catch (err) {
+        console.error("Lỗi tải comment:", err);
+    } finally {
+        setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchComments();
+  }, [postId]);
+
+  const handlePostComment = async () => {
+    if (!newComment.trim()) return;
+    setSubmitting(true);
+    try {
+      // Comment gốc (parentCommentId = null)
+      const res = await socialService.postComment(postId, {
+        content: newComment,
+        parentCommentId: null 
+      });
+      // Thêm vào đầu danh sách
+      setComments([res.data, ...comments]);
+      setNewComment('');
+    } catch (error) {
+      console.error("Lỗi post comment:", error);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
-    <div className={`flex items-center space-x-2 ${isReply ? '' : 'mb-4'}`}>
-      <img src={currentUser.avatar} alt="Avatar" className="h-8 w-8 rounded-full" />
-      <div className="flex-1 relative">
-        <input
-          type="text"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="Viết bình luận..."
-          className="w-full rounded-full bg-gray-100 px-4 py-2 text-sm focus:outline-none"
-          onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
-        />
-        <button 
-          onClick={handleSubmit}
-          className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1.5 text-blue-600 hover:bg-gray-200"
-        >
-          <Send size={16} />
-        </button>
-      </div>
-    </div>
-  );
-};
-
-// Dữ liệu "giả"
-const mockComments = [
-  {
-    id: 1,
-    author: { name: 'Đào Xuân Thông', avatar: 'https://ui-avatars.com/api/?name=DT&background=random' },
-    text: 'Bài viết hay quá!',
-  },
-  {
-    id: 2,
-    author: { name: 'Văn Đức Trung', avatar: 'https://ui-avatars.com/api/?name=VT&background=random' },
-    text: 'Cảm ơn chia sẻ của bạn.',
-  },
-];
-
-const CommentSection = ({ currentUser, postAuthor }) => {
-  const [comments, setComments] = useState(mockComments);
-
-  const handlePostComment = (commentText) => {
-    const comment = {
-      id: comments.length + 1,
-      author: { name: currentUser.name, avatar: currentUser.avatar },
-      text: commentText,
-    };
-    setComments([...comments, comment]);
-  };
-
-  return (
-    <div className="border-t p-4">
-      {/* Input để viết comment mới */}
-      <CommentInput currentUser={currentUser} onSubmit={handlePostComment} />
-
-      {/* Danh sách các comment đã có */}
-      <div className="space-y-4">
-        {comments.map((comment) => (
-          <Comment 
-            key={comment.id} 
-            comment={comment} 
-            currentUser={currentUser} 
-            postAuthor={postAuthor} 
+    <div className="pt-4 border-t border-gray-100">
+      {/* Input cho Comment Gốc */}
+      {currentUser && (
+        <div className="flex gap-3 mb-6">
+          <img 
+            src={getAvatarUrl(currentUser.fullName, currentUser.seeker?.avatarUrl)} 
+            alt="my avatar" 
+            className="w-8 h-8 rounded-full object-cover"
           />
-        ))}
+          <div className="flex-1 relative">
+            <input
+              type="text"
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handlePostComment()}
+              placeholder="Viết bình luận..."
+              className="w-full bg-gray-100 border-0 rounded-full px-4 py-2 pr-10 focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all outline-none"
+            />
+            <button 
+              onClick={handlePostComment}
+              disabled={submitting}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-blue-600 p-1 hover:bg-blue-50 rounded-full"
+            >
+              <Send size={18} />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Danh sách Comments */}
+      <div className="space-y-2">
+        {loading ? (
+             <p className="text-center text-gray-500 text-sm py-2">Đang tải bình luận...</p>
+        ) : comments.length > 0 ? (
+            comments.map(comment => (
+                <CommentItem 
+                    key={comment.id} 
+                    comment={comment} 
+                    postId={postId} 
+                    currentUser={currentUser}
+                    onReplySuccess={fetchComments} // Reload lại cây comment khi có reply mới
+                />
+            ))
+        ) : (
+            <p className="text-center text-gray-400 text-sm italic">Chưa có bình luận nào.</p>
+        )}
       </div>
     </div>
   );

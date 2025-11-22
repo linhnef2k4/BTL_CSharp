@@ -3,28 +3,24 @@
   "WorkspaceRootPath": "D:\\BTL_CSharp\\Freelancer\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\controllers\\profilecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\controllers\\profilecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\controllers\\seekerscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\controllers\\seekerscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\services\\profileservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\services\\profileservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\interfaces\\iprofileservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\interfaces\\iprofileservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\models\\paymenttransaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\models\\paymenttransaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\controllers\\paymentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\controllers\\paymentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\services\\paymentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\services\\paymentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\migrations\\20251122161255_updatepaymenttransactionnullables.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\migrations\\20251122161255_updatepaymenttransactionnullables.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -38,99 +34,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 6,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "ProfileController.cs",
-              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Controllers\\ProfileController.cs",
-              "RelativeDocumentMoniker": "Freelancer\\Controllers\\ProfileController.cs",
-              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Controllers\\ProfileController.cs",
-              "RelativeToolTip": "Freelancer\\Controllers\\ProfileController.cs",
-              "ViewState": "AgIAACAAAAAAAAAAAAA+wGwAAAAdAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-22T15:34:20.187Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "SeekersController.cs",
-              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Controllers\\SeekersController.cs",
-              "RelativeDocumentMoniker": "Freelancer\\Controllers\\SeekersController.cs",
-              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Controllers\\SeekersController.cs",
-              "RelativeToolTip": "Freelancer\\Controllers\\SeekersController.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAAB0AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-22T15:33:25.528Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "IProfileService.cs",
-              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Interfaces\\IProfileService.cs",
-              "RelativeDocumentMoniker": "Freelancer\\Interfaces\\IProfileService.cs",
-              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Interfaces\\IProfileService.cs",
-              "RelativeToolTip": "Freelancer\\Interfaces\\IProfileService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-22T15:12:06.035Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "ProfileService.cs",
-              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Services\\ProfileService.cs",
-              "RelativeDocumentMoniker": "Freelancer\\Services\\ProfileService.cs",
-              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Services\\ProfileService.cs",
-              "RelativeToolTip": "Freelancer\\Services\\ProfileService.cs",
-              "ViewState": "AgIAAPYAAAAAAAAAAAAowDMBAAAyAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-22T15:10:39.687Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "PaymentTransaction.cs",
-              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Models\\PaymentTransaction.cs",
-              "RelativeDocumentMoniker": "Freelancer\\Models\\PaymentTransaction.cs",
-              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Models\\PaymentTransaction.cs",
-              "RelativeToolTip": "Freelancer\\Models\\PaymentTransaction.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAjAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-22T15:06:21.647Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "PaymentService.cs",
-              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Services\\PaymentService.cs",
-              "RelativeDocumentMoniker": "Freelancer\\Services\\PaymentService.cs",
-              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Services\\PaymentService.cs",
-              "RelativeToolTip": "Freelancer\\Services\\PaymentService.cs",
-              "ViewState": "AgIAANwAAAAAAAAAAAAYwAYBAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-22T15:05:10.206Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Program.cs",
-              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Program.cs",
-              "RelativeDocumentMoniker": "Freelancer\\Program.cs",
-              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Program.cs",
-              "RelativeToolTip": "Freelancer\\Program.cs",
-              "ViewState": "AgIAABIAAAAAAAAAAAAAACoAAAA6AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-22T14:58:38.67Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
@@ -142,6 +47,79 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "20251122161255_UpdatePaymentTransactionNullables.cs",
+              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Migrations\\20251122161255_UpdatePaymentTransactionNullables.cs",
+              "RelativeDocumentMoniker": "Freelancer\\Migrations\\20251122161255_UpdatePaymentTransactionNullables.cs",
+              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Migrations\\20251122161255_UpdatePaymentTransactionNullables.cs",
+              "RelativeToolTip": "Freelancer\\Migrations\\20251122161255_UpdatePaymentTransactionNullables.cs",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAowDgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-22T16:35:11.906Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "PaymentController.cs",
+              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Controllers\\PaymentController.cs",
+              "RelativeDocumentMoniker": "Freelancer\\Controllers\\PaymentController.cs",
+              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Controllers\\PaymentController.cs",
+              "RelativeToolTip": "Freelancer\\Controllers\\PaymentController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-22T16:16:27.531Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "PaymentService.cs",
+              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Services\\PaymentService.cs",
+              "RelativeDocumentMoniker": "Freelancer\\Services\\PaymentService.cs",
+              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Services\\PaymentService.cs",
+              "RelativeToolTip": "Freelancer\\Services\\PaymentService.cs",
+              "ViewState": "AgIAAFQAAAAAAAAAAAA2wAgBAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-22T15:55:04.604Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "PaymentTransaction.cs",
+              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Models\\PaymentTransaction.cs",
+              "RelativeDocumentMoniker": "Freelancer\\Models\\PaymentTransaction.cs",
+              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Models\\PaymentTransaction.cs",
+              "RelativeToolTip": "Freelancer\\Models\\PaymentTransaction.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-22T15:54:41.146Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\appsettings.json",
+              "RelativeDocumentMoniker": "Freelancer\\appsettings.json",
+              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\appsettings.json",
+              "RelativeToolTip": "Freelancer\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-11-22T15:49:22.189Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Program.cs",
+              "RelativeDocumentMoniker": "Freelancer\\Program.cs",
+              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Program.cs",
+              "RelativeToolTip": "Freelancer\\Program.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAIBZwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-22T15:49:17.943Z"
             }
           ]
         }

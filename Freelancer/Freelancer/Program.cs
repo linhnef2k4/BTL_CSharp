@@ -1,12 +1,18 @@
-﻿using Freelancer.Data; // <--- Import
+﻿using Freelancer.Data;
 using Freelancer.Interfaces;
 using Freelancer.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Text; // <--- Import
+using System.Text;
 using Microsoft.OpenApi.Models;
 using Freelancer.Hubs;
+// THÊM NAMESPACE NÀY ĐỂ SỬ DỤNG JwtBearerEvents VÀ CÁC TÙY CHỌN KHÁC
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,9 +57,6 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 
 
-// (Thêm các service khác của bạn ở đây)
-// builder.Services.AddScoped<IUserService, UserService>();
-
 // --- Cấu hình xác thực JWT ---
 builder.Services.AddAuthentication(options =>
 {
@@ -72,6 +75,25 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
+
+    // --- CẤU HÌNH ĐỂ SIGNALR NHẬN TOKEN TỪ QUERY STRING ---
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            // SignalR gửi token qua query string với key là "access_token"
+            var accessToken = context.Request.Query["access_token"];
+
+            // Nếu request đến Hub (bắt đầu bằng /chathub) và có token
+            var path = context.HttpContext.Request.Path;
+            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chathub"))
+            {
+                // Gán token vào context để xác thực
+                context.Token = accessToken;
+            }
+            return Task.CompletedTask;
+        }
+    };
 });
 
 // Thêm các service mặc định của API
@@ -82,9 +104,10 @@ builder.Services.AddEndpointsApiExplorer();
 
 // --- THÊM DÒNG NÀY (ĐỂ BẬT SIGNALR) ---
 builder.Services.AddSignalR();
-// --- THAY THẾ DÒNG "builder.Services.AddSwaggerGen();" BẰNG CÁI NÀY ---
+
 // (Chúng ta cũng cần HttpContextAccessor để lấy domain)
 builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddSwaggerGen(options =>
 {
     // 1. Định nghĩa "Security Definition" (Cách Swagger hiểu về Token)
@@ -114,7 +137,6 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
-// --- KẾT THÚC THAY THẾ ---
 
 // --- 2. Xây dựng ứng dụng ---
 var app = builder.Build();
@@ -166,8 +188,6 @@ app.UseCors(MyAllowSpecificOrigins);
 app.UseAuthentication(); // Bật xác thực
 app.UseAuthorization(); // Bật phân quyền
 
-// (Bạn có thể thêm UseAuthentication() ở đây)
-app.UseAuthorization();
 // --- THÊM DÒNG NÀY (ĐỂ ĐĂNG KÝ HUB) ---
 // (Nó sẽ tạo ra 1 endpoint /chathub)
 app.MapHub<ChatHub>("/chathub");

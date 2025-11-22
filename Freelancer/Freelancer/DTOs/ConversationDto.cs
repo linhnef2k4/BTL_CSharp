@@ -11,6 +11,7 @@
         public string OtherParticipantFullName { get; set; }
         public string OtherParticipantHeadline { get; set; } // "Frontend Developer"
 
+
         // --- Tin nhắn cuối cùng ---
         public string LastMessage { get; set; }
         public DateTime LastMessageDate { get; set; }

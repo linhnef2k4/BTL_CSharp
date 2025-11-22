@@ -1,64 +1,44 @@
 import React from 'react';
-import { Video, Image, FileText } from 'lucide-react';
+import { Image, Smile } from 'lucide-react';
 
-// Hàm tạo avatar (giống như trong NavBar/LeftSidebar)
 const getAvatarUrl = (user) => {
-  if (user?.seeker?.avatarUrl) {
-    return user.seeker.avatarUrl;
-  }
-  const name = user?.fullName?.replace(/\s/g, '+') || '?';
+  if (user?.seeker?.avatarUrl) return user.seeker.avatarUrl;
+  const name = user?.fullName?.replace(/\s/g, '+') || 'User';
   return `https://ui-avatars.com/api/?name=${name}&background=random&color=fff`;
-}
+};
 
-// <<< 1. Component này nhận 'user' thật từ MainFeed
 const CreatePostWidget = ({ user, onClick }) => {
-  // Lấy tên đầu tiên (First Name)
-  const firstName = user.fullName ? user.fullName.split(' ')[0] : 'bạn';
+  const firstName = user?.fullName ? user.fullName.split(' ')[0] : 'bạn';
 
   return (
-    <div className="rounded-2xl bg-white p-4 shadow-md hover:shadow-lg transition-all">
-      {/* Hàng trên: Avatar và ô nhập "giả" */}
-      <div className="flex items-center space-x-3 border-b border-gray-200 pb-3">
+    <div className="rounded-2xl bg-white p-4 shadow-sm border border-gray-100 mb-6">
+      <div className="flex items-center gap-3 mb-3">
         <img
-          src={getAvatarUrl(user)} // <<< 2. Dùng avatar thật
+          src={getAvatarUrl(user)}
           alt="Avatar"
-          className="h-10 w-10 rounded-full border border-gray-300 shadow-sm object-cover"
+          className="h-10 w-10 rounded-full border border-gray-200 object-cover"
         />
-
-        {/* Nút mở modal */}
         <button
           onClick={onClick}
-          className="w-full rounded-full bg-gray-100 px-4 py-2 text-left text-gray-600 hover:bg-gray-200 transition"
+          className="flex-1 rounded-full bg-gray-100 px-4 py-2.5 text-left text-gray-500 hover:bg-gray-200 transition duration-200 text-sm font-medium"
         >
-          {/* <<< 3. Dùng tên thật */}
-          Chia sẻ kinh nghiệm của bạn, {firstName}? 
+          {firstName} ơi, bạn đang nghĩ gì thế?
         </button>
       </div>
-
-      {/* Hàng dưới: Các nút chức năng (giữ nguyên) */}
-      <div className="mt-3 flex justify-around">
-        <button
-          onClick={onClick}
-          className="flex items-center space-x-2 rounded-lg px-4 py-2 text-sm font-semibold text-red-500 hover:bg-gray-100 transition"
+      <div className="flex border-t border-gray-100 pt-3">
+        <button 
+            onClick={onClick}
+            className="flex-1 flex items-center justify-center gap-2 py-1.5 rounded-lg hover:bg-gray-50 text-gray-600 transition"
         >
-          <Video className="h-5 w-5" />
-          <span>Video</span>
+            <Image size={20} className="text-green-500" />
+            <span className="text-sm font-medium">Ảnh/Video</span>
         </button>
-
-        <button
-          onClick={onClick}
-          className="flex items-center space-x-2 rounded-lg px-4 py-2 text-sm font-semibold text-green-500 hover:bg-gray-100 transition"
+        <button 
+            onClick={onClick}
+            className="flex-1 flex items-center justify-center gap-2 py-1.5 rounded-lg hover:bg-gray-50 text-gray-600 transition"
         >
-          <Image className="h-5 w-5" />
-          <span>Ảnh</span>
-        </button>
-
-        <button
-          onClick={onClick}
-          className="flex items-center space-x-2 rounded-lg px-4 py-2 text-sm font-semibold text-blue-500 hover:bg-gray-100 transition"
-        >
-          <FileText className="h-5 w-5" />
-          <span>Tài liệu</span>
+            <Smile size={20} className="text-yellow-500" />
+            <span className="text-sm font-medium">Cảm xúc</span>
         </button>
       </div>
     </div>

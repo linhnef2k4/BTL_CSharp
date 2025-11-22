@@ -240,8 +240,11 @@ namespace Freelancer.Migrations
 
             modelBuilder.Entity("Freelancer.Models.PaymentTransaction", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
@@ -255,7 +258,8 @@ namespace Freelancer.Migrations
 
                     b.Property<string>("OrderInfo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<DateTime?>("PaidDate")
                         .HasColumnType("datetime2");

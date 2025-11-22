@@ -1,0 +1,69 @@
+{
+  "Files": [
+    {
+      "Id": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\avatars\\62e7dc73-c2ad-4c83-a327-121e62f7921b-zoro.jpg",
+      "PackagePath": "staticwebassets\\uploads\\avatars\\62e7dc73-c2ad-4c83-a327-121e62f7921b-zoro.jpg"
+    },
+    {
+      "Id": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\avatars\\723a0e38-6613-44b6-8fec-873c343f5ba7-quocky.jpg",
+      "PackagePath": "staticwebassets\\uploads\\avatars\\723a0e38-6613-44b6-8fec-873c343f5ba7-quocky.jpg"
+    },
+    {
+      "Id": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\avatars\\a784a1ff-86ce-41db-89d9-0769aaa53bed-mtp.webp",
+      "PackagePath": "staticwebassets\\uploads\\avatars\\a784a1ff-86ce-41db-89d9-0769aaa53bed-mtp.webp"
+    },
+    {
+      "Id": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\chat-files\\19831aec-91cb-46e3-8936-c49279d616b5-gggggg.png",
+      "PackagePath": "staticwebassets\\uploads\\chat-files\\19831aec-91cb-46e3-8936-c49279d616b5-gggggg.png"
+    },
+    {
+      "Id": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\chat-files\\45e5d60d-4742-45b4-a29b-0d158e4b32d0-WOMEN.png",
+      "PackagePath": "staticwebassets\\uploads\\chat-files\\45e5d60d-4742-45b4-a29b-0d158e4b32d0-WOMEN.png"
+    },
+    {
+      "Id": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\chat-files\\4ce0ef51-0619-4adb-9d82-ef04658a00d2-gggggg.png",
+      "PackagePath": "staticwebassets\\uploads\\chat-files\\4ce0ef51-0619-4adb-9d82-ef04658a00d2-gggggg.png"
+    },
+    {
+      "Id": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\chat-files\\7ee4beb8-4bf6-446d-9bc0-846f4db053a8-zoro.jpg",
+      "PackagePath": "staticwebassets\\uploads\\chat-files\\7ee4beb8-4bf6-446d-9bc0-846f4db053a8-zoro.jpg"
+    },
+    {
+      "Id": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\logos\\cc9a6272-87bc-4823-a623-25da99b00c0d-react.jpg",
+      "PackagePath": "staticwebassets\\uploads\\logos\\cc9a6272-87bc-4823-a623-25da99b00c0d-react.jpg"
+    },
+    {
+      "Id": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\resumes\\8072d9f5-4e6e-4d88-a6a7-ff21c9cbc68c-CVLinhPhan.pdf",
+      "PackagePath": "staticwebassets\\uploads\\resumes\\8072d9f5-4e6e-4d88-a6a7-ff21c9cbc68c-CVLinhPhan.pdf"
+    },
+    {
+      "Id": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\resumes\\850882a8-eef8-4d56-80dd-20980245f293-CV_LinhNef.pdf",
+      "PackagePath": "staticwebassets\\uploads\\resumes\\850882a8-eef8-4d56-80dd-20980245f293-CV_LinhNef.pdf"
+    },
+    {
+      "Id": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\resumes\\e31277cb-daf5-4065-aa77-53e348e84e1c-CVLinhPhan.pdf",
+      "PackagePath": "staticwebassets\\uploads\\resumes\\e31277cb-daf5-4065-aa77-53e348e84e1c-CVLinhPhan.pdf"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.Freelancer.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.Freelancer.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.build.Freelancer.props",
+      "PackagePath": "build\\Freelancer.props"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.buildMultiTargeting.Freelancer.props",
+      "PackagePath": "buildMultiTargeting\\Freelancer.props"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.buildTransitive.Freelancer.props",
+      "PackagePath": "buildTransitive\\Freelancer.props"
+    }
+  ],
+  "ElementsToRemove": []
+}
