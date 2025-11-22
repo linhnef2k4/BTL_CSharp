@@ -47,7 +47,8 @@ builder.Services.AddScoped<IConversationService, ConversationService>();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IFriendshipService, FriendshipService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
-builder.Services.AddScoped<IEmailService, EmailService>(); // <-- THÊM DÒNG NÀY
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
 
 
 // (Thêm các service khác của bạn ở đây)

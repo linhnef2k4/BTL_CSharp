@@ -26,5 +26,8 @@ namespace Freelancer.Controllers
             var result = await _seekerService.SearchSeekersAsync(query);
             return Ok(result);
         }
+
+
+        
     }
 }

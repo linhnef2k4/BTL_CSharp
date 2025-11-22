@@ -63,7 +63,8 @@ namespace Freelancer.Services
                     CompanyWebsite = user.Employer.CompanyWebsite,
                     Address = user.Employer.Address,
                     IsVip = user.Employer.IsVip,
-                    Status = user.Employer.Status.ToString() // Chuyển Enum thành chuỗi
+                    Status = user.Employer.Status.ToString(), // Chuyển Enum thành chuỗi
+                    LogoCompany = user.Employer.CompanyLogoUrl
                 }
             };
         }
@@ -218,11 +219,112 @@ namespace Freelancer.Services
                     CompanyWebsite = user.Employer.CompanyWebsite,
                     Address = user.Employer.Address,
                     IsVip = user.Employer.IsVip,
-                    Status = user.Employer.Status.ToString() // Chuyển Enum thành chuỗi
+                    Status = user.Employer.Status.ToString(), // Chuyển Enum thành chuỗi
+                    LogoCompany = user.Employer.CompanyLogoUrl
                 }
             };
 
             return userProfileDto;
         }
+
+        public async Task<List<UserProfileDto>> GetVipEmployersAsync()
+        {
+            var employers = await _context.Employers
+                .Include(e => e.User)
+                .Where(e => e.IsVip == true)
+                .ToListAsync();
+
+            return employers.Select(employer => new UserProfileDto
+            {
+                Id = employer.User.Id,
+                FullName = employer.User.FullName,
+                Email = employer.User.Email,
+                Role = employer.User.Role,
+                PhoneNumber = employer.User.PhoneNumber,
+                Gender = employer.User.Gender,
+                DateOfBirth = employer.User.DateOfBirth,
+               
+
+                Employer = new EmployerProfileDto
+                {
+                    CompanyName = employer.CompanyName,
+                    TaxCode = employer.TaxCode,
+                    CompanySize = employer.CompanySize,
+                    CompanyWebsite = employer.CompanyWebsite,
+                    Address = employer.Address,
+                    IsVip = employer.IsVip,
+                    Status = employer.Status.ToString(),
+                    LogoCompany = employer.CompanyLogoUrl
+                }
+            }).ToList();
+        }
+
+        public async Task<UserProfileDto> GetVipSeekerAsync()
+        {
+            var seeker = await _context.Seekers
+                .Include(s => s.User)
+                .Where(s => s.IsVip)
+                .OrderByDescending(s => s.YearsOfExperience) // ví dụ lấy top 1
+                .FirstOrDefaultAsync();
+
+            if (seeker == null) return null;
+
+            return new UserProfileDto
+            {
+                Id = seeker.User.Id,
+                FullName = seeker.User.FullName,
+                Email = seeker.User.Email,
+                Role = seeker.User.Role,
+                PhoneNumber = seeker.User.PhoneNumber,
+                Gender = seeker.User.Gender,
+                DateOfBirth = seeker.User.DateOfBirth,
+                Seeker = new SeekerProfileDto
+                {
+                    Headline = seeker.Headline,
+                    IsVip = seeker.IsVip,
+                    ResumeUrl = seeker.ResumeUrl,
+                    YearsOfExperience = seeker.YearsOfExperience,
+                    Location = seeker.Location,
+                    Skills = seeker.Skills,
+                    Level = seeker.Level,
+                    Avatar = seeker.AvatarUrl
+                }
+            };
+        }
+
+        public async Task<UserProfileDto> GetVipEmployerAsync()
+        {
+            var employer = await _context.Employers
+                .Include(e => e.User)
+                .Where(e => e.IsVip)
+                .OrderByDescending(e => e.CompanySize) // ví dụ top 1
+                .FirstOrDefaultAsync();
+
+            if (employer == null) return null;
+
+            return new UserProfileDto
+            {
+                Id = employer.User.Id,
+                FullName = employer.User.FullName,
+                Email = employer.User.Email,
+                Role = employer.User.Role,
+                PhoneNumber = employer.User.PhoneNumber,
+                Gender = employer.User.Gender,
+                DateOfBirth = employer.User.DateOfBirth,
+                Employer = new EmployerProfileDto
+                {
+                    CompanyName = employer.CompanyName,
+                    TaxCode = employer.TaxCode,
+                    CompanySize = employer.CompanySize,
+                    CompanyWebsite = employer.CompanyWebsite,
+                    Address = employer.Address,
+                    IsVip = employer.IsVip,
+                    Status = employer.Status.ToString(),
+                    LogoCompany = employer.CompanyLogoUrl
+                }
+            };
+        }
+
+        
     }
 }

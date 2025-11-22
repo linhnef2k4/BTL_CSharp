@@ -48,9 +48,9 @@ namespace Freelancer.Controllers
 
         // 1. Lấy danh sách Employer chờ duyệt
         [HttpGet("employer-requests/pending")]
-        public async Task<IActionResult> GetPendingEmployerRequests()
+        public async Task<IActionResult> GetPendingEmployerRequests(string? searchTerm)
         {
-            var requests = await _adminService.GetPendingEmployerRequestsAsync();
+            var requests = await _adminService.GetPendingEmployerRequestsAsync(searchTerm);
             return Ok(requests);
         }
 
@@ -77,6 +77,56 @@ namespace Freelancer.Controllers
                 return NotFound("Không tìm thấy yêu cầu hoặc yêu cầu đã được xử lý.");
             }
             return Ok("Từ chối nhà tuyển dụng thành công.");
+        }
+
+        // --- API QUẢN LÝ USER ---
+
+        // 1. Lấy danh sách (có tìm kiếm)
+        // GET /api/admin/users?search=Tuan&role=Seeker
+        [HttpGet("users")]
+        public async Task<IActionResult> GetAllUsers([FromQuery] string? search, [FromQuery] string? role, [FromQuery] bool? trangThai)
+        {
+            var users = await _adminService.GetAllUsersAsync(search, role, trangThai);
+            return Ok(users);
+        }
+
+        // 2. Xem chi tiết
+        [HttpGet("users/{id}")]
+        public async Task<IActionResult> GetUserDetail(int id)
+        {
+            var user = await _adminService.GetUserDetailAsync(id);
+            if (user == null) return NotFound("Không tìm thấy người dùng.");
+            return Ok(user);
+        }
+
+        // 3. Khóa / Mở khóa
+        [HttpPost("users/{id}/toggle-lock")]
+        public async Task<IActionResult> ToggleUserLock(int id)
+        {
+            var success = await _adminService.ToggleUserLockAsync(id);
+            if (!success) return BadRequest("Không tìm thấy người dùng hoặc không thể khóa Admin.");
+
+            return Ok("Đã thay đổi trạng thái khóa tài khoản.");
+        }
+
+        [HttpPost("users/{id}/reset-password")]
+        public async Task<IActionResult> ResetUserPassword(int id)
+        {
+            // Đặt mật khẩu mặc định là "1" (hoặc bất kỳ chuỗi nào bạn muốn, ví dụ "Freelancer@123")
+            string defaultPassword = "1";
+
+            var success = await _adminService.ResetUserPasswordAsync(id, defaultPassword);
+
+            if (!success)
+            {
+                return BadRequest("Không tìm thấy người dùng hoặc không thể đặt lại mật khẩu cho Quản trị viên.");
+            }
+
+            return Ok(new
+            {
+                Message = $"Đã đặt lại mật khẩu thành công. Mật khẩu mới là: {defaultPassword}",
+                NewPassword = defaultPassword
+            });
         }
     }
 }

@@ -16,5 +16,6 @@
         // Thông tin nhà tuyển dụng
         public int EmployerId { get; set; }
         public string CompanyName { get; set; }
+        public string LogoCompany { get; set; }
     }
 }

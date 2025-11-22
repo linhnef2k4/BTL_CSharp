@@ -1,5 +1,6 @@
 ﻿using Freelancer.DTOs;
 using Freelancer.Interfaces;
+using Freelancer.Services;
 using Microsoft.AspNetCore.Authorization; // <-- Quan trọng!
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims; // <-- Quan trọng!
@@ -92,6 +93,27 @@ namespace Freelancer.Controllers
             }
 
             return Ok(profile);
+        }
+
+
+        // Lấy 1 Seeker VIP
+        [HttpGet("seeker/vip")]
+        public async Task<IActionResult> GetVipSeeker()
+        {
+            var result = await _profileService.GetVipSeekerAsync();
+            if (result == null)
+                return NotFound();
+            return Ok(result);
+        }
+
+        // Lấy 1 Employer VIP
+        [HttpGet("employer/vip")]
+        public async Task<IActionResult> GetVipEmployer()
+        {
+            var result = await _profileService.GetVipEmployerAsync();
+            if (result == null)
+                return NotFound();
+            return Ok(result);
         }
     }
 }

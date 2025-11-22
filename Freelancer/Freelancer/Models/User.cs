@@ -45,5 +45,6 @@ namespace Freelancer.Models
 
         // Một User có thể là Employer (và không phải Seeker)
         public virtual Employer Employer { get; set; }
+        public bool IsLocked { get; set; } = false; // Mặc định là không khóa
     }
 }

@@ -89,7 +89,8 @@ namespace Freelancer.Services
                 CreatedDate = p.CreatedDate,
                 Status = p.Status.ToString(), // Chuyển Enum thành "Pending"
                 EmployerId = p.Employer.Id,
-                CompanyName = p.Employer.CompanyName
+                CompanyName = p.Employer.CompanyName,
+                LogoCompany = p.Employer.CompanyLogoUrl
             });
         }
 
@@ -119,7 +120,8 @@ namespace Freelancer.Services
                 CreatedDate = p.CreatedDate,
                 Status = p.Status.ToString(),
                 EmployerId = p.Employer.Id,
-                CompanyName = p.Employer.CompanyName
+                CompanyName = p.Employer.CompanyName,
+                LogoCompany = p.Employer.CompanyLogoUrl
             });
         }
 
@@ -194,7 +196,8 @@ namespace Freelancer.Services
                 CreatedDate = p.CreatedDate,
                 Status = p.Status.ToString(),
                 EmployerId = p.Employer.Id,
-                CompanyName = p.Employer.CompanyName
+                CompanyName = p.Employer.CompanyName,
+                LogoCompany = p.Employer.CompanyLogoUrl
             });
         }
 
@@ -243,7 +246,8 @@ namespace Freelancer.Services
                 CompanyName = project.Employer.CompanyName,
                 CompanyWebsite = project.Employer.CompanyWebsite,
                 CompanySize = project.Employer.CompanySize,
-                CompanyAddress = project.Employer.Address
+                CompanyAddress = project.Employer.Address,
+                LogoCompany = project.Employer.CompanyLogoUrl
             };
         }
 
@@ -440,7 +444,8 @@ namespace Freelancer.Services
                 CreatedDate = p.CreatedDate,
                 Status = p.Status.ToString(),
                 EmployerId = p.Employer.Id,
-                CompanyName = p.Employer.CompanyName
+                CompanyName = p.Employer.CompanyName,
+                LogoCompany = p.Employer.CompanyLogoUrl
                 // Bạn có thể thêm thuộc tính DeletedDate vào ProjectDto nếu muốn hiển thị ngày xóa
             });
         }

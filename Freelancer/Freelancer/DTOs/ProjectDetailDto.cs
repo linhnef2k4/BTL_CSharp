@@ -26,5 +26,7 @@
         public string CompanyWebsite { get; set; }
         public string CompanySize { get; set; }
         public string CompanyAddress { get; set; }
+
+        public string LogoCompany { get; set; }
     }
 }

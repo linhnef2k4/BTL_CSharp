@@ -74,7 +74,12 @@ namespace Freelancer.Services
             {
                 return null; // Không tìm thấy email
             }
-
+            if (user.IsLocked)
+            {
+                // Trả về null (hoặc bạn có thể throw Exception để báo lỗi rõ hơn)
+                // Ở Controller, bạn có thể check và trả về "Tài khoản của bạn đã bị khóa".
+                throw new Exception("Tài khoản của bạn đã bị khóa.");
+            }
             // 2. Xác thực mật khẩu
             bool isValidPassword = BCrypt.Net.BCrypt.Verify(loginRequest.Password, user.PasswordHash);
 

@@ -14,6 +14,7 @@ namespace Freelancer.Models
     public class PaymentTransaction
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Id { get; set; } = Guid.NewGuid().ToString(); // Mã giao dịch duy nhất
 
         // --- SỬA ĐỔI Ở ĐÂY ---

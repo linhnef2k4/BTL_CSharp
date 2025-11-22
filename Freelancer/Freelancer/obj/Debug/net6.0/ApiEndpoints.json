@@ -38,7 +38,13 @@
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "searchTerm",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
     "ReturnTypes": []
   },
   {
@@ -61,6 +67,126 @@
     "ContainingType": "Freelancer.Controllers.AdminController",
     "Method": "RejectProject",
     "RelativePath": "api/Admin/projects/{id}/reject",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.StatisticsController",
+    "Method": "GetDashboardStats",
+    "RelativePath": "api/admin/statistics/dashboard",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.StatisticsController",
+    "Method": "GetRecentActivities",
+    "RelativePath": "api/admin/statistics/recent-activities",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.StatisticsController",
+    "Method": "GetRecentProjects",
+    "RelativePath": "api/admin/statistics/recent-projects",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.StatisticsController",
+    "Method": "GetRevenueChart",
+    "RelativePath": "api/admin/statistics/revenue",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "year",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.AdminController",
+    "Method": "GetAllUsers",
+    "RelativePath": "api/Admin/users",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "search",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "role",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "trangThai",
+        "Type": "System.Nullable\u00601[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.AdminController",
+    "Method": "GetUserDetail",
+    "RelativePath": "api/Admin/users/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.AdminController",
+    "Method": "ResetUserPassword",
+    "RelativePath": "api/Admin/users/{id}/reset-password",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.AdminController",
+    "Method": "ToggleUserLock",
+    "RelativePath": "api/Admin/users/{id}/toggle-lock",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -400,6 +526,16 @@
   },
   {
     "ContainingType": "Freelancer.Controllers.ProfileController",
+    "Method": "GetVipEmployer",
+    "RelativePath": "api/Profile/employer/vip",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.ProfileController",
     "Method": "GetMyProfile",
     "RelativePath": "api/Profile/me",
     "HttpMethod": "GET",
@@ -438,6 +574,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.ProfileController",
+    "Method": "GetVipSeeker",
+    "RelativePath": "api/Profile/seeker/vip",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
