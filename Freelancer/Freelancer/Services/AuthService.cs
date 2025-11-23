@@ -196,7 +196,7 @@ namespace Freelancer.Services
 
             // --- GỬI EMAIL ---
             // Giả sử link frontend của bạn là http://localhost:3000/reset-password
-            var resetLink = $"http://localhost:3000/reset-password?token={token}&email={email}";
+            var resetLink = $"http://localhost:5173/reset-password?token={token}&email={email}";
 
             string emailBody = $@"
                 <h3>Yêu cầu đặt lại mật khẩu</h3>

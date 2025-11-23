@@ -52,6 +52,7 @@ namespace Freelancer.Services
                     Skills = user.Seeker.Skills,
                     Level = user.Seeker.Level,
                     Avatar = user.Seeker.AvatarUrl,
+                    VipExpireDate = user.Seeker.VipExpireDate
                 },
 
                 // Map Employer (nếu có)
@@ -64,7 +65,8 @@ namespace Freelancer.Services
                     Address = user.Employer.Address,
                     IsVip = user.Employer.IsVip,
                     Status = user.Employer.Status.ToString(), // Chuyển Enum thành chuỗi
-                    LogoCompany = user.Employer.CompanyLogoUrl
+                    LogoCompany = user.Employer.CompanyLogoUrl,
+                    VipExpireDate = user.Employer.VipExpireDate
                 }
             };
         }

@@ -47,7 +47,7 @@ namespace Freelancer.Models
         public EmployerStatus Status { get; set; } = EmployerStatus.Pending; // Mặc định là chờ duyệt
 
         public string? CompanyLogoUrl { get; set; }
-
+        public DateTime? VipExpireDate { get; set; } // Ngày hết hạn VIP
         public virtual User User { get; set; }
     }
 }

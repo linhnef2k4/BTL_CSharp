@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Freelancer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251122161255_UpdatePaymentTransactionNullables")]
-    partial class UpdatePaymentTransactionNullables
+    [Migration("20251123052437_ResetDb")]
+    partial class ResetDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -91,6 +91,9 @@ namespace Freelancer.Migrations
                     b.Property<string>("TaxCode")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime?>("VipExpireDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -278,8 +281,7 @@ namespace Freelancer.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("VnPayTransactionNo")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -413,6 +415,9 @@ namespace Freelancer.Migrations
 
                     b.Property<string>("Skills")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("VipExpireDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("YearsOfExperience")
                         .HasColumnType("int");

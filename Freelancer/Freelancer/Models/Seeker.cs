@@ -31,5 +31,7 @@ namespace Freelancer.Models
         // --- Thuộc tính khác đã có ---
         public int YearsOfExperience { get; set; } = 0;
         public virtual User User { get; set; }
+
+        public DateTime? VipExpireDate { get; set; } // Ngày hết hạn VIP
     }
 }

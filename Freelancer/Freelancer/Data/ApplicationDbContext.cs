@@ -182,12 +182,23 @@ namespace Freelancer.Data
                     .OnDelete(DeleteBehavior.Cascade); // Xóa Conversation thì xóa Message
             });
             // --- CẤU HÌNH PAYMENT TRANSACTION ---
+            // --- CẤU HÌNH PAYMENT TRANSACTION (ĐÃ SỬA) ---
             modelBuilder.Entity<PaymentTransaction>(entity =>
             {
-                // Liên kết Transaction -> Employer
+                // Cấu hình EmployerId CHO PHÉP NULL
+                entity.Property(pt => pt.EmployerId).IsRequired(false);
+
                 entity.HasOne(pt => pt.Employer)
-                    .WithMany() // Một Employer có nhiều giao dịch
+                    .WithMany()
                     .HasForeignKey(pt => pt.EmployerId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                // Cấu hình SeekerId CHO PHÉP NULL
+                entity.Property(pt => pt.SeekerId).IsRequired(false);
+
+                entity.HasOne(pt => pt.Seeker)
+                    .WithMany()
+                    .HasForeignKey(pt => pt.SeekerId)
                     .OnDelete(DeleteBehavior.Restrict);
             });
 

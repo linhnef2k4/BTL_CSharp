@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Freelancer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251121014518_AddIsLockedToUser")]
-    partial class AddIsLockedToUser
+    [Migration("20251123052948_AllowNullPaymentIds")]
+    partial class AllowNullPaymentIds
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -91,6 +91,9 @@ namespace Freelancer.Migrations
                     b.Property<string>("TaxCode")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime?>("VipExpireDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -242,8 +245,11 @@ namespace Freelancer.Migrations
 
             modelBuilder.Entity("Freelancer.Models.PaymentTransaction", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
@@ -252,12 +258,12 @@ namespace Freelancer.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("EmployerId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("OrderInfo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<DateTime?>("PaidDate")
                         .HasColumnType("datetime2");
@@ -267,7 +273,6 @@ namespace Freelancer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("SeekerId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("Status")
@@ -408,6 +413,9 @@ namespace Freelancer.Migrations
 
                     b.Property<string>("Skills")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("VipExpireDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("YearsOfExperience")
                         .HasColumnType("int");
@@ -710,7 +718,7 @@ namespace Freelancer.Migrations
                     b.HasOne("Freelancer.Models.Seeker", "Seeker")
                         .WithMany()
                         .HasForeignKey("SeekerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Employer");

@@ -90,6 +90,9 @@ namespace Freelancer.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<DateTime?>("VipExpireDate")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
                     b.ToTable("Employers");
@@ -253,7 +256,6 @@ namespace Freelancer.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("EmployerId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("OrderInfo")
@@ -269,7 +271,6 @@ namespace Freelancer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("SeekerId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("Status")
@@ -410,6 +411,9 @@ namespace Freelancer.Migrations
 
                     b.Property<string>("Skills")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("VipExpireDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("YearsOfExperience")
                         .HasColumnType("int");
@@ -712,7 +716,7 @@ namespace Freelancer.Migrations
                     b.HasOne("Freelancer.Models.Seeker", "Seeker")
                         .WithMany()
                         .HasForeignKey("SeekerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Employer");

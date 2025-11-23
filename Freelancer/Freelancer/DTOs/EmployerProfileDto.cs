@@ -16,5 +16,7 @@ namespace Freelancer.DTOs
         public bool IsVip { get; set; }
         public string Status { get; set; } // "Pending", "Approved", "Rejected"
         public string LogoCompany { get; set; }
+
+        public DateTime? VipExpireDate { get; set; }
     }
 }

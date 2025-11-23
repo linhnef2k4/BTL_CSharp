@@ -14,5 +14,7 @@
         public string? Skills{get; set; }
         public string? Avatar { get; set; }
 
+        public DateTime? VipExpireDate { get; set; }
+
     }
 }

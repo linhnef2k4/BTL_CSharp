@@ -86,18 +86,21 @@ namespace Freelancer.Controllers
                 // (Bạn sẽ cần đổi link localhost:3000 này thành link React/Frontend)
                 if (result == "success")
                 {
-                    return Redirect("http://localhost:3000/payment/success");
+                    return Redirect("http://localhost:5173/payment/success");
+                   
                 }
                 else
                 {
-                    return Redirect("http://localhost:3000/payment/failed");
+                    return Redirect("http://localhost:5173/payment/failed");
+                    
                 }
             }
             catch (System.Exception ex)
             {
-                // Ghi log lỗi nếu quá trình xử lý callback gặp sự cố
-                System.Diagnostics.Debug.WriteLine($"Lỗi xử lý VNPAY Callback: {ex.Message}");
-                return Redirect("http://localhost:3000/payment/failed");
+                //Ghi log lỗi nếu quá trình xử lý callback gặp sự cố
+                //System.Diagnostics.Debug.WriteLine($"Lỗi xử lý VNPAY Callback: {ex.Message}");
+                return Redirect("http://localhost:5173/payment/failed");
+                
             }
         }
 
