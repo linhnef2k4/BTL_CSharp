@@ -59,7 +59,7 @@ namespace Freelancer.Services
                 .OrderByDescending(s => s.IsVip) // Ưu tiên VIP lên đầu
                 .Take(50) // Lấy 50 kết quả
                 .ToListAsync();
-
+            
             return seekers.Select(s => new SeekerSearchResultDto
             {
                 Id = s.Id,

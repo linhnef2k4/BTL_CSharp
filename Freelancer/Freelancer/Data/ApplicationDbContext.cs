@@ -36,6 +36,8 @@ namespace Freelancer.Data
 
         public DbSet<SavedPost> SavedPosts { get; set; } // <-- THÊM DÒNG NÀY
 
+        public DbSet<Report> Reports { get; set; }
+
         // (Nếu bạn có Model "Skill", bạn cũng thêm DbSet ở đây)
 
 
@@ -252,6 +254,16 @@ namespace Freelancer.Data
                     .WithMany()
                     .HasForeignKey(sp => sp.PostId)
                     .OnDelete(DeleteBehavior.Cascade); // Xóa bài post -> Xóa luôn trong danh sách đã lưu
+            });
+
+
+            // --- CẤU HÌNH CHO REPORT ---
+            modelBuilder.Entity<Report>(entity =>
+            {
+                entity.HasOne(r => r.Reporter)
+                    .WithMany()
+                    .HasForeignKey(r => r.ReporterId)
+                    .OnDelete(DeleteBehavior.Cascade); // Xóa User -> Xóa luôn báo cáo của họ
             });
         }
     }
