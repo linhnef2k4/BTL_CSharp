@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "8mq7ddsJfLjwxPubRmM5NGMjRS/7JeNB4+s40Ry4pns=",
+  "Hash": "V3kbaHZy60xSoqK0TlvjMqWdTaB7rlDTghyjo6wc6tg=",
   "Source": "Freelancer",
   "BasePath": "_content/Freelancer",
   "Mode": "Default",
@@ -59,6 +59,48 @@
       "OriginalItemSpec": "wwwroot\\uploads\\avatars\\723a0e38-6613-44b6-8fec-873c343f5ba7-quocky.jpg"
     },
     {
+      "Identity": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\avatars\\78c3df4a-7911-4ea8-8750-faa40c94c293-mtp.webp",
+      "SourceId": "Freelancer",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\",
+      "BasePath": "_content/Freelancer",
+      "RelativePath": "uploads/avatars/78c3df4a-7911-4ea8-8750-faa40c94c293-mtp#[.{fingerprint}]?.webp",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "35fdznrx40",
+      "Integrity": "GcNfslazJT62IEchZHQ2raZrkuIrVloBLNHAeiRZ18w=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\avatars\\78c3df4a-7911-4ea8-8750-faa40c94c293-mtp.webp"
+    },
+    {
+      "Identity": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\avatars\\941218ab-f6d2-4c23-8e7c-288cedc2bd89-hinh-nen-zoro-71.jpg",
+      "SourceId": "Freelancer",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\",
+      "BasePath": "_content/Freelancer",
+      "RelativePath": "uploads/avatars/941218ab-f6d2-4c23-8e7c-288cedc2bd89-hinh-nen-zoro-71#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "a5j1pjptef",
+      "Integrity": "LswL30le8gVLCxxeOFh+pBLgrJ7rhbBx0hfd6RgCrI0=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\avatars\\941218ab-f6d2-4c23-8e7c-288cedc2bd89-hinh-nen-zoro-71.jpg"
+    },
+    {
       "Identity": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\avatars\\a784a1ff-86ce-41db-89d9-0769aaa53bed-mtp.webp",
       "SourceId": "Freelancer",
       "SourceType": "Discovered",
@@ -78,6 +120,27 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\uploads\\avatars\\a784a1ff-86ce-41db-89d9-0769aaa53bed-mtp.webp"
+    },
+    {
+      "Identity": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\chat-files\\0ad7f9e4-d9a7-49a6-8006-01119e888ddc-CVLinhPhan.pdf",
+      "SourceId": "Freelancer",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\",
+      "BasePath": "_content/Freelancer",
+      "RelativePath": "uploads/chat-files/0ad7f9e4-d9a7-49a6-8006-01119e888ddc-CVLinhPhan#[.{fingerprint}]?.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "x6pvrcixm9",
+      "Integrity": "SZz5n9Lla9RmM8sOlEH5YpU8GE40TiLVKWlO59S9BhQ=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\chat-files\\0ad7f9e4-d9a7-49a6-8006-01119e888ddc-CVLinhPhan.pdf"
     },
     {
       "Identity": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\chat-files\\19831aec-91cb-46e3-8936-c49279d616b5-gggggg.png",
@@ -143,6 +206,27 @@
       "OriginalItemSpec": "wwwroot\\uploads\\chat-files\\4ce0ef51-0619-4adb-9d82-ef04658a00d2-gggggg.png"
     },
     {
+      "Identity": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\chat-files\\7c9639f0-4b40-4e5b-b30d-528d6cd70171-zoro.jpg",
+      "SourceId": "Freelancer",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\",
+      "BasePath": "_content/Freelancer",
+      "RelativePath": "uploads/chat-files/7c9639f0-4b40-4e5b-b30d-528d6cd70171-zoro#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "muqjf833zy",
+      "Integrity": "UnKJk7no0ODDaSAy7lYlJbRokDCXQ/ibyU2vLbKynn0=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\chat-files\\7c9639f0-4b40-4e5b-b30d-528d6cd70171-zoro.jpg"
+    },
+    {
       "Identity": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\chat-files\\7ee4beb8-4bf6-446d-9bc0-846f4db053a8-zoro.jpg",
       "SourceId": "Freelancer",
       "SourceType": "Discovered",
@@ -164,6 +248,27 @@
       "OriginalItemSpec": "wwwroot\\uploads\\chat-files\\7ee4beb8-4bf6-446d-9bc0-846f4db053a8-zoro.jpg"
     },
     {
+      "Identity": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\logos\\36791019-34e9-464f-8782-11faa7155e7a-fpt.jpg",
+      "SourceId": "Freelancer",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\",
+      "BasePath": "_content/Freelancer",
+      "RelativePath": "uploads/logos/36791019-34e9-464f-8782-11faa7155e7a-fpt#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "635hdllbh1",
+      "Integrity": "AuXW6xM2x5ooE7EsPYhkUPts34vEPB868EO8GaMznz4=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\logos\\36791019-34e9-464f-8782-11faa7155e7a-fpt.jpg"
+    },
+    {
       "Identity": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\logos\\cc9a6272-87bc-4823-a623-25da99b00c0d-react.jpg",
       "SourceId": "Freelancer",
       "SourceType": "Discovered",
@@ -183,6 +288,27 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\uploads\\logos\\cc9a6272-87bc-4823-a623-25da99b00c0d-react.jpg"
+    },
+    {
+      "Identity": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\resumes\\33714041-ce04-4e67-8ee2-90713359adb5-Linh-Phan-CV.pdf",
+      "SourceId": "Freelancer",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\",
+      "BasePath": "_content/Freelancer",
+      "RelativePath": "uploads/resumes/33714041-ce04-4e67-8ee2-90713359adb5-Linh-Phan-CV#[.{fingerprint}]?.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "1vcwpbspgp",
+      "Integrity": "Hc7qwhZ2htNcXRa7J5ykqC6/m6dv/CgTfiwxdtjUKsE=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\resumes\\33714041-ce04-4e67-8ee2-90713359adb5-Linh-Phan-CV.pdf"
     },
     {
       "Identity": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\resumes\\8072d9f5-4e6e-4d88-a6a7-ff21c9cbc68c-CVLinhPhan.pdf",
@@ -225,6 +351,27 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\uploads\\resumes\\850882a8-eef8-4d56-80dd-20980245f293-CV_LinhNef.pdf"
+    },
+    {
+      "Identity": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\resumes\\8c5ceff0-bf46-48ce-918f-efce7a36c191-CV_LinhNef.pdf",
+      "SourceId": "Freelancer",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\",
+      "BasePath": "_content/Freelancer",
+      "RelativePath": "uploads/resumes/8c5ceff0-bf46-48ce-918f-efce7a36c191-CV_LinhNef#[.{fingerprint}]?.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "61kmr8qrm7",
+      "Integrity": "FnYM93+3JR6J7+WeACt8MAS26dM2uiDHGt/wTjlY1Z0=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\resumes\\8c5ceff0-bf46-48ce-918f-efce7a36c191-CV_LinhNef.pdf"
     },
     {
       "Identity": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\resumes\\e31277cb-daf5-4065-aa77-53e348e84e1c-CVLinhPhan.pdf",
@@ -272,7 +419,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 22 Nov 2025 15:36:43 GMT"
+          "Value": "Sun, 23 Nov 2025 15:19:04 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -309,7 +456,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 22 Nov 2025 15:36:43 GMT"
+          "Value": "Sun, 23 Nov 2025 15:19:04 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -354,7 +501,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 22 Nov 2025 15:36:43 GMT"
+          "Value": "Sun, 23 Nov 2025 15:19:04 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -399,7 +546,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 22 Nov 2025 15:36:43 GMT"
+          "Value": "Sun, 23 Nov 2025 15:19:04 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -410,6 +557,170 @@
         {
           "Name": "integrity",
           "Value": "sha256-ETu1AJZ53v2LZRk7aqDrmU/y4WU8n1YEtp8EielPE4Q="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/avatars/78c3df4a-7911-4ea8-8750-faa40c94c293-mtp.35fdznrx40.webp",
+      "AssetFile": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\avatars\\78c3df4a-7911-4ea8-8750-faa40c94c293-mtp.webp",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "109184"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/webp"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"GcNfslazJT62IEchZHQ2raZrkuIrVloBLNHAeiRZ18w=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 24 Nov 2025 07:21:51 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "35fdznrx40"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/avatars/78c3df4a-7911-4ea8-8750-faa40c94c293-mtp.webp"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-GcNfslazJT62IEchZHQ2raZrkuIrVloBLNHAeiRZ18w="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/avatars/78c3df4a-7911-4ea8-8750-faa40c94c293-mtp.webp",
+      "AssetFile": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\avatars\\78c3df4a-7911-4ea8-8750-faa40c94c293-mtp.webp",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "109184"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/webp"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"GcNfslazJT62IEchZHQ2raZrkuIrVloBLNHAeiRZ18w=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 24 Nov 2025 07:21:51 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-GcNfslazJT62IEchZHQ2raZrkuIrVloBLNHAeiRZ18w="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/avatars/941218ab-f6d2-4c23-8e7c-288cedc2bd89-hinh-nen-zoro-71.a5j1pjptef.jpg",
+      "AssetFile": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\avatars\\941218ab-f6d2-4c23-8e7c-288cedc2bd89-hinh-nen-zoro-71.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "146259"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"LswL30le8gVLCxxeOFh+pBLgrJ7rhbBx0hfd6RgCrI0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 26 Nov 2025 02:35:34 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "a5j1pjptef"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/avatars/941218ab-f6d2-4c23-8e7c-288cedc2bd89-hinh-nen-zoro-71.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-LswL30le8gVLCxxeOFh+pBLgrJ7rhbBx0hfd6RgCrI0="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/avatars/941218ab-f6d2-4c23-8e7c-288cedc2bd89-hinh-nen-zoro-71.jpg",
+      "AssetFile": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\avatars\\941218ab-f6d2-4c23-8e7c-288cedc2bd89-hinh-nen-zoro-71.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "146259"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"LswL30le8gVLCxxeOFh+pBLgrJ7rhbBx0hfd6RgCrI0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 26 Nov 2025 02:35:34 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-LswL30le8gVLCxxeOFh+pBLgrJ7rhbBx0hfd6RgCrI0="
         }
       ]
     },
@@ -436,7 +747,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 22 Nov 2025 15:36:43 GMT"
+          "Value": "Sun, 23 Nov 2025 15:19:04 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -481,7 +792,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 22 Nov 2025 15:36:43 GMT"
+          "Value": "Sun, 23 Nov 2025 15:19:04 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -492,6 +803,88 @@
         {
           "Name": "integrity",
           "Value": "sha256-GcNfslazJT62IEchZHQ2raZrkuIrVloBLNHAeiRZ18w="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/chat-files/0ad7f9e4-d9a7-49a6-8006-01119e888ddc-CVLinhPhan.pdf",
+      "AssetFile": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\chat-files\\0ad7f9e4-d9a7-49a6-8006-01119e888ddc-CVLinhPhan.pdf",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "325561"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/pdf"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"SZz5n9Lla9RmM8sOlEH5YpU8GE40TiLVKWlO59S9BhQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 26 Nov 2025 02:06:10 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-SZz5n9Lla9RmM8sOlEH5YpU8GE40TiLVKWlO59S9BhQ="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/chat-files/0ad7f9e4-d9a7-49a6-8006-01119e888ddc-CVLinhPhan.x6pvrcixm9.pdf",
+      "AssetFile": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\chat-files\\0ad7f9e4-d9a7-49a6-8006-01119e888ddc-CVLinhPhan.pdf",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "325561"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/pdf"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"SZz5n9Lla9RmM8sOlEH5YpU8GE40TiLVKWlO59S9BhQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 26 Nov 2025 02:06:10 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "x6pvrcixm9"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/chat-files/0ad7f9e4-d9a7-49a6-8006-01119e888ddc-CVLinhPhan.pdf"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-SZz5n9Lla9RmM8sOlEH5YpU8GE40TiLVKWlO59S9BhQ="
         }
       ]
     },
@@ -518,7 +911,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 22 Nov 2025 15:36:43 GMT"
+          "Value": "Sun, 23 Nov 2025 15:19:04 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -555,7 +948,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 22 Nov 2025 15:36:43 GMT"
+          "Value": "Sun, 23 Nov 2025 15:19:04 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -600,7 +993,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 22 Nov 2025 15:36:43 GMT"
+          "Value": "Sun, 23 Nov 2025 15:19:04 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -645,7 +1038,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 22 Nov 2025 15:36:43 GMT"
+          "Value": "Sun, 23 Nov 2025 15:19:04 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -682,7 +1075,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 22 Nov 2025 15:36:43 GMT"
+          "Value": "Sun, 23 Nov 2025 15:19:04 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -719,7 +1112,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 22 Nov 2025 15:36:43 GMT"
+          "Value": "Sun, 23 Nov 2025 15:19:04 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -738,6 +1131,88 @@
         {
           "Name": "integrity",
           "Value": "sha256-5JIzXIc1YqYNAuyuTazVep9au97Li6cdYHls3gLUKmk="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/chat-files/7c9639f0-4b40-4e5b-b30d-528d6cd70171-zoro.jpg",
+      "AssetFile": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\chat-files\\7c9639f0-4b40-4e5b-b30d-528d6cd70171-zoro.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1768164"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"UnKJk7no0ODDaSAy7lYlJbRokDCXQ/ibyU2vLbKynn0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 24 Nov 2025 07:15:26 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-UnKJk7no0ODDaSAy7lYlJbRokDCXQ/ibyU2vLbKynn0="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/chat-files/7c9639f0-4b40-4e5b-b30d-528d6cd70171-zoro.muqjf833zy.jpg",
+      "AssetFile": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\chat-files\\7c9639f0-4b40-4e5b-b30d-528d6cd70171-zoro.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1768164"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"UnKJk7no0ODDaSAy7lYlJbRokDCXQ/ibyU2vLbKynn0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 24 Nov 2025 07:15:26 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "muqjf833zy"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/chat-files/7c9639f0-4b40-4e5b-b30d-528d6cd70171-zoro.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-UnKJk7no0ODDaSAy7lYlJbRokDCXQ/ibyU2vLbKynn0="
         }
       ]
     },
@@ -764,7 +1239,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 22 Nov 2025 15:36:43 GMT"
+          "Value": "Sun, 23 Nov 2025 15:19:04 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -801,7 +1276,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 22 Nov 2025 15:36:43 GMT"
+          "Value": "Sun, 23 Nov 2025 15:19:04 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -820,6 +1295,88 @@
         {
           "Name": "integrity",
           "Value": "sha256-UnKJk7no0ODDaSAy7lYlJbRokDCXQ/ibyU2vLbKynn0="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/logos/36791019-34e9-464f-8782-11faa7155e7a-fpt.635hdllbh1.jpg",
+      "AssetFile": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\logos\\36791019-34e9-464f-8782-11faa7155e7a-fpt.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "22269"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"AuXW6xM2x5ooE7EsPYhkUPts34vEPB868EO8GaMznz4=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 27 Nov 2025 09:58:12 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "635hdllbh1"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/logos/36791019-34e9-464f-8782-11faa7155e7a-fpt.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-AuXW6xM2x5ooE7EsPYhkUPts34vEPB868EO8GaMznz4="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/logos/36791019-34e9-464f-8782-11faa7155e7a-fpt.jpg",
+      "AssetFile": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\logos\\36791019-34e9-464f-8782-11faa7155e7a-fpt.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "22269"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"AuXW6xM2x5ooE7EsPYhkUPts34vEPB868EO8GaMznz4=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 27 Nov 2025 09:58:12 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-AuXW6xM2x5ooE7EsPYhkUPts34vEPB868EO8GaMznz4="
         }
       ]
     },
@@ -846,7 +1403,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 22 Nov 2025 15:36:43 GMT"
+          "Value": "Sun, 23 Nov 2025 15:19:04 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -891,7 +1448,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 22 Nov 2025 15:36:43 GMT"
+          "Value": "Sun, 23 Nov 2025 15:19:04 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -902,6 +1459,88 @@
         {
           "Name": "integrity",
           "Value": "sha256-ErNABPxdPGJQCmTMr7XuGvxHAVxhzBn2V98GMpgKQy0="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/resumes/33714041-ce04-4e67-8ee2-90713359adb5-Linh-Phan-CV.1vcwpbspgp.pdf",
+      "AssetFile": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\resumes\\33714041-ce04-4e67-8ee2-90713359adb5-Linh-Phan-CV.pdf",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "312926"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/pdf"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"Hc7qwhZ2htNcXRa7J5ykqC6/m6dv/CgTfiwxdtjUKsE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 26 Nov 2025 01:21:33 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "1vcwpbspgp"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/resumes/33714041-ce04-4e67-8ee2-90713359adb5-Linh-Phan-CV.pdf"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-Hc7qwhZ2htNcXRa7J5ykqC6/m6dv/CgTfiwxdtjUKsE="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/resumes/33714041-ce04-4e67-8ee2-90713359adb5-Linh-Phan-CV.pdf",
+      "AssetFile": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\resumes\\33714041-ce04-4e67-8ee2-90713359adb5-Linh-Phan-CV.pdf",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "312926"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/pdf"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"Hc7qwhZ2htNcXRa7J5ykqC6/m6dv/CgTfiwxdtjUKsE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 26 Nov 2025 01:21:33 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-Hc7qwhZ2htNcXRa7J5ykqC6/m6dv/CgTfiwxdtjUKsE="
         }
       ]
     },
@@ -928,7 +1567,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 22 Nov 2025 15:36:43 GMT"
+          "Value": "Sun, 23 Nov 2025 15:19:04 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -965,7 +1604,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 22 Nov 2025 15:36:43 GMT"
+          "Value": "Sun, 23 Nov 2025 15:19:04 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1010,7 +1649,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 22 Nov 2025 15:36:43 GMT"
+          "Value": "Sun, 23 Nov 2025 15:19:04 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1055,7 +1694,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 22 Nov 2025 15:36:43 GMT"
+          "Value": "Sun, 23 Nov 2025 15:19:04 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1066,6 +1705,88 @@
         {
           "Name": "integrity",
           "Value": "sha256-l4M/jdFdHvxo1FO68ethKSZgwMFr1JaCorT4Zy44OBQ="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/resumes/8c5ceff0-bf46-48ce-918f-efce7a36c191-CV_LinhNef.61kmr8qrm7.pdf",
+      "AssetFile": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\resumes\\8c5ceff0-bf46-48ce-918f-efce7a36c191-CV_LinhNef.pdf",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "9180488"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/pdf"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"FnYM93+3JR6J7+WeACt8MAS26dM2uiDHGt/wTjlY1Z0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 27 Nov 2025 08:50:14 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "61kmr8qrm7"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/resumes/8c5ceff0-bf46-48ce-918f-efce7a36c191-CV_LinhNef.pdf"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-FnYM93+3JR6J7+WeACt8MAS26dM2uiDHGt/wTjlY1Z0="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/resumes/8c5ceff0-bf46-48ce-918f-efce7a36c191-CV_LinhNef.pdf",
+      "AssetFile": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\wwwroot\\uploads\\resumes\\8c5ceff0-bf46-48ce-918f-efce7a36c191-CV_LinhNef.pdf",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "9180488"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/pdf"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"FnYM93+3JR6J7+WeACt8MAS26dM2uiDHGt/wTjlY1Z0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 27 Nov 2025 08:50:14 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-FnYM93+3JR6J7+WeACt8MAS26dM2uiDHGt/wTjlY1Z0="
         }
       ]
     },
@@ -1092,7 +1813,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 22 Nov 2025 15:36:43 GMT"
+          "Value": "Sun, 23 Nov 2025 15:19:04 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1129,7 +1850,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 22 Nov 2025 15:36:43 GMT"
+          "Value": "Sun, 23 Nov 2025 15:19:04 GMT"
         },
         {
           "Name": "Cache-Control",

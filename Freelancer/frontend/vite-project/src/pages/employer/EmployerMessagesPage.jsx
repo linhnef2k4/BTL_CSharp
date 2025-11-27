@@ -1,92 +1,193 @@
-import React, { useState } from 'react';
-// --- "LINH KIỆN" (COMPONENTS) "MỚI" (NEW) "CHO" (FOR) "EMPLOYER" (EMPLOYER) ---
-import EmployerChatList from '../../components/employer/EmployerChatList'; // <-- Sắp "tạo" (create) (File 2/3)
+import React, { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
+import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
+import { Loader2 } from 'lucide-react';
 
-// --- "TÁI SỬ DỤNG" (REUSE) "LINH KIỆN" (COMPONENTS) "XỊN" (PRO) "CỦA" (OF) "SEEKER" (SEEKER) ---
-import ChatWindow from '../../components/messages/ChatWindow'; // <-- "Lấy" (Get) "từ" (from) "bộ" (set) "Seeker" (Seeker)
-import ChatDetails from '../../components/messages/ChatDetails'; // <-- "Lấy" (Get) "từ" (from) "bộ" (set) "Seeker" (Seeker)
+// Import các component dùng chung
+import ChatList from '../../components/messages/ChatList';
+import ChatWindow from '../../components/messages/ChatWindow';
+import ChatDetails from '../../components/messages/ChatDetails';
 
-// --- DỮ LIỆU "GIẢ" (MOCK DATA) "CHO" (FOR) "EMPLOYER" (EMPLOYER) ---
+import conversationService from '../../../services/conversationService';
+import { useAuth } from '../../context/AuthContext';
 
-// 1. "Các" (The) "chat" (chats) "đã" (already) "được" (been) "chấp nhận" (accepted) (HỘP THƯ)
-const MOCK_INBOX = [
-  { id: 1, name: 'Minh Tuấn (Seeker)', avatar: 'https://ui-avatars.com/api/?name=Minh+Tuan', lastMessage: 'Em cảm ơn, em sẽ có mặt ạ!', time: '10 phút trước', online: true, status: 'Đã hẹn phỏng vấn' },
-  { id: 2, name: 'Ngọc Ánh', avatar: 'https://ui-avatars.com/api/?name=Ngoc+Anh', lastMessage: 'Vâng, em gửi CV ạ.', time: '1 giờ trước', online: false, status: 'Đã qua vòng CV' },
-];
-
-// 2. "Các" (The) "chat" (chats) "đang" (are) "chờ" (waiting) "duyệt" (review) (TIN NHẮN CHỜ - TỪ "VIP SEEKER")
-const MOCK_REQUESTS = [
-  { id: 3, name: 'Phan Bá Khánh Linh (VIP)', avatar: 'https://ui-avatars.com/api/?name=Khanh+Linh', lastMessage: 'Chào FPT, em thấy...', time: '5 giờ trước', online: true, status: 'Tin nhắn chờ từ Seeker VIP' },
-  { id: 4, name: 'Lê Nga (VIP)', avatar: 'https://ui-avatars.com/api/?name=Le+Nga', lastMessage: 'Em rất quan tâm...', time: '1 ngày trước', online: false, status: 'Tin nhắn chờ từ Seeker VIP' },
-];
-// ------------------------------------
+// URL của SignalR Hub (Đảm bảo khớp với Backend)
+const HUB_URL = 'https://localhost:7051/chatHub'; 
 
 const EmployerMessagesPage = () => {
-  // --- "BỘ NÃO" (BRAIN) ---
-  const [activeFilter, setActiveFilter] = useState('Hộp thư'); // "Hộp thư" | "Tin nhắn chờ"
+  const { user } = useAuth();
+  const location = useLocation();
+  
+  // --- STATE ---
+  const [conversations, setConversations] = useState([]);
+  const [activeChatId, setActiveChatId] = useState(null);
+  const [messages, setMessages] = useState([]);
+  
+  const [connection, setConnection] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [showDetails, setShowDetails] = useState(true);
 
-  // "Logic" (Logic) "chọn" (select) "list" (list) "dữ liệu" (data) "để" (to) "hiển thị" (display)
-  const contacts = activeFilter === 'Hộp thư' ? MOCK_INBOX : MOCK_REQUESTS;
-  
-  // "Quản lý" (Manage) "ai" (who) "đang" (is) "được" (being) "chọn" (selected)
-  const [activeChat, setActiveChat] = useState(contacts[0]);
+  // Lấy object chat đang active dựa trên ID
+  const activeChat = conversations.find(c => c.id === activeChatId);
 
-  // "Khi" (When) "đổi" (change) "filter" (filter)
-  const handleFilterChange = (filter) => {
-    setActiveFilter(filter);
-    // "Tự động" (Auto) "chọn" (select) "người" (person) "đầu tiên" (first) "trong" (in) "list" (list) "mới" (new)
-    if (filter === 'Hộp thư') {
-      setActiveChat(MOCK_INBOX[0]);
-    } else {
-      setActiveChat(MOCK_REQUESTS[0]);
+  // --- 1. KHỞI TẠO SIGNALR ---
+  useEffect(() => {
+    const newConnection = new HubConnectionBuilder()
+      .withUrl(HUB_URL, {
+        accessTokenFactory: () => localStorage.getItem('authToken') // Gửi Token để xác thực
+      })
+      .withAutomaticReconnect()
+      .configureLogging(LogLevel.Information)
+      .build();
+
+    setConnection(newConnection);
+  }, []);
+
+  // --- 2. KẾT NỐI & LẮNG NGHE SỰ KIỆN ---
+  useEffect(() => {
+    // Chỉ chạy khi có connection và user đã load xong
+    if (connection && user) {
+      connection.start()
+        .then(() => console.log('SignalR Connected!'))
+        .catch(err => console.error('SignalR Connection Error: ', err));
+
+      // Lắng nghe tin nhắn mới
+      connection.on("ReceiveMessage", (messageDto) => {
+        // A. Cập nhật danh sách tin nhắn (Nếu đang mở đúng hội thoại đó)
+        if (activeChatId === messageDto.conversationId) { 
+           setMessages(prev => [...prev, messageDto]);
+        }
+
+        // B. Cập nhật danh sách hội thoại
+        setConversations(prev => {
+           const updatedList = prev.map(conv => {
+              if (conv.id === messageDto.conversationId) { 
+                 return {
+                    ...conv,
+                    lastMessage: messageDto.type === 'Image' ? 'Đã gửi một ảnh' : 
+                                 messageDto.type === 'File' ? 'Đã gửi một tệp' : messageDto.content,
+                    lastMessageDate: messageDto.sentDate,
+                    // FIX LỖI Ở ĐÂY: Dùng user?.id để tránh crash nếu user null
+                    unreadCount: (messageDto.senderId !== user?.id && activeChatId !== conv.id) 
+                                 ? conv.unreadCount + 1 
+                                 : conv.unreadCount
+                 };
+              }
+              return conv;
+           });
+           
+           return updatedList.sort((a, b) => new Date(b.lastMessageDate) - new Date(a.lastMessageDate));
+        });
+      });
     }
-  };
+    
+    // Cleanup listener khi unmount hoặc deps thay đổi để tránh duplicate listener
+    return () => {
+        if (connection) {
+            connection.off("ReceiveMessage");
+        }
+    };
+  }, [connection, activeChatId, user?.id]); // FIX LỖI Ở ĐÂY: Thêm optional chaining user?.id
+
+  // --- 3. LẤY DANH SÁCH HỘI THOẠI ---
+  useEffect(() => {
+    const fetchConversations = async () => {
+      setLoading(true);
+      try {
+        const res = await conversationService.getMyConversations();
+        setConversations(res.data);
+
+        // Xử lý điều hướng từ nút "Nhắn tin"
+        const state = location.state;
+        if (state?.selectedConversationId) {
+            const target = res.data.find(c => c.id === state.selectedConversationId);
+            if (target) {
+                setActiveChatId(target.id);
+            } else if (state.chatWith) {
+                const newConv = {
+                    id: state.selectedConversationId,
+                    otherParticipantId: state.chatWith.id,
+                    otherParticipantFullName: state.chatWith.fullName,
+                    otherParticipantAvatar: state.chatWith.avatar,
+                    otherParticipantHeadline: "Thành viên",
+                    lastMessage: "",
+                    lastMessageDate: new Date().toISOString(),
+                    unreadCount: 0
+                };
+                setConversations(prev => [newConv, ...prev]);
+                setActiveChatId(newConv.id);
+            }
+        }
+      } catch (error) {
+        console.error("Lỗi tải hội thoại:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchConversations();
+  }, [location.state]);
+
+  // --- 4. LẤY TIN NHẮN CỦA HỘI THOẠI ĐANG CHỌN ---
+  useEffect(() => {
+    if (!activeChatId) return;
+
+    const fetchMessages = async () => {
+      try {
+        const res = await conversationService.getMessages(activeChatId);
+        setMessages(res.data);
+        
+        setConversations(prev => prev.map(c => 
+           c.id === activeChatId ? { ...c, unreadCount: 0 } : c
+        ));
+      } catch (error) {
+        console.error("Lỗi tải tin nhắn:", error);
+      }
+    };
+    fetchMessages();
+  }, [activeChatId]);
+
+  if (loading) {
+      return <div className="flex h-full items-center justify-center"><Loader2 className="animate-spin text-blue-600 w-8 h-8"/></div>;
+  }
 
   return (
-    // "Layout" (Layout) "3" (three) "cột" (columns) "full" (full) "chiều cao" (height) "của" (of) "vùng" (area) "làm việc" (workspace)
-    <div className="flex h-[calc(100vh-8.5rem)] bg-white">
-      
-      {/* CỘT 1: DANH BẠ (ChatList) (Sắp "tạo" (create) File 2/3) */}
-      <div className="w-96 flex-shrink-0 border-r border-gray-200">
-        <EmployerChatList
-          contacts={contacts} // "Truyền" (Pass) "list" (list) "data" (data) "đúng" (correct) "xuống" (down)
-          activeChat={activeChat}
-          onSelectChat={setActiveChat}
-          activeFilter={activeFilter}
-          onFilterChange={handleFilterChange} // "Truyền" (Pass) "hàm" (function) "đổi" (change) "filter" (filter) "xuống" (down)
-        />
-      </div>
+    <div className="flex h-[calc(100vh-64px)] bg-white overflow-hidden border-t border-gray-200">
+       {/* CỘT 1: DANH SÁCH CHAT */}
+       <div className={`${activeChatId ? 'hidden md:flex' : 'flex'} w-full md:w-auto flex-shrink-0`}>
+           <ChatList 
+              conversations={conversations}
+              activeChatId={activeChatId}
+              onSelectChat={setActiveChatId}
+           />
+       </div>
 
-      {/* CỘT 2: KHUNG CHAT (ChatWindow) (Tái "sử dụng" (reuse)) */}
-      <div className="flex-1">
-        {activeChat ? (
-          <ChatWindow
-            activeUser={activeChat}
-            onToggleDetails={() => setShowDetails(prev => !prev)}
-          />
-        ) : (
-          <div className="flex h-full items-center justify-center">
-            <p className="text-gray-500">
-              {activeFilter === 'Hộp thư' 
-                ? 'Chưa có tin nhắn nào trong Hộp thư.' 
-                : 'Chưa có Tin nhắn chờ nào.'
-              }
-            </p>
-          </div>
-        )}
-      </div>
+       {/* CỘT 2: KHUNG CHAT */}
+       <div className={`${!activeChatId ? 'hidden md:flex' : 'flex'} flex-1 flex-col min-w-0 bg-gray-50`}>
+           {activeChatId ? (
+              <ChatWindow 
+                 chat={activeChat}
+                 messages={messages}
+                 currentUser={user}
+                 connection={connection}
+                 onBack={() => setActiveChatId(null)} 
+              />
+           ) : (
+              <div className="flex h-full flex-col items-center justify-center text-gray-400">
+                 <MessageSquare className="h-16 w-16 mb-4 opacity-20" />
+                 <p>Chọn một cuộc hội thoại để bắt đầu</p>
+              </div>
+           )}
+       </div>
 
-      {/* CỘT 3: THÔNG TIN (ChatDetails) (Tái "sử dụng" (reuse)) */}
-      {showDetails && activeChat && (
-        <div className="w-96 flex-shrink-0 border-l border-gray-200">
-          <ChatDetails
-            activeUser={activeChat}
-          />
-        </div>
-      )}
+       {/* CỘT 3: THÔNG TIN */}
+       {activeChatId && showDetails && (
+           <div className="hidden lg:block border-l border-gray-200 w-80 bg-white">
+               <ChatDetails activeChat={activeChat} />
+           </div>
+       )}
     </div>
   );
 };
 
+import { MessageSquare } from 'lucide-react';
 export default EmployerMessagesPage;

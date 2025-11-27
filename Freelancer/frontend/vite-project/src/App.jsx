@@ -20,18 +20,16 @@ import PaymentResult from './pages/payment/PaymentResult.jsx';
 import CVBuilder from './pages/cv/CVBuilder.jsx';
 
 // --- CÁC TRANG MẠNG XÃ HỘI (MỚI) ---
-// 1. Trang CẬP NHẬT THÔNG TIN CÁ NHÂN (Code cũ của bạn)
 import Profile from './pages/core/Profile.jsx';
-
-// 2. Trang TƯỜNG CÁ NHÂN (Giao diện giống Facebook - Code mới)
 import UserProfilePage from './pages/core/UserProfilePage.jsx';
+import CompanyProfilePage from './pages/core/CompanyProfilePage.jsx';
 
 import FriendsPage from './pages/core/FriendsPage.jsx';
 import SavedPage from './pages/core/SavedPage.jsx';
 import TrashPage from './pages/core/TrashPage.jsx';
 
-// Component placeholder (Thay bằng component thật nếu có)
-const ChangePassword = () => <div className="p-8 text-4xl">Trang Đổi Mật Khẩu</div>;
+// <<< SỬA LỖI Ở ĐÂY: Import component thật, xóa dòng const cũ >>>
+import ChangePassword from './pages/auth/ChangePassword.jsx';
 
 // --- LUỒNG 3 & 4 (EMPLOYER) ---
 import EmployerRegister from './pages/employer/EmployerRegister.jsx';
@@ -71,11 +69,12 @@ function App() {
         {/* Route: Cập nhật thông tin cá nhân (Form edit) */}
         <Route path="/profile" element={<Profile />} />
         
-        {/* Route: Tường nhà công khai (Giao diện Facebook) */}
-        {/* Xem tường người khác: /user/123 */}
+        {/* Route: Tường nhà công khai */}
         <Route path="/user/:id" element={<UserProfilePage />} />
-        {/* Xem tường chính mình (shortcut): /me */}
         <Route path="/me" element={<UserProfilePage />} />
+
+        {/* Route: Trang thông tin công ty */}
+        <Route path="/company/:id" element={<CompanyProfilePage />} />
 
         <Route path="/jobs" element={<JobListings />} />
         <Route path="/jobs/:id" element={<JobDetail />} />
@@ -83,17 +82,19 @@ function App() {
         <Route path="/cv-builder" element={<CVBuilder />} />
         <Route path="/vip-package" element={<VipPackage />} />
         <Route path="/payment/:status" element={<PaymentResult />} />
+        
+        {/* Route Đổi Mật Khẩu */}
         <Route path="/change-password" element={<ChangePassword />} />
       </Route>
 
-      {/* === LUỒNG 2: AUTH (Dùng AuthLayout) === */}
+      {/* === LUỒNG 2: AUTH === */}
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
       </Route>
       
-      {/* === LUỒNG 3: EMPLOYER (Dùng EmployerLayout) === */}
+      {/* === LUỒNG 3: EMPLOYER === */}
       <Route path="/employer" element={<EmployerLayout />}>
         <Route index element={<Navigate to="dashboard" replace />} />
         <Route path="dashboard" element={<EmployerDashboard />} />
@@ -109,7 +110,7 @@ function App() {
       {/* === LUỒNG 4: EMPLOYER (CÔNG KHAI) === */}
       <Route path="/employer/register" element={<EmployerRegister />} />
 
-      {/* === LUỒNG 5: "ADMIN" (ADMIN) (Dùng AdminLayout) === */}
+      {/* === LUỒNG 5: ADMIN === */}
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<Navigate to="dashboard" replace />} />
         <Route path="dashboard" element={<AdminDashboard />} />

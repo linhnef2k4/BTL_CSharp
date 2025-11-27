@@ -36,6 +36,42 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\avatars\723a0e38-6613-44b6-8fec-873c343f5ba7-quocky.jpg'))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\avatars\78c3df4a-7911-4ea8-8750-faa40c94c293-mtp.webp'))">
+      <SourceType>Package</SourceType>
+      <SourceId>Freelancer</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/Freelancer</BasePath>
+      <RelativePath>uploads/avatars/78c3df4a-7911-4ea8-8750-faa40c94c293-mtp.webp</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>35fdznrx40</Fingerprint>
+      <Integrity>GcNfslazJT62IEchZHQ2raZrkuIrVloBLNHAeiRZ18w=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\avatars\78c3df4a-7911-4ea8-8750-faa40c94c293-mtp.webp'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\avatars\941218ab-f6d2-4c23-8e7c-288cedc2bd89-hinh-nen-zoro-71.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>Freelancer</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/Freelancer</BasePath>
+      <RelativePath>uploads/avatars/941218ab-f6d2-4c23-8e7c-288cedc2bd89-hinh-nen-zoro-71.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>a5j1pjptef</Fingerprint>
+      <Integrity>LswL30le8gVLCxxeOFh+pBLgrJ7rhbBx0hfd6RgCrI0=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\avatars\941218ab-f6d2-4c23-8e7c-288cedc2bd89-hinh-nen-zoro-71.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\avatars\a784a1ff-86ce-41db-89d9-0769aaa53bed-mtp.webp'))">
       <SourceType>Package</SourceType>
       <SourceId>Freelancer</SourceId>
@@ -53,6 +89,24 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\avatars\a784a1ff-86ce-41db-89d9-0769aaa53bed-mtp.webp'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\chat-files\0ad7f9e4-d9a7-49a6-8006-01119e888ddc-CVLinhPhan.pdf'))">
+      <SourceType>Package</SourceType>
+      <SourceId>Freelancer</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/Freelancer</BasePath>
+      <RelativePath>uploads/chat-files/0ad7f9e4-d9a7-49a6-8006-01119e888ddc-CVLinhPhan.pdf</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>x6pvrcixm9</Fingerprint>
+      <Integrity>SZz5n9Lla9RmM8sOlEH5YpU8GE40TiLVKWlO59S9BhQ=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\chat-files\0ad7f9e4-d9a7-49a6-8006-01119e888ddc-CVLinhPhan.pdf'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\chat-files\19831aec-91cb-46e3-8936-c49279d616b5-gggggg.png'))">
       <SourceType>Package</SourceType>
@@ -108,6 +162,24 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\chat-files\4ce0ef51-0619-4adb-9d82-ef04658a00d2-gggggg.png'))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\chat-files\7c9639f0-4b40-4e5b-b30d-528d6cd70171-zoro.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>Freelancer</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/Freelancer</BasePath>
+      <RelativePath>uploads/chat-files/7c9639f0-4b40-4e5b-b30d-528d6cd70171-zoro.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>muqjf833zy</Fingerprint>
+      <Integrity>UnKJk7no0ODDaSAy7lYlJbRokDCXQ/ibyU2vLbKynn0=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\chat-files\7c9639f0-4b40-4e5b-b30d-528d6cd70171-zoro.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\chat-files\7ee4beb8-4bf6-446d-9bc0-846f4db053a8-zoro.jpg'))">
       <SourceType>Package</SourceType>
       <SourceId>Freelancer</SourceId>
@@ -126,6 +198,24 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\chat-files\7ee4beb8-4bf6-446d-9bc0-846f4db053a8-zoro.jpg'))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\logos\36791019-34e9-464f-8782-11faa7155e7a-fpt.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>Freelancer</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/Freelancer</BasePath>
+      <RelativePath>uploads/logos/36791019-34e9-464f-8782-11faa7155e7a-fpt.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>635hdllbh1</Fingerprint>
+      <Integrity>AuXW6xM2x5ooE7EsPYhkUPts34vEPB868EO8GaMznz4=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\logos\36791019-34e9-464f-8782-11faa7155e7a-fpt.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\logos\cc9a6272-87bc-4823-a623-25da99b00c0d-react.jpg'))">
       <SourceType>Package</SourceType>
       <SourceId>Freelancer</SourceId>
@@ -143,6 +233,24 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\logos\cc9a6272-87bc-4823-a623-25da99b00c0d-react.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\resumes\33714041-ce04-4e67-8ee2-90713359adb5-Linh-Phan-CV.pdf'))">
+      <SourceType>Package</SourceType>
+      <SourceId>Freelancer</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/Freelancer</BasePath>
+      <RelativePath>uploads/resumes/33714041-ce04-4e67-8ee2-90713359adb5-Linh-Phan-CV.pdf</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>1vcwpbspgp</Fingerprint>
+      <Integrity>Hc7qwhZ2htNcXRa7J5ykqC6/m6dv/CgTfiwxdtjUKsE=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\resumes\33714041-ce04-4e67-8ee2-90713359adb5-Linh-Phan-CV.pdf'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\resumes\8072d9f5-4e6e-4d88-a6a7-ff21c9cbc68c-CVLinhPhan.pdf'))">
       <SourceType>Package</SourceType>
@@ -179,6 +287,24 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\resumes\850882a8-eef8-4d56-80dd-20980245f293-CV_LinhNef.pdf'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\resumes\8c5ceff0-bf46-48ce-918f-efce7a36c191-CV_LinhNef.pdf'))">
+      <SourceType>Package</SourceType>
+      <SourceId>Freelancer</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/Freelancer</BasePath>
+      <RelativePath>uploads/resumes/8c5ceff0-bf46-48ce-918f-efce7a36c191-CV_LinhNef.pdf</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>61kmr8qrm7</Fingerprint>
+      <Integrity>FnYM93+3JR6J7+WeACt8MAS26dM2uiDHGt/wTjlY1Z0=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\resumes\8c5ceff0-bf46-48ce-918f-efce7a36c191-CV_LinhNef.pdf'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\resumes\e31277cb-daf5-4065-aa77-53e348e84e1c-CVLinhPhan.pdf'))">
       <SourceType>Package</SourceType>

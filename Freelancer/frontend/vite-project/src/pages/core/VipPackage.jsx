@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Star, Zap, ChevronRight } from 'lucide-react';
+import { Star, Zap, ChevronRight, CheckCircle, Clock } from 'lucide-react';
 import ComparisonTable from '../../components/vip/ComparisonTable';
 import PaymentModal from '../../components/vip/PaymentModal';
 import { useAuth } from '../../context/AuthContext';
@@ -9,7 +9,6 @@ const VipPackage = () => {
   const { user } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Animation Variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { staggerChildren: 0.2 } },
@@ -25,14 +24,31 @@ const VipPackage = () => {
           alert("Vui lòng đăng nhập để nâng cấp VIP.");
           return;
       }
+      // Chặn Employer
+      if (user.role === 'Employer') {
+          alert("Gói này chỉ dành cho Người tìm việc (Seeker).\nVui lòng truy cập trang dành cho Nhà tuyển dụng để nâng cấp.");
+          return;
+      }
       setIsModalOpen(true);
   }
+
+  // Lấy thông tin VIP từ user context
+  const isVip = user?.seeker?.isVip;
+  const vipExpireDate = user?.seeker?.vipExpireDate;
+
+  // Format ngày hết hạn chuẩn tiếng Việt
+  const formattedExpireDate = vipExpireDate 
+    ? new Date(vipExpireDate).toLocaleDateString('vi-VN', { 
+        day: '2-digit', month: '2-digit', year: 'numeric', 
+        hour: '2-digit', minute:'2-digit' 
+      })
+    : null;
 
   return (
     <>
       <div className="min-h-screen relative overflow-hidden text-white bg-gradient-to-b from-indigo-950 via-blue-950 to-black">
 
-        {/* Background Effects (Giữ nguyên hiệu ứng đẹp của bạn) */}
+        {/* Background Effects */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute w-[200%] h-[200%] animate-bg-move-slow bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.15),transparent_60%)] blur-3xl"></div>
           {[...Array(30)].map((_, i) => (
@@ -66,16 +82,31 @@ const VipPackage = () => {
             className="mt-6 text-5xl md:text-7xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-white to-yellow-200 drop-shadow-2xl"
             variants={itemVariants}
           >
-            Mở Khóa Tiềm Năng VIP
+            {isVip ? 'Bạn Đang Là VIP' : 'Đặc Quyền Ứng Viên VIP'}
           </motion.h1>
 
-          <motion.p
+          <motion.div
             className="mt-6 text-lg md:text-xl max-w-2xl mx-auto text-indigo-100 leading-relaxed"
             variants={itemVariants}
           >
-            Trở thành ứng viên nổi bật hoặc nhà tuyển dụng uy tín. <br/>
-            Đặc quyền không giới hạn chỉ với một bước nâng cấp.
-          </motion.p>
+            {isVip ? (
+               <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-6 inline-block shadow-lg">
+                  <p className="flex items-center justify-center gap-2 font-bold text-yellow-300 text-xl">
+                     <CheckCircle className="w-6 h-6" /> Tài khoản VIP đang hoạt động
+                  </p>
+                  {formattedExpireDate && (
+                      <p className="flex items-center justify-center gap-2 mt-3 text-base text-gray-200">
+                         <Clock size={18} /> Hết hạn vào: <span className="text-white font-bold bg-white/20 px-2 py-0.5 rounded">{formattedExpireDate}</span>
+                      </p>
+                  )}
+                  <p className="mt-4 text-sm text-indigo-200 border-t border-white/10 pt-3">
+                    Bạn có thể gia hạn thêm ngay bây giờ để cộng dồn thời gian sử dụng.
+                  </p>
+               </div>
+            ) : (
+               <p>Nổi bật hồ sơ, tiếp cận nhà tuyển dụng hàng đầu và mở khóa các tính năng độc quyền dành riêng cho Seeker.</p>
+            )}
+          </motion.div>
 
           <motion.button
             variants={itemVariants}
@@ -83,8 +114,7 @@ const VipPackage = () => {
             className="relative mt-10 inline-flex items-center space-x-3 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-300 px-10 py-4 text-lg font-bold text-indigo-900 shadow-[0_0_25px_rgba(255,200,0,0.5)] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(255,200,0,0.8)]"
           >
             <Zap size={24} className="fill-indigo-900" />
-            {/* Sửa giá tiền khớp với Backend */}
-            <span>Nâng cấp ngay – 500K</span> 
+            <span>{isVip ? 'Gia hạn ngay – 99.999đ' : 'Nâng cấp ngay – 99.999đ'}</span> 
             <ChevronRight size={24} />
           </motion.button>
         </motion.div>

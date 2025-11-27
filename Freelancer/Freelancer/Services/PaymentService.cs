@@ -33,7 +33,6 @@ namespace Freelancer.Services
         {
             var employer = await _context.Employers.FindAsync(employerId);
             if (employer == null) throw new System.Exception("Không tìm thấy Employer.");
-            if (employer.IsVip) throw new System.Exception("Bạn đã là VIP.");
 
             var transaction = new PaymentTransaction
             {
@@ -56,8 +55,7 @@ namespace Freelancer.Services
         {
             var seeker = await _context.Seekers.FindAsync(seekerId);
             if (seeker == null) throw new System.Exception("Không tìm thấy Seeker.");
-            if (seeker.IsVip) throw new System.Exception("Bạn đã là VIP.");
-
+            
             var transaction = new PaymentTransaction
             {
                 SeekerId = seekerId,
