@@ -8,7 +8,8 @@ namespace Freelancer.Models
     {
         Pending,
         Successful,
-        Failed
+        Failed,
+        Refunded
     }
 
     public class PaymentTransaction

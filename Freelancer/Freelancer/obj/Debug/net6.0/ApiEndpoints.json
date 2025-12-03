@@ -479,6 +479,58 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Freelancer.Controllers.NotificationsController",
+    "Method": "MarkAsRead",
+    "RelativePath": "api/notifications/{id}/read",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.NotificationsController",
+    "Method": "MarkAllAsRead",
+    "RelativePath": "api/notifications/read-all",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.PaymentController",
+    "Method": "GetAllPayments",
+    "RelativePath": "api/Payment/admin/all",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.PaymentController",
+    "Method": "CheckTransactionStatus",
+    "RelativePath": "api/Payment/check-status/{transactionId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "transactionId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Freelancer.Controllers.PaymentController",
     "Method": "CreateVipOrder",
     "RelativePath": "api/Payment/create-vip-order",
@@ -496,6 +548,22 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.PaymentController",
+    "Method": "RefundTransaction",
+    "RelativePath": "api/Payment/refund/{transactionId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "transactionId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {
@@ -1118,6 +1186,64 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.SupportController",
+    "Method": "CreateTicket",
+    "RelativePath": "api/Support",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Freelancer.DTOs.CreateTicketDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.SupportController",
+    "Method": "GetAllTickets",
+    "RelativePath": "api/Support/admin/all",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "status",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.SupportController",
+    "Method": "ResolveTicket",
+    "RelativePath": "api/Support/admin/resolve/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.SupportController",
+    "Method": "GetMyTickets",
+    "RelativePath": "api/Support/my-tickets",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {

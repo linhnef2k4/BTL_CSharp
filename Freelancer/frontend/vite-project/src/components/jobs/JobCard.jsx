@@ -1,84 +1,89 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { MapPin, DollarSign, Clock, CheckCircle, Check } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { formatSalary, formatTimeAgo } from '../../utils/formatUtils'; // Import helper
 
-const JobCard = ({ job, isApplied, onApply }) => { // <-- NHẬN PROPS MỚI
+// Hàm lấy logo fallback nếu không có ảnh
+const getCompanyLogo = (name, logoUrl) => {
+  if (logoUrl) return logoUrl;
+  const initial = name ? name.charAt(0).toUpperCase() : 'C';
+  return `https://placehold.co/56x56/00529c/ffffff?text=${initial}`;
+};
+
+const JobCard = ({ job, isApplied, onApply }) => { 
   const navigate = useNavigate();
 
   const handleCardClick = () => {
     navigate(`/jobs/${job.id}`);
   };
 
-  // Nâng cấp hàm click Ứng tuyển
   const handleApplyClick = (e) => {
-    e.stopPropagation(); // Ngăn click lan ra ngoài
+    e.stopPropagation(); 
     if (!isApplied) {
-      onApply(job.id, job.title); // Gọi hàm của cha (truyền ID và Title)
+      onApply(job.id, job.title); 
     }
   };
 
   return (
     <motion.div
       onClick={handleCardClick}
-      className="cursor-pointer rounded-xl border bg-white shadow-md transition-all 
-                 duration-300 hover:shadow-xl hover:-translate-y-1"
-      whileHover={{ y: -5 }}
+      className="cursor-pointer rounded-xl border border-gray-100 bg-white shadow-sm transition-all 
+                 duration-300 hover:shadow-lg hover:-translate-y-1 group"
+      whileHover={{ y: -4 }}
     >
       <div className="p-5">
-        {/* ... (Phần thông tin chính giữ nguyên) ... */}
         <div className="flex items-start justify-between">
           <div className="flex items-center space-x-4">
             <img
-              src={job.companyLogo}
+              src={getCompanyLogo(job.companyName, job.logoCompany)}
               alt={`${job.companyName} logo`}
-              className="h-14 w-14 rounded-lg border object-contain"
+              className="h-14 w-14 rounded-lg border object-contain bg-white"
             />
             <div>
-              <h3 className="text-lg font-bold text-blue-600 hover:underline">
+              <h3 className="text-lg font-bold text-gray-800 group-hover:text-blue-600 transition-colors line-clamp-1">
                 {job.title}
               </h3>
-              <p className="text-sm font-medium text-gray-700">{job.companyName}</p>
+              <p className="text-sm font-medium text-gray-500">{job.companyName}</p>
             </div>
           </div>
-          {job.isHot && (
-            <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-600">
-              Hot
-            </span>
-          )}
+          {/* Giả sử API có trường isHot hoặc logic VIP nào đó */}
+          {/* Tạm thời ẩn hoặc check logic VIP từ employer */}
         </div>
 
-        {/* ... (Thông tin phụ giữ nguyên) ... */}
         <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2">
           <div className="flex items-center space-x-1.5 text-sm text-gray-600">
-            <DollarSign size={16} className="text-green-500" />
-            <span>{job.salary}</span>
+            <DollarSign size={16} className="text-green-600" />
+            <span className="font-medium text-green-700">
+                {formatSalary(job.minSalary, job.maxSalary)}
+            </span>
           </div>
           <div className="flex items-center space-x-1.5 text-sm text-gray-600">
-            <MapPin size={16} className="text-red-500" />
+            <MapPin size={16} className="text-blue-500" />
             <span>{job.location}</span>
           </div>
           <div className="flex items-center space-x-1.5 text-sm text-gray-600">
-            <Clock size={16} className="text-blue-500" />
-            <span>{job.type}</span>
+            <Clock size={16} className="text-orange-500" />
+            <span>{job.workType}</span>
           </div>
         </div>
 
-        {/* Nút "Ứng tuyển" (ĐÃ NÂNG CẤP) */}
-        <div className="mt-5 flex items-center justify-between">
-          <p className="text-xs text-gray-400">Đăng {job.postedTime}</p>
+        <div className="mt-5 flex items-center justify-between pt-4 border-t border-gray-50">
+          <p className="text-xs text-gray-400 font-medium">
+             {formatTimeAgo(job.createdDate)}
+          </p>
           <button
             onClick={handleApplyClick}
-            disabled={isApplied} // <-- Vô hiệu hóa nếu đã ứng tuyển
-            className={`flex items-center space-x-2 rounded-lg px-4 py-2 font-semibold text-white shadow-lg
-                       transition-all duration-200 
-                       ${isApplied 
-                         ? 'cursor-not-allowed bg-gray-400' // <-- STYLE MỚI
-                         : 'bg-blue-600 hover:scale-105'
-                       }`}
+            disabled={isApplied} 
+            className={`flex items-center space-x-2 rounded-lg px-4 py-2 text-sm font-semibold shadow-sm
+                        transition-all duration-200 
+                        ${isApplied 
+                          ? 'cursor-not-allowed bg-green-100 text-green-700' 
+                          : 'bg-blue-600 text-white hover:bg-blue-700 hover:shadow-md'
+                        }`}
           >
-            {isApplied ? <Check size={18} /> : <CheckCircle size={18} />}
-            <span>{isApplied ? 'Đã ứng tuyển' : 'Ứng tuyển'}</span>
+            {isApplied ? <Check size={16} /> : <CheckCircle size={16} />}
+            <span>{isApplied ? 'Đã nộp đơn' : 'Ứng tuyển ngay'}</span>
           </button>
         </div>
       </div>

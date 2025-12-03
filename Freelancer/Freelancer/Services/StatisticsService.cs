@@ -51,7 +51,7 @@ namespace Freelancer.Services
             };
         }
 
-        // --- 2. BIỂU ĐỒ DOANH THU (THEO NĂM) ---
+  
         public async Task<IEnumerable<RevenueChartDto>> GetYearlyRevenueAsync(int year)
         {
             // Lấy dữ liệu doanh thu của năm được chọn

@@ -37,6 +37,7 @@ namespace Freelancer.Data
         public DbSet<SavedPost> SavedPosts { get; set; } // <-- THÊM DÒNG NÀY
 
         public DbSet<Report> Reports { get; set; }
+        public DbSet<SupportTicket> SupportTickets { get; set; }
 
         // (Nếu bạn có Model "Skill", bạn cũng thêm DbSet ở đây)
 
@@ -265,6 +266,13 @@ namespace Freelancer.Data
                     .HasForeignKey(r => r.ReporterId)
                     .OnDelete(DeleteBehavior.Cascade); // Xóa User -> Xóa luôn báo cáo của họ
             });
+
+            // --- CẤU HÌNH CHO SUPPORT TICKET ---
+            modelBuilder.Entity<SupportTicket>()
+                .HasOne(t => t.User)
+                .WithMany() // Một User có thể gửi nhiều Ticket
+                .HasForeignKey(t => t.UserId)
+                .OnDelete(DeleteBehavior.Restrict); // Xóa User không xóa lịch sử ticket ngay
         }
     }
 }

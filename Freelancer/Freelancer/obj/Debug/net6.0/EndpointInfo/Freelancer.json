@@ -641,6 +641,41 @@
         }
       }
     },
+    "/api/notifications/{id}/read": {
+      "put": {
+        "tags": [
+          "Notifications"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/notifications/read-all": {
+      "put": {
+        "tags": [
+          "Notifications"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/api/Payment/create-vip-order": {
       "post": {
         "tags": [
@@ -669,6 +704,64 @@
       "post": {
         "tags": [
           "Payment"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Payment/check-status/{transactionId}": {
+      "get": {
+        "tags": [
+          "Payment"
+        ],
+        "parameters": [
+          {
+            "name": "transactionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Payment/admin/all": {
+      "get": {
+        "tags": [
+          "Payment"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Payment/refund/{transactionId}": {
+      "post": {
+        "tags": [
+          "Payment"
+        ],
+        "parameters": [
+          {
+            "name": "transactionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -1694,6 +1787,93 @@
         }
       }
     },
+    "/api/Support": {
+      "post": {
+        "tags": [
+          "Support"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTicketDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTicketDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTicketDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Support/my-tickets": {
+      "get": {
+        "tags": [
+          "Support"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Support/admin/all": {
+      "get": {
+        "tags": [
+          "Support"
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Support/admin/resolve/{id}": {
+      "put": {
+        "tags": [
+          "Support"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/api/Upload/company-logo": {
       "post": {
         "tags": [
@@ -2032,6 +2212,28 @@
             "type": "string"
           },
           "imageUrl": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateTicketDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "priority": {
+            "type": "string",
+            "nullable": true
+          },
+          "attachmentUrl": {
             "type": "string",
             "nullable": true
           }

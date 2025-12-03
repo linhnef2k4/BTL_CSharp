@@ -101,5 +101,36 @@ namespace Freelancer.Services
             catch (System.Exception) { /* Lỗi push SignalR (không làm hỏng flow) */ }
             // --- (KẾT THÚC NÂNG CẤP) ---
         }
+
+        // --- THÊM LOGIC ĐÁNH DẤU 1 CÁI ---
+        public async Task MarkAsReadAsync(int notificationId, int userId)
+        {
+            var notification = await _context.Notifications.FindAsync(notificationId);
+
+            // Chỉ đánh dấu nếu tìm thấy VÀ đúng là của người dùng đó
+            if (notification != null && notification.RecipientId == userId)
+            {
+                notification.IsRead = true;
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        // --- THÊM LOGIC ĐÁNH DẤU TẤT CẢ ---
+        public async Task MarkAllAsReadAsync(int userId)
+        {
+            // Tìm tất cả thông báo CHƯA ĐỌC của user này
+            var unreadNotifications = await _context.Notifications
+                .Where(n => n.RecipientId == userId && !n.IsRead)
+                .ToListAsync();
+
+            if (unreadNotifications.Any())
+            {
+                foreach (var notif in unreadNotifications)
+                {
+                    notif.IsRead = true;
+                }
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

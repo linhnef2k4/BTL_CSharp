@@ -1,6 +1,7 @@
 ﻿using Freelancer.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -36,5 +37,26 @@ namespace Freelancer.Controllers
 
         // (Sau này chúng ta sẽ làm API "Đánh dấu đã đọc")
         // [HttpPost("mark-as-read")]
+        // Đánh dấu 1 thông báo cụ thể là đã đọc
+
+        // --- THÊM API 1: Đánh dấu 1 cái (Khi user bấm vào thông báo) ---
+        // PUT: api/notifications/5/read
+        [HttpPut("{id}/read")]
+        public async Task<IActionResult> MarkAsRead(int id)
+        {
+            var userId = GetUserIdFromToken();
+            await _notificationService.MarkAsReadAsync(id, userId);
+            return Ok(new { Message = "Đã đánh dấu đã đọc." });
+        }
+
+        // --- THÊM API 2: Đánh dấu tất cả (Nút "Đánh dấu tất cả đã đọc") ---
+        // PUT: api/notifications/read-all
+        [HttpPut("read-all")]
+        public async Task<IActionResult> MarkAllAsRead()
+        {
+            var userId = GetUserIdFromToken();
+            await _notificationService.MarkAllAsReadAsync(userId);
+            return Ok(new { Message = "Đã đánh dấu tất cả là đã đọc." });
+        }
     }
 }

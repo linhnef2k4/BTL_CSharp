@@ -1,110 +1,74 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Star, Zap, ChevronRight } from 'lucide-react';
-import ComparisonTable from '../../components/vip/ComparisonTable';
-import PaymentModal from '../../components/vip/PaymentModal';
+import React, { useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { CheckCircle, XCircle, Home, RefreshCcw } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
-const VipPackage = () => {
-  const { user } = useAuth();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+const PaymentResult = () => {
+  const { status } = useParams(); // Lấy param 'success' hoặc 'failed' từ URL
+  const navigate = useNavigate();
+  const { refetchUser } = useAuth();
   
-  // Animation Variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.2 } },
-  };
+  const isSuccess = status === 'success';
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100 } },
-  };
-
-  const handleOpenModal = () => {
-      if (!user) {
-          alert("Vui lòng đăng nhập để nâng cấp VIP.");
-          return;
-      }
-      setIsModalOpen(true);
-  }
+  useEffect(() => {
+    // Nếu thanh toán thành công, gọi lại API User (refetchUser) 
+    // để cập nhật ngay lập tức trạng thái VIP và ngày hết hạn mới nhất từ server
+    if (isSuccess) {
+        refetchUser();
+    }
+  }, [isSuccess, refetchUser]);
 
   return (
-    <>
-      <div className="min-h-screen relative overflow-hidden text-white bg-gradient-to-b from-indigo-950 via-blue-950 to-black">
-
-        {/* Background Effects (Giữ nguyên hiệu ứng đẹp của bạn) */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute w-[200%] h-[200%] animate-bg-move-slow bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.15),transparent_60%)] blur-3xl"></div>
-          {[...Array(30)].map((_, i) => (
-            <motion.div
-              key={`star-${i}`}
-              className="absolute rounded-full bg-white opacity-70"
-              style={{
-                width: Math.random() * 3 + 'px',
-                height: Math.random() * 3 + 'px',
-                top: Math.random() * 100 + '%',
-                left: Math.random() * 100 + '%',
-              }}
-              animate={{ opacity: [0.2, 1, 0.2] }}
-              transition={{ duration: Math.random() * 5 + 3, repeat: Infinity }}
-            />
-          ))}
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+      <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full text-center border border-gray-100">
+        
+        {/* Icon trạng thái */}
+        <div className="flex justify-center mb-6">
+          {isSuccess ? (
+            <div className="bg-green-100 p-4 rounded-full animate-bounce-slow">
+               <CheckCircle className="w-20 h-20 text-green-600" />
+            </div>
+          ) : (
+            <div className="bg-red-100 p-4 rounded-full">
+               <XCircle className="w-20 h-20 text-red-600" />
+            </div>
+          )}
         </div>
 
-        {/* Hero Section */}
-        <motion.div
-          className="relative z-10 text-center pt-32 pb-20 px-4"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          <motion.div variants={itemVariants}>
-            <Star className="mx-auto h-20 w-20 text-yellow-400 drop-shadow-[0_0_30px_rgba(255,255,0,0.6)]" fill="currentColor" />
-          </motion.div>
+        {/* Tiêu đề */}
+        <h1 className={`text-2xl font-bold mb-2 ${isSuccess ? 'text-green-700' : 'text-red-700'}`}>
+          {isSuccess ? 'Giao dịch Thành công!' : 'Giao dịch Thất bại'}
+        </h1>
 
-          <motion.h1
-            className="mt-6 text-5xl md:text-7xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-white to-yellow-200 drop-shadow-2xl"
-            variants={itemVariants}
+        {/* Mô tả */}
+        <p className="text-gray-600 mb-8 leading-relaxed">
+          {isSuccess 
+            ? 'Chúc mừng! Tài khoản của bạn đã được nâng cấp/gia hạn VIP thành công. Hãy tận hưởng các đặc quyền ngay bây giờ.'
+            : 'Giao dịch đã bị hủy hoặc có lỗi xảy ra trong quá trình thanh toán. Vui lòng thử lại.'}
+        </p>
+
+        {/* Nút điều hướng */}
+        <div className="space-y-3">
+          <button 
+            onClick={() => navigate('/')}
+            className="w-full flex items-center justify-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 py-3 rounded-xl font-semibold transition"
           >
-            Mở Khóa Tiềm Năng VIP
-          </motion.h1>
+            <Home size={18} /> Về trang chủ
+          </button>
+          
+          {!isSuccess && (
+             <button 
+                onClick={() => navigate('/vip-package')}
+                className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition"
+             >
+                <RefreshCcw size={18} /> Thử lại
+             </button>
+          )}
+        </div>
 
-          <motion.p
-            className="mt-6 text-lg md:text-xl max-w-2xl mx-auto text-indigo-100 leading-relaxed"
-            variants={itemVariants}
-          >
-            Trở thành ứng viên nổi bật hoặc nhà tuyển dụng uy tín. <br/>
-            Đặc quyền không giới hạn chỉ với một bước nâng cấp.
-          </motion.p>
-
-          <motion.button
-            variants={itemVariants}
-            onClick={handleOpenModal}
-            className="relative mt-10 inline-flex items-center space-x-3 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-300 px-10 py-4 text-lg font-bold text-indigo-900 shadow-[0_0_25px_rgba(255,200,0,0.5)] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(255,200,0,0.8)]"
-          >
-            <Zap size={24} className="fill-indigo-900" />
-            {/* Sửa giá tiền khớp với Backend */}
-            <span>Nâng cấp ngay – 500K</span> 
-            <ChevronRight size={24} />
-          </motion.button>
-        </motion.div>
-
-        {/* Comparison Table */}
-        <motion.div 
-          className="relative z-10 container mx-auto max-w-6xl px-6 pb-20"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
-          <ComparisonTable onUpgradeClick={handleOpenModal} />
-        </motion.div>
       </div>
-
-      {/* Payment Modal */}
-      <PaymentModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-    </>
+    </div>
   );
 };
 
-export default VipPackage;
+export default PaymentResult;

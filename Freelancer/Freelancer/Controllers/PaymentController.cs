@@ -136,5 +136,69 @@ namespace Freelancer.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        // GET: api/payment/check-status/{transactionId}
+        [HttpGet("check-status/{transactionId}")]
+        [Authorize] // Chỉ user đăng nhập mới được check
+        public async Task<IActionResult> CheckTransactionStatus(int transactionId)
+        {
+            try
+            {
+                // Gọi Service QueryDR
+                var result = await _paymentService.QueryTransactionStatusAsync(transactionId, HttpContext);
+
+                return Ok(new { Message = result });
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(new { Error = ex.Message });
+            }
+        }
+
+        // --- API ADMIN: XEM TẤT CẢ GIAO DỊCH ---
+        [HttpGet("admin/all")]
+        [Authorize(Roles = "Admin")] // Chỉ Admin mới được xem doanh thu
+        public async Task<IActionResult> GetAllPayments()
+        {
+            try
+            {
+                var transactions = await _paymentService.GetAllTransactionsAsync();
+                return Ok(transactions);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(new { Error = ex.Message });
+            }
+        }
+
+        // ...
+
+        // --- API 4: HOÀN TIỀN (REFUND) ---
+        // POST: api/payment/refund/{transactionId}
+        [HttpPost("refund/{transactionId}")]
+        [Authorize(Roles = "Admin")] // BẮT BUỘC LÀ ADMIN
+        public async Task<IActionResult> RefundTransaction(int transactionId)
+        {
+            try
+            {
+                // Lấy tên Admin đang đăng nhập để ghi log cho VNPay
+                string adminName = User.Identity.Name ?? "Admin";
+
+                var result = await _paymentService.RefundTransactionAsync(transactionId, adminName, HttpContext);
+
+                if (result.Contains("thành công"))
+                {
+                    return Ok(new { Message = result });
+                }
+                else
+                {
+                    return BadRequest(new { Error = result });
+                }
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(new { Error = ex.Message });
+            }
+        }
     }
 }

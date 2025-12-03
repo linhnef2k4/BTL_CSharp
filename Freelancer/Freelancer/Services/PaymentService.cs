@@ -3,7 +3,10 @@ using Freelancer.Interfaces;
 using Freelancer.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Freelancer.DTOs;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +36,6 @@ namespace Freelancer.Services
         {
             var employer = await _context.Employers.FindAsync(employerId);
             if (employer == null) throw new System.Exception("Không tìm thấy Employer.");
-            if (employer.IsVip) throw new System.Exception("Bạn đã là VIP.");
 
             var transaction = new PaymentTransaction
             {
@@ -56,8 +58,7 @@ namespace Freelancer.Services
         {
             var seeker = await _context.Seekers.FindAsync(seekerId);
             if (seeker == null) throw new System.Exception("Không tìm thấy Seeker.");
-            if (seeker.IsVip) throw new System.Exception("Bạn đã là VIP.");
-
+            
             var transaction = new PaymentTransaction
             {
                 SeekerId = seekerId,
@@ -299,5 +300,296 @@ namespace Freelancer.Services
                 return compare;
             }
         }
+
+
+        public async Task<string> QueryTransactionStatusAsync(int transactionId, HttpContext httpContext)
+        {
+            // 1. Lấy giao dịch từ DB
+            var transaction = await _context.PaymentTransactions.FindAsync(transactionId);
+            if (transaction == null) return "Transaction not found";
+
+            // 2. Cấu hình tham số QueryDR
+            string vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
+            string vnp_TmnCode = _config["VnPay:TmnCode"];
+            string vnp_HashSecret = _config["VnPay:HashSecret"];
+            string vnp_RequestId = Guid.NewGuid().ToString(); // Mã định danh request (duy nhất)
+            string vnp_Version = "2.1.0";
+            string vnp_Command = "querydr";
+            string vnp_TxnRef = transaction.Id.ToString(); // Mã giao dịch của mình
+            string vnp_OrderInfo = "Query transaction " + transaction.Id;
+
+            // VNPay yêu cầu ngày tạo giao dịch (phải đúng y hệt lúc tạo link thanh toán)
+            string vnp_TransactionDate = transaction.CreatedDate.ToString("yyyyMMddHHmmss");
+            string vnp_CreateDate = DateTime.Now.ToString("yyyyMMddHHmmss"); // Thời gian gọi API này
+            string vnp_IpAddr = GetIpAddress(httpContext);
+
+            // 3. Tính Checksum (Lưu ý: QueryDR dùng dấu "|" để nối, KHÔNG sắp xếp alphabet)
+            // Quy tắc: requestId|version|command|tmnCode|txnRef|transDate|createDate|ipAddr|orderInfo
+            string rawData = $"{vnp_RequestId}|{vnp_Version}|{vnp_Command}|{vnp_TmnCode}|{vnp_TxnRef}|{vnp_TransactionDate}|{vnp_CreateDate}|{vnp_IpAddr}|{vnp_OrderInfo}";
+            string vnp_SecureHash = HmacSHA512(vnp_HashSecret, rawData);
+
+            // 4. Tạo JSON Body
+            var requestData = new
+            {
+                vnp_RequestId = vnp_RequestId,
+                vnp_Version = vnp_Version,
+                vnp_Command = vnp_Command,
+                vnp_TmnCode = vnp_TmnCode,
+                vnp_TxnRef = vnp_TxnRef,
+                vnp_OrderInfo = vnp_OrderInfo,
+                vnp_TransactionDate = vnp_TransactionDate,
+                vnp_CreateDate = vnp_CreateDate,
+                vnp_IpAddr = vnp_IpAddr,
+                vnp_SecureHash = vnp_SecureHash
+            };
+
+            // 5. Gửi Request POST đến VNPay
+            using (var client = new HttpClient())
+            {
+                var json = JsonConvert.SerializeObject(requestData);
+                var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await client.PostAsync(vnp_ApiUrl, httpContent);
+                var responseString = await response.Content.ReadAsStringAsync();
+
+                // 6. Xử lý kết quả trả về
+                var jsonResponse = JObject.Parse(responseString);
+                string responseCode = jsonResponse["vnp_ResponseCode"]?.ToString();
+                string transactionStatus = jsonResponse["vnp_TransactionStatus"]?.ToString();
+
+                if (responseCode == "00" && transactionStatus == "00")
+                {
+                    // Giao dịch thành công tại VNPay
+                    if (transaction.Status == PaymentStatus.Pending)
+                    {
+                        // Cập nhật DB của mình
+                        transaction.Status = PaymentStatus.Successful;
+                        transaction.PaidDate = DateTime.UtcNow;
+                        transaction.VnPayTransactionNo = jsonResponse["vnp_TransactionNo"]?.ToString();
+
+                        // GỌI HÀM CẬP NHẬT VIP (Giống logic trong ProcessVnPayReturnAsync)
+                        await UpdateVipStatus(transaction);
+
+                        await _context.SaveChangesAsync();
+                        return "Success: Transaction confirmed.";
+                    }
+                    return "Success: Already updated.";
+                }
+                else
+                {
+                    return $"Failed: Code {responseCode}, Status {transactionStatus}, Msg: {jsonResponse["vnp_Message"]}";
+                }
+            }
+        }
+
+        // Hàm phụ để cập nhật VIP (tách ra để dùng chung cho gọn)
+        private async Task UpdateVipStatus(PaymentTransaction transaction)
+        {
+            if (transaction.EmployerId.HasValue)
+            {
+                var employer = await _context.Employers.FindAsync(transaction.EmployerId);
+                if (employer != null)
+                {
+                    employer.IsVip = true;
+                    if (!employer.VipExpireDate.HasValue || employer.VipExpireDate < DateTime.UtcNow)
+                        employer.VipExpireDate = DateTime.UtcNow.AddDays(30);
+                    else
+                        employer.VipExpireDate = employer.VipExpireDate.Value.AddDays(30);
+                }
+            }
+            else if (transaction.SeekerId.HasValue)
+            {
+                var seeker = await _context.Seekers.FindAsync(transaction.SeekerId);
+                if (seeker != null)
+                {
+                    seeker.IsVip = true;
+                    if (!seeker.VipExpireDate.HasValue || seeker.VipExpireDate < DateTime.UtcNow)
+                        seeker.VipExpireDate = DateTime.UtcNow.AddDays(30);
+                    else
+                        seeker.VipExpireDate = seeker.VipExpireDate.Value.AddDays(30);
+                }
+            }
+        }
+        public async Task<IEnumerable<PaymentTransactionDto>> GetAllTransactionsAsync()
+        {
+            // BƯỚC 1: Lấy danh sách giao dịch thô (KHÔNG Include gì cả để chắc chắn lấy được dữ liệu)
+            var transactions = await _context.PaymentTransactions
+                .OrderByDescending(t => t.CreatedDate)
+                .AsNoTracking()
+                .ToListAsync();
+
+            // Nếu không có giao dịch nào thì trả về luôn
+            if (!transactions.Any()) return new List<PaymentTransactionDto>();
+
+            // BƯỚC 2: Lấy danh sách ID của Employer và Seeker có trong các giao dịch trên
+            var employerIds = transactions.Where(t => t.EmployerId.HasValue).Select(t => t.EmployerId.Value).Distinct().ToList();
+            var seekerIds = transactions.Where(t => t.SeekerId.HasValue).Select(t => t.SeekerId.Value).Distinct().ToList();
+
+            // BƯỚC 3: Truy vấn thông tin Employer và Seeker (Kèm User) để lấy tên
+            // Chỉ lấy những người có trong danh sách ID ở trên (Tối ưu hiệu năng)
+            var employers = await _context.Employers
+                .Where(e => employerIds.Contains(e.Id))
+                .Include(e => e.User) // Lấy User để lấy Email
+                .ToDictionaryAsync(e => e.Id); // Chuyển sang Dictionary để tra cứu cho nhanh
+
+            var seekers = await _context.Seekers
+                .Where(s => seekerIds.Contains(s.Id))
+                .Include(s => s.User)
+                .ToDictionaryAsync(s => s.Id);
+
+            // BƯỚC 4: Ghép thông tin (Mapping)
+            var result = transactions.Select(t =>
+            {
+                string name = "Không xác định";
+                string email = "Ẩn";
+                string type = "Unknown";
+
+                // Thử tìm trong danh sách Employer đã tải về
+                if (t.EmployerId.HasValue && employers.ContainsKey(t.EmployerId.Value))
+                {
+                    var emp = employers[t.EmployerId.Value];
+                    type = "Employer";
+                    name = emp.CompanyName ?? "Công ty (Lỗi tên)";
+                    email = emp.User?.Email ?? "Email ẩn";
+                }
+                // Thử tìm trong danh sách Seeker đã tải về
+                else if (t.SeekerId.HasValue && seekers.ContainsKey(t.SeekerId.Value))
+                {
+                    var sk = seekers[t.SeekerId.Value];
+                    type = "Seeker";
+                    name = sk.User?.FullName ?? "Ứng viên (Lỗi tên)";
+                    email = sk.User?.Email ?? "Email ẩn";
+                }
+
+                return new PaymentTransactionDto
+                {
+                    Id = t.Id,
+                    Amount = t.Amount,
+                    OrderInfo = t.OrderInfo,
+                    Status = t.Status.ToString(),
+                    CreatedDate = t.CreatedDate,
+                    PaidDate = t.PaidDate,
+                    VnPayTransactionNo = t.VnPayTransactionNo,
+
+                    PayerName = name,
+                    PayerType = type,
+                    PayerEmail = email
+                };
+            });
+
+            return result;
+        }
+
+        // ... (Giữ nguyên các using cũ)
+
+        // --- THÊM HÀM MỚI VÀO PaymentService ---
+        public async Task<string> RefundTransactionAsync(int transactionId, string adminUser, HttpContext httpContext)
+        {
+            // 1. Lấy thông tin giao dịch từ DB
+            var transaction = await _context.PaymentTransactions.FindAsync(transactionId);
+
+            if (transaction == null) return "Không tìm thấy giao dịch.";
+            if (transaction.Status != PaymentStatus.Successful) return "Giao dịch chưa thành công hoặc đã hoàn tiền.";
+            if (string.IsNullOrEmpty(transaction.VnPayTransactionNo)) return "Thiếu mã giao dịch VNPay (VnPayTransactionNo).";
+
+            // 2. Cấu hình tham số Refund
+            // Lưu ý: URL Refund KHÁC với URL QueryDR
+            string vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
+
+            string vnp_RequestId = Guid.NewGuid().ToString(); // Mã duy nhất cho yêu cầu hoàn tiền
+            string vnp_Version = "2.1.0";
+            string vnp_Command = "refund";
+            string vnp_TmnCode = _config["VnPay:TmnCode"];
+            string vnp_HashSecret = _config["VnPay:HashSecret"];
+            string vnp_TxnRef = transaction.Id.ToString(); // Mã đơn hàng cũ
+            string vnp_Amount = ((long)transaction.Amount * 100).ToString(); // Số tiền hoàn (nhân 100)
+            string vnp_OrderInfo = "Hoan tien giao dich " + transaction.Id;
+            string vnp_TransactionDate = transaction.CreatedDate.ToString("yyyyMMddHHmmss"); // Ngày đơn hàng cũ
+            string vnp_CreateDate = DateTime.Now.ToString("yyyyMMddHHmmss"); // Ngày tạo lệnh hoàn
+            string vnp_IpAddr = GetIpAddress(httpContext);
+            string vnp_TransactionType = "02"; // 02: Hoàn toàn bộ, 03: Hoàn một phần
+
+            // 3. Tạo Checksum (SecureHash)
+            // Quy tắc tạo Hash Refund:
+            // requestId|version|command|tmnCode|transactionType|txnRef|amount|transactionNo|transactionDate|createBy|createDate|ipAddr|orderInfo
+            string rawData = $"{vnp_RequestId}|{vnp_Version}|{vnp_Command}|{vnp_TmnCode}|{vnp_TransactionType}|{vnp_TxnRef}|{vnp_Amount}|{transaction.VnPayTransactionNo}|{vnp_TransactionDate}|{adminUser}|{vnp_CreateDate}|{vnp_IpAddr}|{vnp_OrderInfo}";
+
+            string vnp_SecureHash = HmacSHA512(vnp_HashSecret, rawData);
+
+            // 4. Tạo JSON Request
+            var requestData = new
+            {
+                vnp_RequestId = vnp_RequestId,
+                vnp_Version = vnp_Version,
+                vnp_Command = vnp_Command,
+                vnp_TmnCode = vnp_TmnCode,
+                vnp_TransactionType = vnp_TransactionType,
+                vnp_TxnRef = vnp_TxnRef,
+                vnp_Amount = vnp_Amount,
+                vnp_TransactionNo = transaction.VnPayTransactionNo, // Quan trọng
+                vnp_TransactionDate = vnp_TransactionDate,
+                vnp_CreateBy = adminUser,
+                vnp_CreateDate = vnp_CreateDate,
+                vnp_IpAddr = vnp_IpAddr,
+                vnp_OrderInfo = vnp_OrderInfo,
+                vnp_SecureHash = vnp_SecureHash
+            };
+
+            // 5. Gửi Request tới VNPay
+            using (var client = new HttpClient())
+            {
+                var json = JsonConvert.SerializeObject(requestData);
+                var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await client.PostAsync(vnp_ApiUrl, httpContent);
+                var responseString = await response.Content.ReadAsStringAsync();
+
+                // 6. Xử lý phản hồi
+                var jsonResponse = JObject.Parse(responseString);
+                string responseCode = jsonResponse["vnp_ResponseCode"]?.ToString();
+
+                if (responseCode == "00")
+                {
+                    // --- THÀNH CÔNG ---
+                    // Cập nhật trạng thái trong DB
+                    transaction.Status = PaymentStatus.Refunded; // Bạn cần thêm Enum này hoặc dùng Failed
+
+                    // THU HỒI VIP (Quan trọng)
+                    await RevokeVip(transaction);
+
+                    await _context.SaveChangesAsync();
+                    return "Hoàn tiền thành công.";
+                }
+                else
+                {
+                    string msg = jsonResponse["vnp_Message"]?.ToString() ?? "Lỗi không xác định";
+                    return $"Lỗi VNPay: {responseCode} - {msg}";
+                }
+            }
+        }
+
+        // Hàm phụ để thu hồi VIP (Ngược lại với UpdateVipStatus)
+        private async Task RevokeVip(PaymentTransaction transaction)
+        {
+            if (transaction.EmployerId.HasValue)
+            {
+                var employer = await _context.Employers.FindAsync(transaction.EmployerId);
+                if (employer != null)
+                {
+                    employer.IsVip = false;
+                    // employer.VipExpireDate giữ nguyên hoặc xóa tùy bạn
+                }
+            }
+            else if (transaction.SeekerId.HasValue)
+            {
+                var seeker = await _context.Seekers.FindAsync(transaction.SeekerId);
+                if (seeker != null)
+                {
+                    seeker.IsVip = false;
+                }
+            }
+        }
+
+
     }
 }

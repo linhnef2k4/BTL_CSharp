@@ -41,7 +41,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
 // Đăng ký Service (ví dụ: IProjectService)
-builder.Services.AddScoped<DbInitializer>();
+
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
 builder.Services.AddScoped<ISocialPostService, SocialPostService>();
@@ -55,6 +55,9 @@ builder.Services.AddScoped<IFriendshipService, FriendshipService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddScoped<ISupportService, SupportService>();
+builder.Services.AddScoped<IStatisticsService, StatisticsService>();
 
 
 // --- Cấu hình xác thực JWT ---
@@ -141,30 +144,7 @@ builder.Services.AddSwaggerGen(options =>
 // --- 2. Xây dựng ứng dụng ---
 var app = builder.Build();
 
-// --- 3. Logic chạy Seed Data (Dữ liệu mẫu) ---
-// Chỉ chạy khi ở môi trường Development
-if (app.Environment.IsDevelopment())
-{
-    // Tạo một "scope" (phạm vi) dịch vụ
-    using (var scope = app.Services.CreateScope())
-    {
-        var services = scope.ServiceProvider;
-        try
-        {
-            // Lấy DbInitializer
-            var dbInitializer = services.GetRequiredService<DbInitializer>();
 
-            // Chạy hàm seed (nó sẽ tự kiểm tra và thêm data nếu DB trống)
-            await dbInitializer.SeedAsync();
-        }
-        catch (Exception ex)
-        {
-            // Ghi log lỗi nếu có
-            var logger = services.GetRequiredService<ILogger<Program>>();
-            logger.LogError(ex, "Có lỗi xảy ra khi seed database.");
-        }
-    }
-}
 
 // --- 4. Cấu hình HTTP Request Pipeline (Middleware) ---
 

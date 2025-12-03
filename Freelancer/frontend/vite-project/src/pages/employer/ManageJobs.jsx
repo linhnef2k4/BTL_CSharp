@@ -1,205 +1,228 @@
-import React, { useState } from 'react';
-// "ĐỘNG CƠ" (ENGINE) "MỚI" (NEW) "CỦA" (OF) "@dnd-kit"
-import {
-  DndContext,
-  closestCenter,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  DragOverlay, // "Để" (To) "vẽ" (render) "cái" (the) "card" (card) "khi" (when) "đang" (is) "kéo" (dragging) "cho" (for) "nó" (it) "đẹp" (beautiful)
-} from '@dnd-kit/core';
-import {
-  SortableContext,
-  arrayMove, // "Hàm" (Function) "thần thánh" (divine) "để" (to) "sắp xếp" (sort) "lại" (again) "mảng" (array)
-  rectSortingStrategy,
-} from '@dnd-kit/sortable';
+import React, { useState, useEffect } from 'react';
+import { 
+  Briefcase, Clock, Trash2, RefreshCcw, Users, Eye, 
+  MoreVertical, Search, Loader2, AlertCircle 
+} from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 
-import { v4 as uuidv4 } from 'uuid'; // "Vẫn" (Still) "cần" (need) "cái" (this) "này" (this)
-import KanbanColumn from '../../components/employer/KanbanColumn'; // "Import" (Import) "File" (File) 2/4
-import ApplicantCard from '../../components/employer/ApplicantCard'; // "Import" (Import) "File" (File) 1/4
+import projectService from '../../../services/projectService';
+import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../../context/ToastContext';
+import { formatSalary, formatTimeAgo } from '../../utils/formatUtils';
 
-// --- DỮ LIỆU "GIẢ" (MOCK DATA) "MỚI" (NEW) (Thiết kế "lại" (again) "cho" (for) "@dnd-kit") ---
-// "Giờ" (Now) "chúng ta" (we) "chỉ" (only) "cần" (need) "1" (one) "cái" (an) "Object" (object) "chứa" (containing) "4" (four) "cái" (the) "cột" (columns)
-const initialColumns = {
-  'col-1': {
-    id: 'col-1',
-    title: 'Hồ sơ Mới',
-    color: 'bg-blue-500',
-    applicants: [
-      { id: 'app-1', name: 'Minh Tuấn (Seeker)', avatar: 'https://ui-avatars.com/api/?name=Minh+Tuan', job: 'Senior React Developer', time: '1 giờ trước' },
-      { id: 'app-2', name: 'Ngọc Ánh', avatar: 'https://ui-avatars.com/api/?name=Ngoc+Anh', job: '.NET Developer', time: '3 giờ trước' },
-      { id: 'app-3', name: 'Văn Đức Trung', avatar: 'https://ui-avatars.com/api/?name=Van+Trung', job: 'Senior React Developer', time: '5 giờ trước' },
-      { id: 'app-4', name: 'Hồ Thị Hồng Trâm', avatar: 'https://ui-avatars.com/api/?name=Hong+Tram', job: 'UI/UX Designer', time: '1 ngày trước' },
-    ]
-  },
-  'col-2': {
-    id: 'col-2',
-    title: 'Đang duyệt',
-    color: 'bg-yellow-500',
-    applicants: []
-  },
-  'col-3': {
-    id: 'col-3',
-    title: 'Phỏng vấn',
-    color: 'bg-green-500',
-    applicants: []
-  },
-  'col-4': {
-    id: 'col-4',
-    title: 'Từ chối',
-    color: 'bg-red-500',
-    applicants: []
-  },
-};
-// --------------------------------------------------
+// Import Modal quản lý ứng viên
+import JobApplicationsModal from '../../components/employer/JobApplicationsModal';
 
 const ManageJobs = () => {
-  // "BỘ NÃO" (BRAIN) "MỚI" (NEW)
-  const [columns, setColumns] = useState(initialColumns);
-  const [activeApplicant, setActiveApplicant] = useState(null); // "Lưu" (Store) "cái" (the) "card" (card) "đang" (is) "kéo" (being dragged)
+  const { user } = useAuth();
+  const { addToast } = useToast();
 
-  // "Set up" (Setup) "cảm biến" (sensors) "cho" (for) "dnd-kit" (để "nó" (it) "chạy" (run) "mượt" (smoothly))
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 8, // "Chỉ" (Only) "kéo" (drag) "khi" (when) "di chuột" (mouse moves) "8px" (8px) (tránh "click" (click) "nhầm" (accidental))
-      },
-    })
+  // 'active' | 'pending' | 'trash'
+  const [activeTab, setActiveTab] = useState('active'); 
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  
+  // State cho Modal Ứng viên
+  const [selectedJobId, setSelectedJobId] = useState(null); // ID job đang xem ứng viên
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // --- LOAD DATA ---
+  const fetchJobs = async () => {
+    setLoading(true);
+    try {
+      let res;
+      if (activeTab === 'active') {
+         // Lấy job đã duyệt của tôi
+         // Lưu ý: Hàm này trong service đang dùng workaround lọc client-side nếu chưa có API backend chuẩn
+         res = await projectService.getMyActiveProjects(user.id);
+      } else if (activeTab === 'pending') {
+         // Lấy job chờ duyệt
+         res = await projectService.getMyPendingProjects();
+      } else if (activeTab === 'trash') {
+         // Lấy thùng rác
+         res = await projectService.getTrash();
+      }
+      
+      // Đảm bảo data luôn là mảng
+      setJobs(Array.isArray(res.data) ? res.data : []);
+    } catch (error) {
+      console.error("Lỗi tải jobs:", error);
+      setJobs([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (user?.id) {
+        fetchJobs();
+    }
+  }, [activeTab, user]);
+
+  // --- ACTIONS (XÓA / KHÔI PHỤC) ---
+  const handleDelete = async (id, isPermanent = false) => {
+    if (!window.confirm(isPermanent ? "CẢNH BÁO: Hành động này không thể hoàn tác. Bạn chắc chắn muốn xóa vĩnh viễn?" : "Bạn muốn chuyển tin này vào thùng rác?")) return;
+
+    try {
+      if (isPermanent) {
+        await projectService.deletePermanent(id);
+        addToast("Đã xóa vĩnh viễn.", "success");
+      } else {
+        await projectService.deleteProject(id);
+        addToast("Đã chuyển vào thùng rác.", "info");
+      }
+      // Refresh list (Optimistic update)
+      setJobs(prev => prev.filter(j => j.id !== id));
+    } catch (error) {
+      const msg = error.response?.data || "Có lỗi xảy ra.";
+      addToast(msg, "error");
+    }
+  };
+
+  const handleRestore = async (id) => {
+    try {
+      await projectService.restoreProject(id);
+      addToast("Khôi phục thành công.", "success");
+      setJobs(prev => prev.filter(j => j.id !== id));
+    } catch (error) {
+      addToast("Lỗi khi khôi phục.", "error");
+    }
+  };
+
+  // Mở modal ứng viên
+  const openApplications = (jobId) => {
+      setSelectedJobId(jobId);
+      setIsModalOpen(true);
+  }
+
+  // --- RENDER TAB BUTTON ---
+  const TabButton = ({ id, label, icon }) => (
+    <button
+      onClick={() => setActiveTab(id)}
+      className={`flex items-center gap-2 px-5 py-3 rounded-t-lg font-medium transition-all border-b-2 
+        ${activeTab === id 
+          ? 'border-blue-600 text-blue-600 bg-blue-50' 
+          : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'}`}
+    >
+      {icon}
+      {label}
+    </button>
   );
 
-  // --- LOGIC "KÉO-THẢ" (DRAG-AND-DROP) (VIẾT LẠI 100%) ---
-  
-  // "Hàm" (Function) "tìm" (find) "cái" (the) "cột" (column) "mà" (that) "cái" (the) "card" (card) "đang" (is) "nằm" (in)
-  const findColumn = (applicantId) => {
-    return Object.values(columns).find(col => col.applicants.some(app => app.id === applicantId));
-  };
-  
-  // "Khi" (When) "bắt đầu" (start) "kéo" (dragging)
-  const handleDragStart = (event) => {
-    const { active } = event;
-    const { id } = active;
-    const startColumn = findColumn(id);
-    if (startColumn) {
-      setActiveApplicant(startColumn.applicants.find(app => app.id === id));
-    }
-  };
-  
-  // "Khi" (When) "kết thúc" (finish) "kéo" (dragging)
-  const handleDragEnd = (event) => {
-    const { active, over } = event;
-
-    // "Nếu" (If) "không" (not) "thả" (drop) "vào" (into) "vùng" (area) "cho phép" (allowed)
-    if (!over) {
-      setActiveApplicant(null);
-      return;
-    }
-
-    const activeId = active.id;
-    const overId = over.id; // "ID" (ID) "của" (of) "vùng" (area) "thả" (drop)
-
-    // "Tìm" (Find) "cột" (column) "Bắt đầu" (Start) "và" (and) "cột" (column) "Kết thúc" (End)
-    const startColumn = findColumn(activeId);
-    // "Vùng" (Area) "thả" (drop) "có thể" (can be) "là" (is) "1" (one) "cái" (a) "cột" (column) (nếu "thả" (drop) "vào" (into) "vùng" (area) "rỗng" (empty))
-    // "hoặc" (or) "là" (is) "1" (one) "cái" (a) "card" (card) "khác" (other) (nếu "thả" (drop) "đè" (onto) "lên" (it))
-    const endColumn = columns[overId] ? columns[overId] : findColumn(overId);
-
-    if (!startColumn || !endColumn) {
-      setActiveApplicant(null);
-      return;
-    }
-
-    // --- TRƯỜNG HỢP 1: "KÉO" (DRAG) "TRONG" (INSIDE) "CÙNG" (THE SAME) "1" (ONE) "CỘT" (COLUMN) ---
-    if (startColumn.id === endColumn.id) {
-      setColumns(prev => ({
-        ...prev,
-        [startColumn.id]: {
-          ...startColumn,
-          // "Dùng" (Use) "hàm" (function) "thần thánh" (divine) `arrayMove` "để" (to) "sắp xếp" (sort) "lại" (again)
-          applicants: arrayMove(startColumn.applicants, 
-                                startColumn.applicants.findIndex(app => app.id === activeId), 
-                                startColumn.applicants.findIndex(app => app.id === (columns[overId] ? null : overId))) // "Hơi" (A bit) "phức tạp" (complex) "nhưng" (but) "nó" (it) "chạy" (works)
-        }
-      }));
-    } else {
-    // --- TRƯỜNG HỢP 2: "KÉO" (DRAG) "QUA" (BETWEEN) "2" (TWO) "CỘT" (COLUMNS) "KHÁC NHAU" (DIFFERENT) ---
-      setColumns(prev => {
-        // "Lấy" (Get) "data" (data) "ứng viên" (applicant) "đang" (being) "kéo" (dragged)
-        const applicantToMove = startColumn.applicants.find(app => app.id === activeId);
-
-        // "Xóa" (Remove) "ứng viên" (applicant) "khỏi" (from) "cột" (column) "BẮT ĐẦU" (START)
-        const newStartApplicants = startColumn.applicants.filter(app => app.id !== activeId);
-        
-        // "Tìm" (Find) "vị trí" (index) "để" (to) "thả" (drop) "vào" (into) "cột" (column) "KẾT THÚC" (END)
-        let newEndApplicants = [...endColumn.applicants];
-        const overIndex = endColumn.applicants.findIndex(app => app.id === overId);
-        
-        if (overIndex !== -1) {
-          // "Thả" (Drop) "đè" (onto) "lên" (on) "1" (one) "cái" (a) "card" (card) "khác" (other)
-          newEndApplicants.splice(overIndex, 0, applicantToMove);
-        } else {
-          // "Thả" (Drop) "vào" (into) "vùng" (area) "rỗng" (empty) "của" (of) "cột" (column)
-          newEndApplicants.push(applicantToMove);
-        }
-
-        return {
-          ...prev,
-          [startColumn.id]: { ...startColumn, applicants: newStartApplicants },
-          [endColumn.id]: { ...endColumn, applicants: newEndApplicants }
-        };
-      });
-    }
-    
-    setActiveApplicant(null); // "Xong" (Done) "rồi" (already), "xóa" (clear) "card" (card) "đang" (being) "kéo" (dragged)
-  };
-  // ------------------------------------
-
   return (
-    <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-gray-900">Quản lý Ứng viên</h1>
-
-      {/* "Giả lập" (Mockup) "chọn" (select) "Job" (job) (Giữ "nguyên" (same)) */}
-      <div className="max-w-sm">
-        <label htmlFor="jobSelect" className="block text-sm font-semibold text-gray-700 mb-1">
-          Chọn Job để quản lý:
-        </label>
-        <select
-          id="jobSelect"
-          className="w-full rounded-lg border-gray-300 py-2.5 pl-3 pr-10 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-        >
-          <option>Senior React Developer (4 ứng viên)</option>
-          <option>.NET Developer (0 ứng viên)</option>
-        </select>
+    <div className="space-y-6 pb-10">
+      {/* Header */}
+      <div>
+         <h1 className="text-2xl font-bold text-gray-900">Quản lý Tin tuyển dụng</h1>
+         <p className="text-gray-500 text-sm mt-1">Theo dõi trạng thái tin đăng và quản lý hồ sơ ứng viên.</p>
       </div>
-      
-      {/* "BỌC" (WRAP) "TOÀN BỘ" (ENTIRE) "BẢNG" (BOARD) "BẰNG" (IN) "DndContext" (DndContext) */}
-      <DndContext 
-        sensors={sensors} 
-        collisionDetection={closestCenter}
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-      >
-        {/* "Container" (Container) "chứa" (holding) "các" (the) "cột" (columns) (Giữ "nguyên" (same)) */}
-        <div className="flex space-x-4 overflow-x-auto pb-4">
-          
-          {/* "Lắp ráp" (Assemble) "các" (the) "cột" (columns) "ra" (out) */}
-          {Object.values(columns).map(column => (
-            // "Vẽ" (Render) "cái" (the) "Cột" (Column) (File 2/4) "ra" (out)
-            <KanbanColumn 
-              key={column.id} 
-              column={column} 
-              applicants={column.applicants} 
-            />
-          ))}
-          
-        </div>
 
-        {/* "CÁI" (THE) "NÀY" (THIS) "RẤT" (VERY) "XỊN" (COOL): "Vẽ" (Render) "1" (one) "cái" (a) "card" (card) "ảo" (virtual) "khi" (when) "đang" (is) "kéo" (dragging) */}
-        {/* "Nó" (It) "giúp" (helps) "cái" (the) "card" (card) "khi" (when) "kéo" (dragging) "nó" (it) "không" (doesn't) "bị" (get) "móp" (squished) "bởi" (by) "cái" (the) "cột" (column) */}
-        <DragOverlay>
-          {activeApplicant ? <ApplicantCard applicant={activeApplicant} /> : null}
-        </DragOverlay>
-        
-      </DndContext>
+      {/* Tabs */}
+      <div className="flex border-b border-gray-200 overflow-x-auto">
+         <TabButton id="active" label="Đang tuyển" icon={<Briefcase size={18}/>} />
+         <TabButton id="pending" label="Chờ duyệt" icon={<Clock size={18}/>} />
+         <TabButton id="trash" label="Thùng rác" icon={<Trash2 size={18}/>} />
+      </div>
+
+      {/* Content List */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 min-h-[300px]">
+         {loading ? (
+            <div className="flex justify-center items-center h-60">
+               <Loader2 className="animate-spin text-blue-600" size={32} />
+            </div>
+         ) : jobs.length > 0 ? (
+            <div className="divide-y divide-gray-100">
+               {jobs.map((job) => (
+                  <div key={job.id} className="p-5 flex flex-col md:flex-row md:items-center justify-between hover:bg-gray-50 transition gap-4">
+                     
+                     {/* Job Info */}
+                     <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-1 flex-wrap">
+                           <h3 className="font-bold text-gray-800 text-lg hover:text-blue-600 cursor-pointer truncate max-w-md">
+                              <Link to={`/jobs/${job.id}`}>{job.title}</Link>
+                           </h3>
+                           {activeTab === 'active' && (
+                              <span className="px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-700 border border-green-200">
+                                 Đang hiển thị
+                              </span>
+                           )}
+                           {activeTab === 'pending' && (
+                              <span className="px-2 py-0.5 rounded text-xs font-bold bg-yellow-100 text-yellow-700 border border-yellow-200">
+                                 Đang xét duyệt
+                              </span>
+                           )}
+                           {activeTab === 'trash' && (
+                              <span className="px-2 py-0.5 rounded text-xs font-bold bg-red-100 text-red-700 border border-red-200">
+                                 Đã xóa
+                              </span>
+                           )}
+                        </div>
+                        
+                        <div className="flex flex-wrap gap-4 text-sm text-gray-500">
+                           <span>Mức lương: <strong className="text-gray-700">{formatSalary(job.minSalary, job.maxSalary)}</strong></span>
+                           <span className="hidden md:inline">•</span>
+                           <span>Đăng: {formatTimeAgo(job.createdDate)}</span>
+                           <span className="hidden md:inline">•</span>
+                           <span>{job.location}</span>
+                        </div>
+                     </div>
+
+                     {/* Actions */}
+                     <div className="flex items-center gap-3">
+                        {/* Nút Xem Ứng Viên (Chỉ hiện ở tab Active) */}
+                        {activeTab === 'active' && (
+                           <button 
+                              onClick={() => openApplications(job.id)}
+                              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition shadow-sm text-sm"
+                           >
+                              <Users size={18} />
+                              Xem ứng viên
+                           </button>
+                        )}
+
+                        {/* Nút Khôi phục (Chỉ hiện ở Trash) */}
+                        {activeTab === 'trash' && (
+                           <button 
+                              onClick={() => handleRestore(job.id)}
+                              className="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-lg font-medium hover:bg-green-200 transition text-sm"
+                           >
+                              <RefreshCcw size={18} /> Khôi phục
+                           </button>
+                        )}
+
+                        {/* Nút Xóa (Logic khác nhau từng tab) */}
+                        <button 
+                           onClick={() => handleDelete(job.id, activeTab === 'trash')}
+                           className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition"
+                           title={activeTab === 'trash' ? "Xóa vĩnh viễn" : "Chuyển vào thùng rác"}
+                        >
+                           <Trash2 size={20} />
+                        </button>
+                     </div>
+                  </div>
+               ))}
+            </div>
+         ) : (
+            <div className="flex flex-col items-center justify-center h-60 text-gray-400">
+               <Briefcase size={48} className="mb-3 opacity-20" />
+               <p>Không có tin tuyển dụng nào trong mục này.</p>
+               {activeTab === 'active' && (
+                   <Link to="/employer/post-job" className="mt-4 text-blue-600 font-medium hover:underline">
+                       Đăng tin ngay
+                   </Link>
+               )}
+            </div>
+         )}
+      </div>
+
+      {/* MODAL ỨNG VIÊN */}
+      {isModalOpen && (
+         <JobApplicationsModal 
+            jobId={selectedJobId} 
+            onClose={() => setIsModalOpen(false)} 
+         />
+      )}
     </div>
   );
 };

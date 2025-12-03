@@ -396,7 +396,7 @@ namespace Freelancer.Migrations
 
                     b.HasIndex("ReporterId");
 
-                    b.ToTable("Report");
+                    b.ToTable("Reports");
                 });
 
             modelBuilder.Entity("Freelancer.Models.SavedPost", b =>
@@ -587,6 +587,49 @@ namespace Freelancer.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("SocialPostReactions");
+                });
+
+            modelBuilder.Entity("Freelancer.Models.SupportTicket", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("AttachmentUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Priority")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ResolvedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("SupportTickets");
                 });
 
             modelBuilder.Entity("Freelancer.Models.User", b =>
@@ -890,6 +933,17 @@ namespace Freelancer.Migrations
                         .IsRequired();
 
                     b.Navigation("Post");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Freelancer.Models.SupportTicket", b =>
+                {
+                    b.HasOne("Freelancer.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });

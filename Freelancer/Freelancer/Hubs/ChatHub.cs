@@ -1,29 +1,114 @@
-﻿using Freelancer.Data; // Cần DbContext
-using Freelancer.DTOs; // Cần MessageDto
+﻿using Freelancer.Data;
+using Freelancer.DTOs;
 using Freelancer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Concurrent; // Cần thêm thư viện này
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Freelancer.Hubs
 {
-    [Authorize] // Bắt buộc đăng nhập
+    [Authorize]
     public class ChatHub : Hub
     {
         private readonly ApplicationDbContext _context;
 
-        // Chúng ta sẽ tiêm (inject) DbContext vào Hub
+        // --- PHẦN MỚI: KHO LƯU TRỮ ONLINE (Dùng static để lưu trên RAM) ---
+        private static readonly ConcurrentDictionary<int, List<string>> _onlineUsers = new();
+
         public ChatHub(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // --- HÀM GỬI TIN NHẮN ---
-        // (Frontend sẽ gọi hàm "SendMessage" này)
-        // --- HÀM GỬI TIN NHẮN (ĐÃ CẬP NHẬT LOẠI) ---
-        // type: "Text", "Image", "SharePost"...
+        // --- SỬA HÀM KẾT NỐI: GIỮ CŨ + THÊM MỚI ---
+        public override async Task OnConnectedAsync()
+        {
+            var userIdString = Context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            // 1. LOGIC CŨ CỦA BẠN (GIỮ NGUYÊN)
+            // Add user vào Group để frontend chat hoạt động như cũ
+            if (!string.IsNullOrEmpty(userIdString))
+            {
+                await Groups.AddToGroupAsync(Context.ConnectionId, userIdString);
+            }
+
+            // 2. LOGIC MỚI (ONLINE STATUS) - Chèn thêm vào
+            if (int.TryParse(userIdString, out int userId))
+            {
+                _onlineUsers.AddOrUpdate(userId,
+                    new List<string> { Context.ConnectionId },
+                    (key, list) =>
+                    {
+                        lock (list)
+                        {
+                            if (!list.Contains(Context.ConnectionId)) list.Add(Context.ConnectionId);
+                        }
+                        return list;
+                    });
+
+                // Chỉ thông báo nếu đây là tab đầu tiên mở (tránh báo 2 lần)
+                if (_onlineUsers.TryGetValue(userId, out var connections))
+                {
+                    bool isFirstConnection;
+                    lock (connections) { isFirstConnection = connections.Count == 1; }
+
+                    if (isFirstConnection)
+                    {
+                        // Báo cho mọi người: "User này vừa Online"
+                        await Clients.Others.SendAsync("UserOnline", userId);
+                    }
+                }
+            }
+
+            await base.OnConnectedAsync();
+        }
+
+        // --- SỬA HÀM NGẮT KẾT NỐI: THÊM LOGIC OFFLINE ---
+        public override async Task OnDisconnectedAsync(Exception? exception)
+        {
+            var userIdString = Context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (int.TryParse(userIdString, out int userId))
+            {
+                // 1. LOGIC CŨ (GIỮ NGUYÊN)
+                await Groups.RemoveFromGroupAsync(Context.ConnectionId, userIdString);
+
+                // 2. LOGIC MỚI (OFFLINE STATUS)
+                if (_onlineUsers.TryGetValue(userId, out var connections))
+                {
+                    lock (connections)
+                    {
+                        connections.Remove(Context.ConnectionId);
+                    }
+
+                    if (connections.Count == 0)
+                    {
+                        _onlineUsers.TryRemove(userId, out _);
+                        // Báo cho mọi người: "User này Offline rồi"
+                        await Clients.Others.SendAsync("UserOffline", userId);
+                    }
+                }
+            }
+
+            await base.OnDisconnectedAsync(exception);
+        }
+
+        // --- API MỚI: LẤY DANH SÁCH ONLINE (Frontend gọi cái này lúc mới vào) ---
+        public Task<IEnumerable<int>> GetOnlineUsers()
+        {
+            return Task.FromResult(_onlineUsers.Keys.AsEnumerable());
+        }
+
+        // ========================================================================
+        // TỪ ĐÂY TRỞ XUỐNG LÀ CODE CŨ CỦA BẠN (GIỮ NGUYÊN 100%)
+        // ========================================================================
+
         public async Task SendMessage(int conversationId, string content, string type = "Text")
         {
             // 1. Lấy ID người gửi (từ Token)
@@ -45,7 +130,6 @@ namespace Freelancer.Hubs
             {
                 messageType = MessageType.Text;
             }
-
 
             // 4. Tạo Model Message
             var message = new Message
@@ -76,8 +160,6 @@ namespace Freelancer.Hubs
             };
 
             // 7. Gửi tin nhắn đến NHỮNG NGƯỜI KHÁC trong phòng
-
-            // Lấy ID của TẤT CẢ người tham gia (trừ mình)
             var participantIds = await _context.ConversationUsers
                 .Where(cu => cu.ConversationId == conversationId)
                 .Select(cu => cu.UserId.ToString()) // Phải là string
@@ -87,34 +169,12 @@ namespace Freelancer.Hubs
             await Clients.Users(participantIds).SendAsync("ReceiveMessage", messageDto);
         }
 
-        // Hàm này tự động chạy khi user kết nối
-        public override async Task OnConnectedAsync()
-        {
-            // Lấy ID (từ Token)
-            var userId = Context.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-
-            // "Groups" là một cách của SignalR
-            // Chúng ta "Add" user vào 1 Group có tên = chính ID của họ
-            // Để lát nữa chúng ta có thể gửi tin nhắn cho "Nhóm User 123"
-            await Groups.AddToGroupAsync(Context.ConnectionId, userId);
-
-            await base.OnConnectedAsync();
-        }
-
-
-        // ... (Trong tệp Hubs/ChatHub.cs)
-        // ... (Giữ nguyên hàm SendMessage và OnConnectedAsync)
-
-        // --- THÊM HÀM MỚI NÀY VÀO CUỐI TỆP ---
-
-        // (Frontend sẽ gọi hàm "MarkAsRead" này khi user MỞ phòng chat)
         public async Task MarkAsRead(int conversationId)
         {
             // 1. Lấy ID người đang xem (từ Token)
             var currentUserId = int.Parse(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            // 2. Tìm tất cả tin nhắn CHƯA ĐỌC trong phòng này
-            //    mà KHÔNG PHẢI do mình gửi
+            // 2. Tìm tất cả tin nhắn CHƯA ĐỌC trong phòng này mà KHÔNG PHẢI do mình gửi
             var unreadMessages = await _context.Messages
                 .Where(m => m.ConversationId == conversationId &&
                             m.SenderId != currentUserId &&
@@ -135,17 +195,12 @@ namespace Freelancer.Hubs
             // 4. Lưu vào Database
             await _context.SaveChangesAsync();
 
-            // 5. (Quan trọng) Thông báo "real-time" cho người gửi
-            //    rằng tin nhắn của họ ĐÃ ĐƯỢC ĐỌC
-
-            // Lấy ID của những người gửi (có thể chỉ là 1 người)
+            // 5. Thông báo "real-time" cho người gửi
             var senderIds = unreadMessages
                 .Select(m => m.SenderId.ToString())
                 .Distinct()
                 .ToList();
 
-            // Gửi tín hiệu "MessagesRead" đến những người gửi đó
-            // (Báo cho họ biết: "User [currentUserId] đã đọc tin nhắn trong phòng [conversationId]")
             await Clients.Users(senderIds).SendAsync("MessagesRead", conversationId, currentUserId);
         }
     }
