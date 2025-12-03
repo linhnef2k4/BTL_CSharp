@@ -154,7 +154,9 @@ namespace Freelancer.Services
                     FriendId = otherUser.Id,
                     FriendFullName = otherUser.FullName,
                     FriendHeadline = otherUser.Seeker?.Headline ?? "Thành viên",
-                    FriendEmail = otherUser.Email
+                    FriendEmail = otherUser.Email,
+                    Avatar = otherUser.Seeker.AvatarUrl
+
                 });
             }
             return friendDtos;
@@ -204,6 +206,41 @@ namespace Freelancer.Services
                 FullName = u.FullName,
                 Headline = u.Seeker?.Headline ?? "Thành viên",
                 Role = u.Role
+            });
+        }
+
+        // --- TRIỂN KHAI HÀM ĐỀ XUẤT ---
+        public async Task<IEnumerable<UserSearchResultDto>> GetFriendSuggestionsAsync(int userId, int limit = 5)
+        {
+            // 1. Lấy danh sách ID của những người ĐÃ CÓ quan hệ (Bạn bè hoặc Pending)
+            var connectedUserIds = await _context.Friendships
+                .Where(f => f.RequesterId == userId || f.ReceiverId == userId)
+                .Select(f => f.RequesterId == userId ? f.ReceiverId : f.RequesterId)
+                .ToListAsync();
+
+            // 2. Thêm chính mình vào danh sách loại trừ
+            connectedUserIds.Add(userId);
+
+            // 3. Truy vấn tìm người dùng KHÔNG nằm trong danh sách loại trừ
+            var suggestions = await _context.Users
+                .Where(u => !connectedUserIds.Contains(u.Id)) // Loại bỏ người quen
+                .Include(u => u.Seeker)   // Lấy info để hiển thị
+                .Include(u => u.Employer)
+                .OrderBy(r => Guid.NewGuid()) // Hack: Sắp xếp ngẫu nhiên (ORDER BY NEWID)
+                .Take(limit) // Chỉ lấy số lượng giới hạn
+                .ToListAsync();
+
+            // 4. Map sang DTO
+            return suggestions.Select(u => new UserSearchResultDto
+            {
+                Id = u.Id,
+                FullName = u.FullName,
+                // Lấy avatar ưu tiên Seeker -> Employer
+                AvatarUrl = u.Seeker?.AvatarUrl ?? u.Employer?.CompanyLogoUrl,
+                // Lấy tiêu đề
+                //Headline = u.Seeker?.Headline ?? u.Employer?.CompanyName,
+                //// Xác định loại user
+                //Type = u.Seeker != null ? "Seeker" : "Employer"
             });
         }
     }

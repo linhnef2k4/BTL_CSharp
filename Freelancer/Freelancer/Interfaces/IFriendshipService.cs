@@ -22,5 +22,7 @@ namespace Freelancer.Interfaces
         Task<IEnumerable<FriendDto>> GetFriendsAsync(int currentUserId);
 
         Task<IEnumerable<UserSearchDto>> SearchUsersAsync(int currentUserId, string searchQuery);
+
+        Task<IEnumerable<UserSearchResultDto>> GetFriendSuggestionsAsync(int userId, int limit = 5);
     }
 }

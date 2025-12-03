@@ -122,9 +122,9 @@ namespace Freelancer.Services
                     CommentCount = commentCounts.GetValueOrDefault(post.Id),
                     ReactionCounts = postReactionCounts,
                     MyReaction = myReactions.GetValueOrDefault(post.Id),
-
                     // --- GÁN GIÁ TRỊ MỚI ---
-                    IsSaved = savedPostIds.Contains(post.Id) // Kiểm tra xem ID bài này có trong list đã lưu không
+                    IsSaved = savedPostIds.Contains(post.Id), // Kiểm tra xem ID bài này có trong list đã lưu không
+                    AvatarUrl = post.Author.Seeker.AvatarUrl
                 });
             }
             return resultDtos;

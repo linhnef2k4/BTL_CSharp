@@ -25,5 +25,6 @@
         public string? MyReaction { get; set; }
 
         public bool IsSaved { get; set; }
+        public string AvatarUrl { get; set; }
     }
 }

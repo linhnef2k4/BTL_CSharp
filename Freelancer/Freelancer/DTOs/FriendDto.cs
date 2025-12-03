@@ -7,5 +7,7 @@
         public string FriendFullName { get; set; }
         public string FriendHeadline { get; set; }
         public string FriendEmail { get; set; } // Cần để bắt đầu chat
+
+        public string Avatar { get; set; }
     }
 }
