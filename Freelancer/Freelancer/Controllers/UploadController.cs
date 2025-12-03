@@ -57,7 +57,7 @@ namespace Freelancer.Controllers
 
         // --- API UPLOAD AVATAR CÁ NHÂN ---
         [HttpPost("avatar")]
-        [Authorize(Roles = "Seeker")] // Giả sử chỉ Seeker có Avatar
+        [Authorize]
         public async Task<IActionResult> UploadAvatar(IFormFile file)
         {
             var userId = GetUserIdFromToken();

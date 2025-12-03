@@ -89,5 +89,14 @@ namespace Freelancer.Controllers
             var users = await _friendshipService.SearchUsersAsync(currentUserId, query);
             return Ok(users);
         }
+
+        // --- THÊM API MỚI: GET /api/friendships/suggestions ---
+        [HttpGet("suggestions")]
+        public async Task<IActionResult> GetSuggestions([FromQuery] int limit = 5)
+        {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var suggestions = await _friendshipService.GetFriendSuggestionsAsync(userId, limit);
+            return Ok(suggestions);
+        }
     }
 }

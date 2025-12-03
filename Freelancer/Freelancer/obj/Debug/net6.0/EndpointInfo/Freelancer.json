@@ -629,6 +629,29 @@
         }
       }
     },
+    "/api/friends/suggestions": {
+      "get": {
+        "tags": [
+          "Friendships"
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 5
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/api/notifications": {
       "get": {
         "tags": [

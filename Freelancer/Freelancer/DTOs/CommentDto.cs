@@ -22,5 +22,6 @@
         // --- NÂNG CẤP (Bình luận lồng nhau) ---
         // Danh sách các comment trả lời cho comment này
         public List<CommentDto> Replies { get; set; } = new List<CommentDto>();
+        public string AvatarUrl { get; set; }
     }
 }

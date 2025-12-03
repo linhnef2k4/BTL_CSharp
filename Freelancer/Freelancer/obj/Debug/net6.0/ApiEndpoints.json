@@ -469,6 +469,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Freelancer.Controllers.FriendshipsController",
+    "Method": "GetSuggestions",
+    "RelativePath": "api/friends/suggestions",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "limit",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Freelancer.Controllers.NotificationsController",
     "Method": "GetMyNotifications",
     "RelativePath": "api/notifications",

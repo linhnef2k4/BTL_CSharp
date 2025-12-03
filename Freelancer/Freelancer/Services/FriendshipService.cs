@@ -238,9 +238,9 @@ namespace Freelancer.Services
                 // Lấy avatar ưu tiên Seeker -> Employer
                 AvatarUrl = u.Seeker?.AvatarUrl ?? u.Employer?.CompanyLogoUrl,
                 // Lấy tiêu đề
-                //Headline = u.Seeker?.Headline ?? u.Employer?.CompanyName,
-                //// Xác định loại user
-                //Type = u.Seeker != null ? "Seeker" : "Employer"
+                HeadlineOrCompany = u.Seeker?.Headline ?? u.Employer?.CompanyName,
+                // Xác định loại user
+                Role = u.Seeker != null ? "Seeker" : "Employer"
             });
         }
     }

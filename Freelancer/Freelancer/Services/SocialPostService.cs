@@ -204,7 +204,8 @@ namespace Freelancer.Services
                 AuthorHeadline = commentAuthor.Seeker?.Headline ?? "Thành viên",
                 ReactionCounts = new Dictionary<string, int>(),
                 MyReaction = null,
-                Replies = new List<CommentDto>()
+                Replies = new List<CommentDto>(),
+                AvatarUrl = newComment.Author.Seeker.AvatarUrl
             };
         }
 
@@ -263,7 +264,8 @@ namespace Freelancer.Services
                     AuthorHeadline = comment.Author.Seeker?.Headline ?? "Thành viên",
                     ReactionCounts = reactionCounts,
                     MyReaction = myReactions.GetValueOrDefault(comment.Id),
-                    Replies = new List<CommentDto>() // <-- Khởi tạo rỗng
+                    Replies = new List<CommentDto>(), // <-- Khởi tạo rỗng
+                    AvatarUrl = comment.Author.Seeker.AvatarUrl
                 };
             };
 
