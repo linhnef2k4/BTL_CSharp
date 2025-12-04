@@ -10,5 +10,9 @@
         public string Level { get; set; }
         public string Skills { get; set; }
         public bool IsVip { get; set; } // Để hiển thị huy hiệu VIP
+
+        public string AvatarUrl { get; set; }
+
+        public string Experience { get; set; }
     }
 }

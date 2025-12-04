@@ -49,6 +49,22 @@
   },
   {
     "ContainingType": "Freelancer.Controllers.AdminController",
+    "Method": "DeletePost",
+    "RelativePath": "api/Admin/posts/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.AdminController",
     "Method": "ApproveProject",
     "RelativePath": "api/Admin/projects/{id}/approve",
     "HttpMethod": "POST",
@@ -77,6 +93,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.AdminController",
+    "Method": "GetSensitivePosts",
+    "RelativePath": "api/Admin/sensitive-posts",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -156,6 +182,22 @@
     "Method": "GetUserDetail",
     "RelativePath": "api/Admin/users/{id}",
     "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.AdminController",
+    "Method": "BanUser",
+    "RelativePath": "api/Admin/users/{id}/ban",
+    "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -940,6 +982,22 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Freelancer.Controllers.SeekersController",
+    "Method": "GetRecommendedCandidates",
+    "RelativePath": "api/Seekers/recommendations/{jobId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "jobId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {

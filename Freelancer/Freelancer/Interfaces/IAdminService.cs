@@ -15,5 +15,14 @@ namespace Freelancer.Interfaces
         Task<UserProfileDto> GetUserDetailAsync(int userId);
         Task<bool> ToggleUserLockAsync(int userId); // Khóa hoặc Mở khóa
         Task<bool> ResetUserPasswordAsync(int userId, string newDefaultPassword);
+
+        // 1. Lấy danh sách bài viết chứa từ khóa nhạy cảm
+        Task<IEnumerable<FlaggedPostDto>> GetSensitivePostsAsync();
+
+        // 2. Xóa bài viết (Quyền Admin)
+        Task<string> AdminDeletePostAsync(int postId);
+
+        // 3. Ban (Khóa) tài khoản người dùng
+        Task<string> BanUserAsync(int userId);
     }
 }

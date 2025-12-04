@@ -9,7 +9,10 @@ namespace Freelancer.Services
     public class AdminService : IAdminService
     {
         private readonly ApplicationDbContext _context;
-
+        private readonly List<string> _bannedKeywords = new List<string>
+        {
+            "lừa đảo", "cờ bạc", "sex", "khiêu dâm", "đánh bạc", "địt mẹ mày" , " con mẹ mày" , "đm"
+        };
         public AdminService(ApplicationDbContext context)
         {
             _context = context;
@@ -289,7 +292,80 @@ namespace Freelancer.Services
             await _context.SaveChangesAsync();
             return true;
         }
+
+
+        // --- 1. QUÉT BÀI VIẾT NHẠY CẢM ---
+        public async Task<IEnumerable<FlaggedPostDto>> GetSensitivePostsAsync()
+        {
+            // Lấy tất cả bài viết (kèm thông tin tác giả)
+            // Lưu ý: Nếu dữ liệu lớn, nên lọc ở DB. Nhưng EF Core hạn chế "Contains" với List.
+            // Với quy mô đồ án, ta lấy về RAM rồi lọc cũng ổn.
+            var allPosts = await _context.SocialPosts
+                .Include(p => p.Author).ThenInclude(u => u.Seeker)
+                .Include(p => p.Author).ThenInclude(u => u.Employer)
+                .OrderByDescending(p => p.CreatedDate)
+                .ToListAsync();
+
+            var flaggedPosts = new List<FlaggedPostDto>();
+
+            foreach (var post in allPosts)
+            {
+                if (string.IsNullOrEmpty(post.Content)) continue;
+
+                // Kiểm tra xem nội dung có chứa từ cấm nào không
+                // Dùng StringComparison.OrdinalIgnoreCase để không phân biệt hoa thường
+                var foundKeyword = _bannedKeywords.FirstOrDefault(k => post.Content.Contains(k, StringComparison.OrdinalIgnoreCase));
+
+                if (foundKeyword != null)
+                {
+                    flaggedPosts.Add(new FlaggedPostDto
+                    {
+                        Id = post.Id,
+                        Content = post.Content,
+                        ImageUrl = post.ImageUrl,
+                        CreatedDate = post.CreatedDate,
+                        MatchedKeyword = foundKeyword, // Báo cho Admin biết dính từ nào
+
+                        AuthorId = post.AuthorId,
+                        AuthorName = post.Author.FullName,
+                        AuthorEmail = post.Author.Email,
+                        AuthorAvatar = post.Author.Seeker?.AvatarUrl ?? post.Author.Employer?.CompanyLogoUrl
+                    });
+                }
+            }
+
+            return flaggedPosts;
+        }
+
+        // --- 2. XÓA BÀI VIẾT (ADMIN) ---
+        public async Task<string> AdminDeletePostAsync(int postId)
+        {
+            var post = await _context.SocialPosts.FindAsync(postId);
+            if (post == null) return "Bài viết không tồn tại.";
+
+            _context.SocialPosts.Remove(post);
+            await _context.SaveChangesAsync();
+            return null; // Thành công
+        }
+
+        // --- 3. BAN TÀI KHOẢN ---
+        public async Task<string> BanUserAsync(int userId)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null) return "Người dùng không tồn tại.";
+
+            if (user.Role == "Admin") return "Không thể ban Admin.";
+
+            // Đổi trạng thái IsLocked (cần đảm bảo Model User có trường này)
+            user.IsLocked = true;
+
+            // (Tùy chọn) Xóa token hoặc phiên đăng nhập nếu cần thiết
+
+            await _context.SaveChangesAsync();
+            return null;
+        }
     }
 }
+
     
 

@@ -128,5 +128,31 @@ namespace Freelancer.Controllers
                 NewPassword = defaultPassword
             });
         }
+
+        // GET: api/admin/sensitive-posts
+        [HttpGet("sensitive-posts")]
+        public async Task<IActionResult> GetSensitivePosts()
+        {
+            var posts = await _adminService.GetSensitivePostsAsync();
+            return Ok(posts);
+        }
+
+        // DELETE: api/admin/posts/{id}
+        [HttpDelete("posts/{id}")]
+        public async Task<IActionResult> DeletePost(int id)
+        {
+            var result = await _adminService.AdminDeletePostAsync(id);
+            if (result != null) return BadRequest(result);
+            return Ok(new { Message = "Đã xóa bài viết vi phạm." });
+        }
+
+        // POST: api/admin/users/{id}/ban
+        [HttpPost("users/{id}/ban")]
+        public async Task<IActionResult> BanUser(int id)
+        {
+            var result = await _adminService.BanUserAsync(id);
+            if (result != null) return BadRequest(result);
+            return Ok(new { Message = "Đã khóa tài khoản người dùng." });
+        }
     }
 }
