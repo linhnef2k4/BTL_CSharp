@@ -364,6 +364,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Freelancer.Controllers.AuthController",
+    "Method": "ResetPassword",
+    "RelativePath": "api/Auth/reset-password",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Freelancer.DTOs.ResetPasswordDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Freelancer.Controllers.ConversationsController",
     "Method": "GetMyConversations",
     "RelativePath": "api/Conversations",

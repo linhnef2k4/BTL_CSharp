@@ -75,5 +75,30 @@ namespace Freelancer.Controllers
             // Luôn trả về thông báo thành công (để bảo mật)
             return Ok("Nếu email tồn tại, chúng tôi đã gửi hướng dẫn đặt lại mật khẩu vào hộp thư của bạn.");
         }
+
+        // --- API RESET PASSWORD ---
+        // POST: api/auth/reset-password
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto request)
+        {
+            // Validate dữ liệu đầu vào (Format email, độ dài pass...)
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Gọi Service xử lý
+            var result = await _authService.ResetPasswordAsyncFG(request);
+
+            if (result == "Success")
+            {
+                return Ok(new { Message = "Đặt lại mật khẩu thành công. Bạn có thể đăng nhập ngay bây giờ." });
+            }
+            else
+            {
+                // Trả về lỗi cụ thể (Hết hạn, sai token...)
+                return BadRequest(new { Message = result });
+            }
+        }
     }
 }

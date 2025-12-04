@@ -5,6 +5,9 @@ namespace Freelancer.DTOs
     public class ResetPasswordDto
     {
         [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+        [Required]
         public string Token { get; set; } // Mã token nhận được
 
         [Required]

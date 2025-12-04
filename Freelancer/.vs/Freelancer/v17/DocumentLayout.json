@@ -3,6 +3,34 @@
   "WorkspaceRootPath": "D:\\BTL_CSharp\\Freelancer\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\dtos\\resetpassworddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\dtos\\resetpassworddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\interfaces\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\interfaces\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\services\\adminservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\services\\adminservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\services\\emailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\services\\emailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\services\\seekerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\services\\seekerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -17,10 +45,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\dtos\\seekersearchresultdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\dtos\\seekersearchresultdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|d:\\btl_csharp\\freelancer\\freelancer\\services\\adminservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C5EDFB0B-0E9D-458B-B70C-2563375E5AFC}|Freelancer\\Freelancer.csproj|solutionrelative:freelancer\\services\\adminservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,32 +54,71 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "SeekersController.cs",
-              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Controllers\\SeekersController.cs",
-              "RelativeDocumentMoniker": "Freelancer\\Controllers\\SeekersController.cs",
-              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Controllers\\SeekersController.cs",
-              "RelativeToolTip": "Freelancer\\Controllers\\SeekersController.cs",
-              "ViewState": "AgIAAAEAAAAAAAAAAAAcwBYAAAAdAAAAAAAAAA==",
+              "DocumentIndex": 4,
+              "Title": "IAuthService.cs",
+              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Interfaces\\IAuthService.cs",
+              "RelativeDocumentMoniker": "Freelancer\\Interfaces\\IAuthService.cs",
+              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Interfaces\\IAuthService.cs",
+              "RelativeToolTip": "Freelancer\\Interfaces\\IAuthService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-04T14:27:38.243Z",
+              "WhenOpened": "2025-12-04T14:58:42.138Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "SeekerSearchResultDto.cs",
-              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\DTOs\\SeekerSearchResultDto.cs",
-              "RelativeDocumentMoniker": "Freelancer\\DTOs\\SeekerSearchResultDto.cs",
-              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\DTOs\\SeekerSearchResultDto.cs",
-              "RelativeToolTip": "Freelancer\\DTOs\\SeekerSearchResultDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAuwA8AAAAuAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "ResetPasswordDto.cs",
+              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\DTOs\\ResetPasswordDto.cs",
+              "RelativeDocumentMoniker": "Freelancer\\DTOs\\ResetPasswordDto.cs",
+              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\DTOs\\ResetPasswordDto.cs",
+              "RelativeToolTip": "Freelancer\\DTOs\\ResetPasswordDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAgAAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-04T14:16:24.993Z",
+              "WhenOpened": "2025-12-04T14:54:59.515Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AdminController.cs",
+              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Controllers\\AdminController.cs",
+              "RelativeDocumentMoniker": "Freelancer\\Controllers\\AdminController.cs",
+              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Controllers\\AdminController.cs",
+              "RelativeToolTip": "Freelancer\\Controllers\\AdminController.cs",
+              "ViewState": "AgIAAF4AAAAAAAAAAAAwwHUAAABEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-04T14:48:18.983Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Services\\AuthService.cs",
+              "RelativeDocumentMoniker": "Freelancer\\Services\\AuthService.cs",
+              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Services\\AuthService.cs",
+              "RelativeToolTip": "Freelancer\\Services\\AuthService.cs",
+              "ViewState": "AgIAAM0AAAAAAAAAAAAwwNYAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-04T14:35:35.035Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "EmailService.cs",
+              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Services\\EmailService.cs",
+              "RelativeDocumentMoniker": "Freelancer\\Services\\EmailService.cs",
+              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Services\\EmailService.cs",
+              "RelativeToolTip": "Freelancer\\Services\\EmailService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAC0AAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-04T14:35:00.17Z",
               "EditorCaption": ""
             },
             {
@@ -72,7 +135,44 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "Freelancer\\Controllers\\AuthController.cs",
+              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "Freelancer\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAACYAAAAAAAAAAAAkwFkAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-04T14:34:34.455Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "SeekersController.cs",
+              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Controllers\\SeekersController.cs",
+              "RelativeDocumentMoniker": "Freelancer\\Controllers\\SeekersController.cs",
+              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Controllers\\SeekersController.cs",
+              "RelativeToolTip": "Freelancer\\Controllers\\SeekersController.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAcwBYAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-04T14:27:38.243Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "SeekerSearchResultDto.cs",
+              "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\DTOs\\SeekerSearchResultDto.cs",
+              "RelativeDocumentMoniker": "Freelancer\\DTOs\\SeekerSearchResultDto.cs",
+              "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\DTOs\\SeekerSearchResultDto.cs",
+              "RelativeToolTip": "Freelancer\\DTOs\\SeekerSearchResultDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwA8AAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-04T14:16:24.993Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "SeekerService.cs",
               "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Services\\SeekerService.cs",
               "RelativeDocumentMoniker": "Freelancer\\Services\\SeekerService.cs",
@@ -85,7 +185,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 9,
               "Title": "ISeekerService.cs",
               "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Interfaces\\ISeekerService.cs",
               "RelativeDocumentMoniker": "Freelancer\\Interfaces\\ISeekerService.cs",
@@ -93,18 +193,17 @@
               "RelativeToolTip": "Freelancer\\Interfaces\\ISeekerService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-04T14:15:21.094Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-04T14:15:21.094Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "AdminService.cs",
               "DocumentMoniker": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Services\\AdminService.cs",
               "RelativeDocumentMoniker": "Freelancer\\Services\\AdminService.cs",
               "ToolTip": "D:\\BTL_CSharp\\Freelancer\\Freelancer\\Services\\AdminService.cs",
               "RelativeToolTip": "Freelancer\\Services\\AdminService.cs",
-              "ViewState": "AgIAAFkBAAAAAAAAAAASwHABAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAEBAAAAAAAAAAAvwCYBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-12-04T14:03:55.276Z",
               "EditorCaption": ""

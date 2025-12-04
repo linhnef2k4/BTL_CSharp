@@ -9,7 +9,7 @@ namespace Freelancer.Interfaces
         Task<string?> ChangePasswordAsync(int userId, ChangePasswordDto request);
         // Trả về Token (để test) hoặc null (nếu lỗi)
         Task<string?> ForgotPasswordAsync(string email);
+        Task<string> ResetPasswordAsyncFG(ResetPasswordDto model);
 
-        
     }
 }

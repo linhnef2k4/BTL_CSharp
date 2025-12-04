@@ -195,7 +195,7 @@ namespace Freelancer.Services
             await _context.SaveChangesAsync();
 
             // --- GỬI EMAIL ---
-            // Giả sử link frontend của bạn là http://localhost:3000/reset-password
+            
             var resetLink = $"http://localhost:5173/reset-password?token={token}&email={email}";
 
             string emailBody = $@"
@@ -210,6 +210,47 @@ namespace Freelancer.Services
 
             // Trả về "Success" thay vì token (vì token đã nằm trong mail)
             return "Success";
+        }
+
+      
+public async Task<string> ResetPasswordAsyncFG(ResetPasswordDto model)
+        {
+            // 1. Tìm user theo Email
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+
+            if (user == null)
+            {
+                return "Email không tồn tại trong hệ thống.";
+            }
+
+            // 2. Kiểm tra Token có khớp không
+            // (So sánh token client gửi lên với token đang lưu trong DB)
+            if (user.ResetToken != model.Token)
+            {
+                return "Token không hợp lệ hoặc đã bị thay đổi.";
+            }
+
+            // 3. Kiểm tra hạn sử dụng (QUAN TRỌNG: Dùng DateTime.UtcNow)
+            // Nếu giờ hiện tại (UTC) đã vượt quá giờ hết hạn -> Lỗi
+            if (user.ResetTokenExpires < DateTime.UtcNow)
+            {
+                return "Link đặt lại mật khẩu đã hết hạn. Vui lòng yêu cầu lại.";
+            }
+
+            // 4. Mọi thứ OK -> Tiến hành đổi mật khẩu
+            // Mã hóa mật khẩu mới
+            string newPasswordHash = BCrypt.Net.BCrypt.HashPassword(model.NewPassword);
+
+            user.PasswordHash = newPasswordHash;
+
+            // 5. Hủy Token ngay lập tức (để không dùng lại được lần 2)
+            user.ResetToken = null;
+            user.ResetTokenExpires = null;
+
+            // 6. Lưu vào DB
+            await _context.SaveChangesAsync();
+
+            return "Success"; // Trả về chuỗi này để Controller biết là thành công
         }
     }
 }
